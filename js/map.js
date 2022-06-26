@@ -1,31 +1,24 @@
 function generateLevel(){
-    generateTiles();
     tryTo('generate map', function(){
         return generateTiles() == randomPassableTile().getConnectedTiles().length;
     });
 }
 
 function generateTiles(){
-
     let passableTiles=0;
-
     tiles = [];
-    for(let i=0;i<numTiles;i++){
-        tiles[i] = [];
-        for(let j=0;j<numTiles;j++){
-            if(Math.random() < 0.3 || !inBounds(i,j)){
-                tiles[i][j] = new Wall(i,j);
+    for(let column=0;column<numTiles;column++){
+        tiles[column] = [];
+        for(let row=0;row<numTiles;row++){
+            if(Math.random() < 0.3 || !inBounds(column,row)){
+                tiles[column][row] = new Wall(column,row);
             }else{
-                tiles[i][j] = new Floor(i,j);
-
+                tiles[column][row] = new Floor(column,row);
                 passableTiles++;
-
             }
         }
     }
-
     return passableTiles;
-
 }
 
 function inBounds(x,y){
