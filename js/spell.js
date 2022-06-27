@@ -23,7 +23,7 @@ spells = {
     MULLIGAN: function(){
         startLevel(1, player.spells);
     },
-    AURA: function(){
+    HEAL: function(){
         player.tile.getAdjacentNeighbors().forEach(function(t){
             t.setEffect(13);
             if(t.monster){
