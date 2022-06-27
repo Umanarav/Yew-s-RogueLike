@@ -4,6 +4,10 @@ class Monster{
         this.sprite = sprite;
         this.hp = hp;
         this.teleportCounter = 2;
+        this.offsetX = 0;                                                   
+        this.offsetY = 0;
+        this.lastMove = [-1,0];
+        this.bonusAttack = 0;    
 	}
 
 	heal(damage){
@@ -31,21 +35,32 @@ class Monster{
        }
     }
 
+    getDisplayX(){                     
+        return this.tile.x + this.offsetX;
+    }
+
+    getDisplayY(){                                                                  
+        return this.tile.y + this.offsetY;
+    }   
+
 	draw(){
 		if(this.teleportCounter > 0){                                        
-            drawSprite(10, this.tile.x, this.tile.y);                     
+           	drawSprite(10, this.getDisplayX(),  this.getDisplayY());                     
         }else{        
-	        drawSprite(this.sprite, this.tile.x, this.tile.y);
+	        drawSprite(this.sprite, this.getDisplayX(),  this.getDisplayY());
 	        this.drawHp();
 	    }
+
+	    this.offsetX -= Math.sign(this.offsetX)*(1/8);     
+        this.offsetY -= Math.sign(this.offsetY)*(1/8); 
 	}
 
 	drawHp(){
         for(let i=0; i<this.hp; i++){
             drawSprite(
                 9,
-                this.tile.x + (i%3)*(5/16),
-                this.tile.y - Math.floor(i/3)*(5/16)
+                this.getDisplayX() + (i%3)*(5/16),   
+                this.getDisplayY() - Math.floor(i/3)*(5/16)
             );
         }
     }	
@@ -53,13 +68,20 @@ class Monster{
 	tryMove(dx, dy){
         let newTile = this.tile.getNeighbor(dx,dy);
         if(newTile.passable){
+        	this.lastMove = [dx,dy];
             if(!newTile.monster){
                 this.move(newTile);
             }else{
               	if(this.isPlayer != newTile.monster.isPlayer){
                     this.attackedThisTurn = true;
                     newTile.monster.stunned = true;
-                    newTile.monster.hit(1);
+                    newTile.monster.hit(1 + this.bonusAttack);
+                    this.bonusAttack = 0;
+
+                    shakeAmount = 5;
+
+                    this.offsetX = (newTile.x - this.tile.x)/2;         
+                    this.offsetY = (newTile.y - this.tile.y)/2;
                 }
             }
             return true;
@@ -67,10 +89,19 @@ class Monster{
     }
 
     hit(damage){
+    	 if(this.shield>0){           
+            return;                                                             
+        }
         this.hp -= damage;
         if(this.hp <= 0){
             this.die();
         }
+
+        if(this.isPlayer){                                                     
+            playSound("hit1");                                              
+        }else{                                                       
+            playSound("hit2");                                              
+        }   
     }
 
     die(){
@@ -82,6 +113,8 @@ class Monster{
     move(tile){
         if(this.tile){
             this.tile.monster = null;
+            this.offsetX = this.tile.x - tile.x;    
+            this.offsetY = this.tile.y - tile.y;
         }
         this.tile = tile;
         tile.monster = this;
@@ -91,18 +124,38 @@ class Monster{
 }
 
     class Player extends Monster{
-    constructor(tile){
-        super(tile, 0, 3);
-        this.isPlayer = true;
-        this.teleportCounter = 0;
-    }
+	    constructor(tile){
+	        super(tile, 0, 3);
+	        this.isPlayer = true;
+	        this.teleportCounter = 0;
+	        this.spells = shuffle(Object.keys(spells)).splice(0,numSpells);
+	    }
 
-    tryMove(dx, dy){
-        if(super.tryMove(dx,dy)){
-            tick();
-        }
-    }
-}
+	    update(){          
+        this.shield--;                                                      
+    	} 
+
+	    tryMove(dx, dy){
+	        if(super.tryMove(dx,dy)){
+	            tick();
+	        }
+	    }
+
+	    addSpell(){                                                       
+	        let newSpell = shuffle(Object.keys(spells))[0];
+	        this.spells.push(newSpell);
+	    }
+
+	    castSpell(index){                                                   
+	        let spellName = this.spells[index];
+	        if(spellName){
+	            delete this.spells[index];
+	            spells[spellName]();
+	            playSound("spell");
+	            tick();
+	        }
+	    }
+	}
 
 class Bird extends Monster{
     constructor(tile){

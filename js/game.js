@@ -16,8 +16,8 @@ function drawSprite(sprite, x, y){
         0,
         16,
         16,
-        x*tileSize,
-        y*tileSize,
+        x*tileSize + shakeX,
+        y*tileSize + shakeY,
         tileSize,
         tileSize
     );
@@ -26,6 +26,8 @@ function drawSprite(sprite, x, y){
 function draw(){
     if(gameState == "running" || gameState == "dead"){  
         ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        screenshake();
 
         for(let i=0;i<numTiles;i++){
             for(let j=0;j<numTiles;j++){
@@ -41,6 +43,11 @@ function draw(){
 
         drawText("Level: "+level, 30, false, 40, "violet");
         drawText("Score: "+score, 30, false, 70, "violet");
+
+        for(let i=0; i<player.spells.length; i++){
+            let spellText = (i+1) + ") " + (player.spells[i] || "");                        
+            drawText(spellText, 20, false, 110+i*40, "aqua");        
+        }
     }
 }
 
@@ -52,6 +59,8 @@ function tick(){
             monsters.splice(k,1);
         }
     }
+
+    player.update();
 
     if(player.dead){
         addScore(score, false);    
@@ -73,7 +82,7 @@ function showTitle(){
     gameState = "title";
 
     drawText("Yew's", 40, true, canvas.height/2 - 110, "white");
-    drawText("Rogue Like", 70, true, canvas.height/2 - 50, "white"); 
+    drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white"); 
 
     drawScores(); 
 }
@@ -81,19 +90,22 @@ function showTitle(){
 function startGame(){                                           
     level = 1;
     score = 0;
+    numSpells = 1;
     startLevel(startingHp);
 
     gameState = "running";
 }
 
-function startLevel(playerHp){        
+function startLevel(playerHp, playerSpells){         
     spawnRate = 15;              
     spawnCounter = spawnRate;                  
     generateLevel();
 
     player = new Player(randomPassableTile());
     player.hp = playerHp;
-
+    if(playerSpells){
+        player.spells = playerSpells;
+    } 
     randomPassableTile().replace(Exit);
 }
 
@@ -164,4 +176,28 @@ function drawScores(){
             );
         }
     }
+}
+
+function screenshake(){
+    if(shakeAmount){
+        shakeAmount--;
+    }
+    let shakeAngle = Math.random()*Math.PI*2;
+    shakeX = Math.round(Math.cos(shakeAngle)*shakeAmount);
+    shakeY = Math.round(Math.sin(shakeAngle)*shakeAmount);
+}
+
+function initSounds(){          
+    sounds = {
+        hit1: new Audio('sounds/hit1.wav'),
+        hit2: new Audio('sounds/hit2.wav'),
+        treasure: new Audio('sounds/treasure.wav'),
+        newLevel: new Audio('sounds/newLevel.wav'),
+        spell: new Audio('sounds/spell.wav'),
+    };
+}
+
+function playSound(soundName){                       
+    sounds[soundName].currentTime = 0;  
+    sounds[soundName].play();
 }
