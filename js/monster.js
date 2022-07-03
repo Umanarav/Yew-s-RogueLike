@@ -96,11 +96,11 @@ class Monster{
         this.hp -= damage;
         if(this.hp <= 0){
             this.die();
-            if(this.isBird && numItems === 0){
+            if(this.isBird && numItem === 0){
                 if(Math.random() < 0.5){
                     randomPassableTile().tier1Sword = true;
                 }
-            }else if(this.isBird && numItems >= 1){
+            }else if(this.isBird && numItem >= 1){
                 if(Math.random() < 0.5){
                     randomPassableTile().treasure = true;
                 }
@@ -140,7 +140,7 @@ class Monster{
 	        this.isPlayer = true;
 	        this.teleportCounter = 0;
 	        this.spells = (Object.keys(spells)).splice(0,numSpells);
-	        this.items = (Object.keys(items)).splice(0,numSword);
+	        this.items = (Object.keys(items)).splice(0,numItem);
 	    }
 
 	    update(){          
@@ -171,15 +171,11 @@ class Monster{
 	    }
 
 	    addItem(){ 
-            let newItem = (Object.keys(items))[numItems - 1];                                                      
+            let newItem = (Object.keys(items))[numItem - 1];                                                      
 	        this.items.push(newItem);
 	    }
-        addSword(){
-            let newSword = (Object.keys(items))[0];
-            this.items.push(newSword);
-        }
 
-	    equipSword(index){                                                   
+	    useItem(index){                                                   
 	        let itemName = this.items[index];
 	        console.log(itemName);
 	        if(itemName){

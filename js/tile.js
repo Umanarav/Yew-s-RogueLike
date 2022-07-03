@@ -55,6 +55,10 @@ class Tile{
         if(this.tier1Sword){
             drawSprite(21, this.x, this.y)
         }
+        if(this.tier1Shield){
+            drawSprite(22, this.x, this.y)
+        }
+
         if(this.effectCounter){                    
             this.effectCounter--;
             ctx.globalAlpha = this.effectCounter/30;
@@ -88,8 +92,8 @@ class Floor extends Tile{
         }
 
         if (monster.isPlayer && this.tier1Sword){
-            numSword +=1;
-            player.addSword();
+            numItem +=1;
+            player.addItem();
             playSound("treasure")
             this.tier1Sword = false;
         }

@@ -50,9 +50,11 @@ function draw(){
             drawText(spellText, 20, false, 170+i*21, "aqua");        
         }
         drawText("Inventory ", 21, false, 377, "violet");
+        for(let i=0; i<player.items.length; i++){
             console.log(tier1SwordEquipped);
             let itemText = (7) + ") " + (player.items[0] + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
-            drawText(itemText, 20, false, 407, "aqua");       
+            drawText(itemText, 20, false, 407+i*21, "aqua");        
+        }
     }
 }
  
@@ -99,7 +101,7 @@ function startGame(){
     level = 1;
     score = 0;
     numSpells = 1;
-    numSword = 1;
+    numItem = 0;
     startLevel(startingHp);
 
     gameState = "running";
