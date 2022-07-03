@@ -1,3 +1,6 @@
+readyToExit = false;
+readyToDrink = false;
+
 class Tile{
 	constructor(x, y, sprite, passable){
         this.x = x;
@@ -55,7 +58,7 @@ class Tile{
         if(this.tier1Sword){
             drawSprite(21, this.x, this.y)
         }
-        if(this.tier1Shield){
+        if(this.tier1Armor){
             drawSprite(22, this.x, this.y)
         }
 
@@ -79,7 +82,14 @@ class Floor extends Tile{
         super(x, y, 2, true);
     };
 
-    stepOn(monster){                                                           
+    stepOn(monster){
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if(monster.isPlayer && !this.well){
+            readyToDrink = false;
+        }
+
         if(monster.isPlayer && this.treasure){   
             score++;
             if(score % 3 == 0 && numSpells < 6){                         
@@ -92,11 +102,21 @@ class Floor extends Tile{
         }
 
         if (monster.isPlayer && this.tier1Sword){
-            numItem +=1;
-            player.addItem();
+            numSword +=1;
+            player.addSword();
             playSound("treasure")
             this.tier1Sword = false;
         }
+
+        if (monster.isPlayer && this.tier1Armor){
+            numArmor +=1;
+            player.addArmor();
+            playSound("treasure")
+            this.tier1Armor = false;
+        }
+
+
+
     }
 
 }
@@ -110,19 +130,20 @@ class Wall extends Tile{
 class Exit extends Tile{
     constructor(x, y){
         super(x, y, 11, true);
+        this.exit = true;
     }
 
     stepOn(monster){
         if(monster.isPlayer){
-            playSound("newLevel");
-            welldepleted = false  
-            if(level === numLevels){
-                addScore(score, true); 
-                showTitle();
-            }else{
-                level++;
-                startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
-            }
+            readyToExit = true;
+            console.log(readyToExit);          
+        }
+
+        if (monster.isPlayer && this.tier1Sword){
+            numSword +=1;
+            player.addSword();
+            playSound("treasure")
+            this.tier1Sword = false;
         }
     }
 }
@@ -130,32 +151,13 @@ class Exit extends Tile{
 class Well extends Tile{
     constructor(x, y){
         super(x, y, 19, true);
+        this.well = true;
     }
 
     stepOn(monster){
         if(monster.isPlayer && welldepleted === false){
-            playSound("well");
-            welldepleted = true;
-            if(player.hp === maxHp){
-                score += 6;
-                numSpells += 1;
-                player.addSpell();
-                numSpells += 1;
-                player.addSpell();
-            }else{
-                player.hp = maxHp;
-                score += 3;
-                numSpells += 1;
-                player.addSpell();
-            }
-                for(let i=1;i<numTiles-1;i++){
-                    let findwell = tiles[i].findIndex((tile) => tile instanceof Well);
-                    console.log(findwell);
-                if (findwell !== -1){
-                        let tile = getTile(i, findwell);
-                        tile.replace(EmptyWell);
-                }
-            }
+            readyToDrink = true;
+            console.log(readyToDrink);
         }
     }
 }
@@ -163,5 +165,11 @@ class Well extends Tile{
 class EmptyWell extends Tile{
     constructor(x, y){
         super(x, y, 20, true);
+    }
+
+    stepOn(monster){
+        if(monster.isPlayer && welldepleted ===true){
+           playSound("empty_well");
+        }
     }
 }

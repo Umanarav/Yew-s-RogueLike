@@ -1,6 +1,6 @@
 let tier1SwordEquipped = false;
 
-items = {
+swords = {
     SWORD: function(){
         if (tier1SwordEquipped === false){
             tier1SwordEquipped = true

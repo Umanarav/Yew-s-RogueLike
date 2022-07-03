@@ -8,7 +8,8 @@ class Monster{
         this.offsetY = 0;
         this.lastMove = [-1,0];
         this.bonusAttack = 0;
-        this.baseAttack = 1;   
+        this.baseAttack = 1;
+        this.damageReduction = 1;  
 	}
 
 	heal(damage){
@@ -76,7 +77,7 @@ class Monster{
               	if(this.isPlayer != newTile.monster.isPlayer){
                     this.attackedThisTurn = true;
                     newTile.monster.stunned = true;
-                    newTile.monster.hit(this.baseAttack + this.bonusAttack);
+                    newTile.monster.hit((this.baseAttack + this.bonusAttack));
                     this.bonusAttack = 0;
 
                     shakeAmount = 5;
@@ -93,18 +94,38 @@ class Monster{
     	 if(this.shield>0){           
             return;                                                             
         }
-        this.hp -= damage;
+        
+        if (this.isPlayer){
+            this.hp -= ((damage)/this.damageReduction);
+        }else{
+            this.hp -= damage;
+        }
+        
         if(this.hp <= 0){
             this.die();
-            if(this.isBird && numItem === 0){
+
+            if(this.isBird && numSword === 0){
                 if(Math.random() < 0.5){
                     randomPassableTile().tier1Sword = true;
                 }
-            }else if(this.isBird && numItem >= 1){
+            }else if(this.isBird && numSword >= 1){
                 if(Math.random() < 0.5){
                     randomPassableTile().treasure = true;
                 }
             }
+
+            if(this.isTank && numArmor === 0){
+                if(Math.random() < 0.5){
+                    randomPassableTile().tier1Armor = true;
+                }
+            }else if(this.isTank && numArmor >= 1){
+                if(Math.random() < 0.5){
+                    randomPassableTile().treasure = true;
+                }
+            }
+
+
+
         }
 
         if(this.isPlayer){                                                     
@@ -118,7 +139,9 @@ class Monster{
     die(){
         this.dead = true;
         this.tile.monster = null;
-        this.sprite = 1;
+        if(this.isPlayer){
+            this.sprite = 1;
+        }
     }
 
     move(tile){
@@ -140,7 +163,8 @@ class Monster{
 	        this.isPlayer = true;
 	        this.teleportCounter = 0;
 	        this.spells = (Object.keys(spells)).splice(0,numSpells);
-	        this.items = (Object.keys(items)).splice(0,numItem);
+	        this.swords = (Object.keys(swords)).splice(0,numSword);
+            this.armors = (Object.keys(armors)).splice(0,numArmor);
 	    }
 
 	    update(){          
@@ -170,20 +194,34 @@ class Monster{
 	        }
 	    }
 
-	    addItem(){ 
-            let newItem = (Object.keys(items))[numItem - 1];                                                      
-	        this.items.push(newItem);
+	    addSword(){ 
+            let newSword = (Object.keys(swords))[numSword - 1];                                                      
+	        this.swords.push(newSword);
 	    }
 
-	    useItem(index){                                                   
-	        let itemName = this.items[index];
-	        console.log(itemName);
-	        if(itemName){
-	            items[itemName]();
-	            playSound("spell");
+	    equipSword(index){                                                   
+	        let swordName = this.swords[index];
+	        if(swordName){
+	            swords[swordName]();
+	            playSound("equip_sword");
 	            tick();
 	        }
 	    }
+
+        addArmor(){ 
+            let newArmor = (Object.keys(armors))[0];                                                      
+            this.armors.push(newArmor);
+        }
+
+        equipArmor(index){                                                   
+            let armorName = this.armors[index];
+                if(armorName){
+                armors[armorName]();
+                playSound("equip_armor");
+                tick();
+            }
+        }
+
 	}
 
 class Bird extends Monster{
@@ -211,6 +249,7 @@ class Snake extends Monster{
 class Tank extends Monster{
     constructor(tile){
         super(tile, 6, 2);
+        this.isTank = true;
     }
 
   	update(){

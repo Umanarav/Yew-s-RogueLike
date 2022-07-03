@@ -50,10 +50,13 @@ function draw(){
             drawText(spellText, 20, false, 170+i*21, "aqua");        
         }
         drawText("Inventory ", 21, false, 377, "violet");
-        for(let i=0; i<player.items.length; i++){
-            console.log(tier1SwordEquipped);
-            let itemText = (7) + ") " + (player.items[0] + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
-            drawText(itemText, 20, false, 407+i*21, "aqua");        
+        for(let i=0; i<player.swords.length; i++){
+            let swordText = (7) + ") " + (player.swords[i] + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
+            drawText(swordText, 20, false, 407+i*21, "aqua");        
+        }
+        for(let i=0; i<player.armors.length; i++){
+            let armorText = (8) + ") " + (player.armors[i] + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                        
+            drawText(armorText, 20, false, 428, "aqua");        
         }
     }
 }
@@ -72,9 +75,10 @@ function tick(){
     player.update();
 
     if(player.dead){
-        addScore(score, false);    
-        gameState = "dead";
+        addScore(score, false);   
         tier1SwordEquipped = false;
+        tier1ArmorEquipped = false; 
+        gameState = "dead";
     }
 
     spawnCounter--;
@@ -101,7 +105,10 @@ function startGame(){
     level = 1;
     score = 0;
     numSpells = 1;
-    numItem = 0;
+    numSword = 0;
+    numArmor = 0;
+    tier1SwordEquipped = false;
+    tier1ArmorEquipped = false;
     startLevel(startingHp);
 
     gameState = "running";
@@ -212,6 +219,9 @@ function initSounds(){
         newLevel: new Audio('sounds/newLevel.wav'),
         spell: new Audio('sounds/spell.wav'),
         well: new Audio('sounds/well.wav'),
+        empty_well: new Audio('sounds/empty_well.wav'),
+        equip_armor: new Audio('sounds/equip_armor.wav'),
+        equip_sword: new Audio('sounds/equip_sword.wav'),
     };
 }
 

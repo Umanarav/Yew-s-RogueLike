@@ -9,7 +9,8 @@
 <script src="js/monster.js"></script>
 <script src="js/util.js"></script>
 <script src="js/spell.js"></script>
-<script src="js/item.js"></script>
+<script src="js/sword.js"></script>
+<script src="js/armor.js"></script>
 
 <script>
     tileSize = 64;
@@ -44,11 +45,48 @@
             if(e.key=="a") player.tryMove(-1, 0);
             if(e.key=="d") player.tryMove(1, 0);
             if(e.key=="f") tick();
+            if(e.key==="Enter" && readyToExit === true){
+                    playSound("newLevel");
+                    welldepleted = false  
+                if(level === numLevels){
+                    addScore(score, true); 
+                    showTitle();
+                }else{
+                    level++;
+                    startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+                }            
+            };
+
+            if(e.key==="Enter" && readyToDrink === true){
+                playSound("well");
+                welldepleted = true;
+                if(player.hp === maxHp){
+                    score += 6;
+                    numSpells += 1;
+                    player.addSpell();
+                    numSpells += 1;
+                    player.addSpell();
+                }else{
+                    player.hp = maxHp;
+                    score += 3;
+                    numSpells += 1;
+                    player.addSpell();
+                }
+                    for(let i=1;i<numTiles-1;i++){
+                        let findwell = tiles[i].findIndex((tile) => tile instanceof Well);
+                        console.log(findwell);
+                    if (findwell !== -1){
+                            let tile = getTile(i, findwell);
+                            tile.replace(EmptyWell);
+                    }
+                }
+            }   
 
             if(e.key>=1 && e.key<=6) player.castSpell(e.key-1);
 
-            if(e.key=7) player.useItem(e.key-7);
-            //if(e.key=8) player.equipArmor(e.key-7);      
+            if(e.key=7) player.equipSword(e.key-7);
+            if(e.key=8) player.equipArmor(e.key-8);
+
         }
     };
 
