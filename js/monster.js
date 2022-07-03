@@ -140,7 +140,7 @@ class Monster{
 	        this.isPlayer = true;
 	        this.teleportCounter = 0;
 	        this.spells = (Object.keys(spells)).splice(0,numSpells);
-	        this.items = (Object.keys(items)).splice(0,numItems);
+	        this.items = (Object.keys(items)).splice(0,numSword);
 	    }
 
 	    update(){          
@@ -176,10 +176,10 @@ class Monster{
 	    }
         addSword(){
             let newSword = (Object.keys(items))[0];
-            this.items.push(newSwords);
+            this.items.push(newSword);
         }
 
-	    useItem(index){                                                   
+	    equipSword(index){                                                   
 	        let itemName = this.items[index];
 	        console.log(itemName);
 	        if(itemName){

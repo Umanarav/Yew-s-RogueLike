@@ -88,7 +88,7 @@ class Floor extends Tile{
         }
 
         if (monster.isPlayer && this.tier1Sword){
-            numSword += 1;
+            numSword +=1;
             player.addSword();
             playSound("treasure")
             this.tier1Sword = false;
