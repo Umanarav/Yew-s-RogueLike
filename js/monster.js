@@ -7,7 +7,8 @@ class Monster{
         this.offsetX = 0;                                                   
         this.offsetY = 0;
         this.lastMove = [-1,0];
-        this.bonusAttack = 0;    
+        this.bonusAttack = 0;
+        this.baseAttack = 1;   
 	}
 
 	heal(damage){
@@ -59,8 +60,8 @@ class Monster{
         for(let i=0; i<this.hp; i++){
             drawSprite(
                 9,
-                this.getDisplayX() + (i%3)*(2/16),   
-                this.getDisplayY() - Math.floor(i/8)*(-2/16)
+                this.getDisplayX() + (i%6)*(2.6/16),   
+                this.getDisplayY() - Math.floor(i/6)*(2.6/16)
             );
         }
     }	
@@ -75,7 +76,7 @@ class Monster{
               	if(this.isPlayer != newTile.monster.isPlayer){
                     this.attackedThisTurn = true;
                     newTile.monster.stunned = true;
-                    newTile.monster.hit(1 + this.bonusAttack);
+                    newTile.monster.hit(this.baseAttack + this.bonusAttack);
                     this.bonusAttack = 0;
 
                     shakeAmount = 5;
@@ -95,6 +96,15 @@ class Monster{
         this.hp -= damage;
         if(this.hp <= 0){
             this.die();
+            if(this.isBird && numItems === 0){
+                if(Math.random() < 0.5){
+                    randomPassableTile().tier1Sword = true;
+                }
+            }else if(this.isBird && numItems >= 1){
+                if(Math.random() < 0.5){
+                    randomPassableTile().treasure = true;
+                }
+            }
         }
 
         if(this.isPlayer){                                                     
@@ -102,6 +112,7 @@ class Monster{
         }else{                                                       
             playSound("hit2");                                              
         }   
+
     }
 
     die(){
@@ -128,7 +139,8 @@ class Monster{
 	        super(tile, 0, 3);
 	        this.isPlayer = true;
 	        this.teleportCounter = 0;
-	        this.spells = shuffle(Object.keys(spells)).splice(0,numSpells);
+	        this.spells = (Object.keys(spells)).splice(0,numSpells);
+	        this.items = (Object.keys(items)).splice(0,numItems);
 	    }
 
 	    update(){          
@@ -141,9 +153,11 @@ class Monster{
 	        }
 	    }
 
-	    addSpell(){                                                       
-	        let newSpell = shuffle(Object.keys(spells))[0];
-	        this.spells.push(newSpell);
+	    addSpell(){
+            if(numSpells < 6){                                                       
+    	        let newSpell = (Object.keys(spells))[numSpells - 1];
+    	        this.spells.push(newSpell);
+            }
 	    }
 
 	    castSpell(index){                                                   
@@ -155,11 +169,31 @@ class Monster{
 	            tick();
 	        }
 	    }
+
+	    addItem(){ 
+            let newItem = (Object.keys(items))[numItems - 1];                                                      
+	        this.items.push(newItem);
+	    }
+        addSword(){
+            let newSword = (Object.keys(items))[0];
+            this.items.push(newSwords);
+        }
+
+	    useItem(index){                                                   
+	        let itemName = this.items[index];
+	        console.log(itemName);
+	        if(itemName){
+	            items[itemName]();
+	            playSound("spell");
+	            tick();
+	        }
+	    }
 	}
 
 class Bird extends Monster{
     constructor(tile){
         super(tile, 4, 3);
+        this.isBird = true;
     }
 }
 

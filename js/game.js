@@ -43,14 +43,21 @@ function draw(){
 
         drawText("Level: "+level, 30, false, 40, "violet");
         drawText("Score: "+score, 30, false, 70, "violet");
-
+        drawText("HP: "+player.hp, 30, false, 100, "violet");
+        drawText("Spells", 21, false, 140, "violet");
         for(let i=0; i<player.spells.length; i++){
             let spellText = (i+1) + ") " + (player.spells[i] || "");                        
-            drawText(spellText, 20, false, 110+i*40, "aqua");        
+            drawText(spellText, 20, false, 170+i*21, "aqua");        
+        }
+        drawText("Inventory ", 21, false, 377, "violet");
+        for(let i=0; i<player.items.length; i++){
+            console.log(tier1SwordEquipped);
+            let itemText = (i+7) + ") " + (player.items[i] + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
+            drawText(itemText, 20, false, 407+i*21, "aqua");        
         }
     }
 }
-
+ 
 function tick(){
     for(let k=monsters.length-1;k>=0;k--){
         if(!monsters[k].dead){
@@ -58,6 +65,8 @@ function tick(){
         }else{
             monsters.splice(k,1);
         }
+
+
     }
 
     player.update();
@@ -65,6 +74,7 @@ function tick(){
     if(player.dead){
         addScore(score, false);    
         gameState = "dead";
+        tier1SwordEquipped = false;
     }
 
     spawnCounter--;
@@ -91,22 +101,29 @@ function startGame(){
     level = 1;
     score = 0;
     numSpells = 1;
+    numItems = 1;
     startLevel(startingHp);
 
     gameState = "running";
 }
 
-function startLevel(playerHp, playerSpells){         
+function startLevel(playerHp, playerSpells, playerBaseAttack = 1){         
     spawnRate = 15;              
     spawnCounter = spawnRate;                  
     generateLevel();
 
     player = new Player(randomPassableTile());
     player.hp = playerHp;
+    player.baseAttack = playerBaseAttack;
+    welldepleted = false;
     if(playerSpells){
         player.spells = playerSpells;
     } 
     randomPassableTile().replace(Exit);
+
+    if(Math.random() * 10 < 5){
+     randomPassableTile().replace(Well);
+    }
 }
 
 function drawText(text, size, centered, textY, color){
@@ -194,6 +211,7 @@ function initSounds(){
         treasure: new Audio('sounds/treasure.wav'),
         newLevel: new Audio('sounds/newLevel.wav'),
         spell: new Audio('sounds/spell.wav'),
+        well: new Audio('sounds/well.wav'),
     };
 }
 

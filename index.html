@@ -9,6 +9,8 @@
 <script src="js/monster.js"></script>
 <script src="js/util.js"></script>
 <script src="js/spell.js"></script>
+<script src="js/item.js"></script>
+
 <script>
     tileSize = 64;
     numTiles = 9;
@@ -31,6 +33,7 @@
 
 
     document.querySelector("html").onkeypress = function(e){
+        console.log(e.key);
         if(gameState == "title"){                              
             startGame();                
         }else if(gameState == "dead"){                             
@@ -42,8 +45,9 @@
             if(e.key=="d") player.tryMove(1, 0);
             if(e.key=="f") tick();
 
-            if(e.key>=1 && e.key<=9) player.castSpell(e.key-1);
+            if(e.key>=1 && e.key<=6) player.castSpell(e.key-1);
 
+            if(e.key=7) player.useItem(e.key-7);   
         }
     };
 
