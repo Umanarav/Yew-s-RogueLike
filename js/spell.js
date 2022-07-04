@@ -1,6 +1,10 @@
 spells = {
     WOOP: function(){
-        player.move(randomPassableTile());
+        if(this.isPlayer = true){
+            player.move(randomPassableTile());
+        }else if(this.isBoss = true){
+            boss.move(randomPassableTile());
+        }
     },
     QUAKE: function(){                  
         for(let i=0; i<numTiles; i++){

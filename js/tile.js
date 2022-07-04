@@ -93,7 +93,7 @@ class Floor extends Tile{
         if(monster.isPlayer && this.treasure){   
             score++;
             if(score % 3 == 0 && numSpells < 6){                         
-                numSpells++;                
+                numSpells += 1;                
                 player.addSpell();            
             }  
             playSound("treasure");                        
@@ -102,30 +102,58 @@ class Floor extends Tile{
         }
 
         if (monster.isPlayer && this.tier1Sword){
-            numSword +=1;
-            player.addSword();
-            playSound("treasure")
-            this.tier1Sword = false;
+            if(numSword === 0){
+                numSword +=1;
+                player.addSword();
+                playSound("pickup_sword");
+                this.tier1Sword = false;
+            }else{
+                score +=1;
+                this.tier1Sword = false;
+                playSound("pickup_sword");
+                return;
+                }
+
         }
 
         if (monster.isPlayer && this.tier1Armor){
-            numArmor +=1;
-            player.addArmor();
-            playSound("treasure")
+            if(numArmor === 0){
+                numArmor +=1;
+                player.addArmor();
+                playSound("pickup_armor")
+                this.tier1Armor = false;
+        }else{
+            score +=1;
             this.tier1Armor = false;
+            playSound("pickup_armor");
+            return;
+            }
         }
+    };
+};
 
-
-
+class BossFloor extends Tile{
+    constructor(x,y){
+        super(x, y, 23, true);
+    };
+    stepOn(monster){
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
     }
-
-}
+};
 
 class Wall extends Tile{
     constructor(x, y){
         super(x, y, 3, false);
     }
-}
+};
+
+class BossWall extends Tile{
+    constructor(x, y){
+        super(x, y, 24, false);
+    }
+};
 
 class Exit extends Tile{
     constructor(x, y){
@@ -140,11 +168,45 @@ class Exit extends Tile{
         }
 
         if (monster.isPlayer && this.tier1Sword){
+            if(numSword === 0){
             numSword +=1;
             player.addSword();
-            playSound("treasure")
+            playSound("pickup_sword");
             this.tier1Sword = false;
+        }else{
+            score +=1;
+            this.tier1Sword = false;
+            playSound("pickup_sword");
+            return;
+            }
         }
+
+        if (monster.isPlayer && this.tier1Armor){
+            if(numArmor === 0){
+            numArmor +=1;
+            player.addArmor();
+            playSound("pickup_armor")
+            this.tier1Sword = false;
+        }else{
+            score +=1;
+            this.tier1Armor = false;
+            playSound("pickup_armor");
+            return;
+            }
+
+        }
+
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playSound("treasure");                        
+            this.treasure = false;
+            spawnMonster();
+        }
+
     }
 }
 
@@ -173,3 +235,27 @@ class EmptyWell extends Tile{
         }
     }
 }
+
+class Rubble extends Tile{
+    constructor(x, y){
+        super(x, y, 26, true);
+    }
+
+    stepOn(monster){
+        if(monster.isPlayer){
+            console.log(player.hp);
+            player.hp -= 1;
+            if(player.hp <= 0){
+                addScore(score, false);   
+                tier1SwordEquipped = false;
+                tier1ArmorEquipped = false;
+                readyToExit = false;
+                gameState = "dead";
+            }
+            console.log(player.hp);
+            playSound("hit1");
+        }
+    }
+
+
+};

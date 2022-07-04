@@ -77,7 +77,8 @@ function tick(){
     if(player.dead){
         addScore(score, false);   
         tier1SwordEquipped = false;
-        tier1ArmorEquipped = false; 
+        tier1ArmorEquipped = false;
+        readyToExit = false;
         gameState = "dead";
     }
 
@@ -104,7 +105,8 @@ function showTitle(){
 function startGame(){                                           
     level = 1;
     score = 0;
-    numSpells = 1;
+    numSpells = 0;
+    numBossSpells = 1;
     numSword = 0;
     numArmor = 0;
     tier1SwordEquipped = false;
@@ -115,6 +117,7 @@ function startGame(){
 }
 
 function startLevel(playerHp, playerSpells, playerBaseAttack = 1){         
+    readyToExit = false;
     spawnRate = 15;              
     spawnCounter = spawnRate;                  
     generateLevel();
@@ -131,6 +134,21 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     if(Math.random() * 10 < 5){
      randomPassableTile().replace(Well);
     }
+}
+
+function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){         
+    readyToExit = false;
+    spawnRate = 15;              
+    spawnCounter = spawnRate;                  
+    generateBossLevel();
+
+    player = new Player(randomPassableTile());
+    player.hp = playerHp;
+    player.baseAttack = playerBaseAttack;
+    welldepleted = false;
+    if(playerSpells){
+        player.spells = playerSpells;
+    } 
 }
 
 function drawText(text, size, centered, textY, color){
@@ -220,6 +238,8 @@ function initSounds(){
         spell: new Audio('sounds/spell.wav'),
         well: new Audio('sounds/well.wav'),
         empty_well: new Audio('sounds/empty_well.wav'),
+        pickup_armor: new Audio('sounds/pickup_armor.ogg'),
+        pickup_sword: new Audio('sounds/pickup_sword.ogg'),
         equip_armor: new Audio('sounds/equip_armor.wav'),
         equip_sword: new Audio('sounds/equip_sword.wav'),
     };

@@ -124,7 +124,9 @@ class Monster{
                 }
             }
 
-
+            if(this.isBoss){
+                    randomPassableTile().replace(Exit);
+            }
 
         }
 
@@ -287,5 +289,32 @@ class Jester extends Monster{
         if(neighbors.length){
             this.tryMove(neighbors[0].x - this.tile.x, neighbors[0].y - this.tile.y);
         }
+    }
+}
+
+class Boss extends Monster{
+    constructor(tile){
+        super(tile, 25, 6);
+        this.isBoss = true;
+        this.bossSpells = (Object.keys(spells)).splice(0,numBossSpells);
+        this.teleportCounter = 0;
+    }
+
+    doStuff(){
+        this.attackedThisTurn = false;        
+        super.doStuff();
+
+        if(Math.random() > 0.2){
+            //player.move(randomPassableTile());
+        }
+
+        let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
+        if(neighbors.length){
+            neighbors[0].replace(Rubble);
+            this.heal(1);
+        }else if(!this.attackedThisTurn){
+            super.doStuff();
+        };
+
     }
 }
