@@ -1,7 +1,7 @@
 let tier1SwordEquipped = false;
 
 swords = {
-    SWORD: function(){
+    CPMII: function(){
         if (tier1SwordEquipped === false){
             tier1SwordEquipped = true
             player.baseAttack = 3

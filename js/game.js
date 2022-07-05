@@ -44,19 +44,64 @@ function draw(){
         drawText("Level: "+level, 30, false, 40, "violet");
         drawText("Score: "+score, 30, false, 70, "violet");
         drawText("HP: "+player.hp, 30, false, 100, "violet");
-        drawText("Spells", 21, false, 140, "violet");
-        for(let i=0; i<player.spells.length; i++){
-            let spellText = (i+1) + ") " + (player.spells[i] || "");                        
-            drawText(spellText, 20, false, 170+i*21, "aqua");        
+
+        if(gamepadConnected === false){
+            drawText("Executables", 21, false, 140, "violet");
+            let spellText1 = (1) + ") " + (player.spells[0] + ".EXE" || "");                        
+                let spellText2 = (2) + ") " + (player.spells[1] + ".EXE" || "");
+                let spellText3 = (3) + ") " + (player.spells[2] + ".EXE"  || "");
+                let spellText4 = (4) + ") " + (player.spells[3] + ".EXE"  || "");
+                let spellText5 = (5) + ") " + (player.spells[4] + ".EXE"  || "");
+                let spellText6 = (6) + ") " + (player.spells[5] + ".EXE"  || "");
+                drawText(spellText1, 20, false, 170+0*21, "aqua");
+                drawText(spellText2, 20, false, 170+1*21, "aqua");        
+                drawText(spellText3, 20, false, 170+2*21, "aqua");        
+                drawText(spellText4, 20, false, 170+3*21, "aqua");        
+                drawText(spellText5, 20, false, 170+4*21, "aqua");        
+                drawText(spellText6, 20, false, 170+5*21, "aqua"); 
+
+            drawText("Functions ", 21, false, 315 , "violet");
+                drawText("ENTER) USE(); ", 20, false, 345 , "aqua");
+                drawText("f) TICK(); ", 20, false, 366 , "aqua");
+
+            drawText("Hardware ", 21, false, 406, "violet");
+                let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                          
+                drawText(swordText, 20, false, 436, "aqua");        
+
+                let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                         
+                drawText(armorText, 20, false, 457, "aqua");        
+            
         }
-        drawText("Inventory ", 21, false, 377, "violet");
-        for(let i=0; i<player.swords.length; i++){
-            let swordText = (7) + ") " + (player.swords[i] + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
-            drawText(swordText, 20, false, 407+i*21, "aqua");        
-        }
-        for(let i=0; i<player.armors.length; i++){
-            let armorText = (8) + ") " + (player.armors[i] + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                        
-            drawText(armorText, 20, false, 428, "aqua");        
+
+        if(gamepadConnected === true){
+            drawText("Executables", 21, false, 140, "violet");
+                let spellText1 = (1) + ") " + (player.spells[0] || "");                        
+                let spellText2 = (2) + ") " + (player.spells[1] || "");
+                let spellText3 = (3) + ") " + (player.spells[2] || "");
+                let spellText4 = (4) + ") " + (player.spells[3] || "");
+                let spellText5 = (5) + ") " + (player.spells[4] || "");
+                let spellText6 = (6) + ") " + (player.spells[5] || "");
+                drawText("LT/" + spellText1, 20, false, 170+0*21, "aqua");
+                drawText("RT/" + spellText2, 20, false, 170+1*21, "aqua");        
+                drawText("LB/" + spellText3, 20, false, 170+2*21, "aqua");        
+                drawText("RB/" + spellText4, 20, false, 170+3*21, "aqua");        
+                drawText("X/" + spellText5, 20, false, 170+4*21, "aqua");        
+                drawText("Y/" + spellText6, 20, false, 170+5*21, "aqua");                
+            
+            drawText("Functions ", 21, false, 315 , "violet");
+                drawText("SELECT/ENTER) USE(); ", 20, false, 345 , "aqua");
+                drawText("START/f) TICK(); ", 20, false, 366 , "aqua");
+
+
+            drawText("Hardware ", 21, false, 406, "violet");
+                let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
+                drawText("A/" + swordText, 20, false, 436, "aqua");        
+            
+            
+                let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                        
+                drawText("B/" + armorText, 20, false, 457, "aqua");        
+            
+            drawText("Gamepad Connected ", 21, false, 555, "violet");
         }
     }
 }
@@ -69,10 +114,26 @@ function tick(){
             monsters.splice(k,1);
         }
 
-
     }
 
     player.update();
+
+    console.log(bossDamageReduction);
+
+    if(bossDamageReduction > 1){
+        bossDamageReduction -=1;
+        console.log(bossDamageReduction);
+    }
+
+
+    if(level === 6){
+        if(Math.random() < .5){ 
+            randomHazardTile().replace(BossFloor);
+            if(bossDamageReduction > 1){
+            }
+        }
+    }
+
 
     if(player.dead){
         addScore(score, false);   
@@ -102,10 +163,12 @@ function showTitle(){
     drawScores(); 
 }
 
-function startGame(){                                           
+function startGame(){
+    playSound("music");
+    soundStopped = false;                                       
     level = 1;
     score = 0;
-    numSpells = 0;
+    numSpells =0;
     numBossSpells = 1;
     numSword = 0;
     numArmor = 0;
@@ -139,7 +202,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){         
     readyToExit = false;
     spawnRate = 15;              
-    spawnCounter = spawnRate;                  
+    spawnCounter = spawnRate;                                 
     generateBossLevel();
 
     player = new Player(randomPassableTile());
@@ -242,6 +305,7 @@ function initSounds(){
         pickup_sword: new Audio('sounds/pickup_sword.ogg'),
         equip_armor: new Audio('sounds/equip_armor.wav'),
         equip_sword: new Audio('sounds/equip_sword.wav'),
+        music: new Audio('sounds/music.wav'),
     };
 }
 
@@ -249,3 +313,10 @@ function playSound(soundName){
     sounds[soundName].currentTime = 0;  
     sounds[soundName].play();
 }
+
+function pauseSound(soundName){                       
+    sounds[soundName].currentTime = 0;  
+    sounds[soundName].pause();
+}
+
+

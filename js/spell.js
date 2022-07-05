@@ -18,7 +18,7 @@ spells = {
         }
         shakeAmount = 20;
     },
-    HEAL: function(){
+    RESTORE: function(){
         player.tile.getAdjacentNeighbors().forEach(function(t){
             t.setEffect(13);
             if(t.monster){
@@ -28,14 +28,18 @@ spells = {
         player.tile.setEffect(13);
         player.heal(1);
     },
-    ALCHEMY: function(){
+    WALL_TO_DISK: function(){
         player.tile.getAdjacentNeighbors().forEach(function(t){
             if(!t.passable && inBounds(t.x, t.y)){
-                t.replace(Floor).treasure = true;
+                if(level === 6){
+                    t.replace(BossFloor).treasure = true;
+                }else{
+                    t.replace(Floor).treasure = true;  
+                }
             }
         });
     },
-    CROSS: function(){
+    SHOCK: function(){
         let directions = [
             [0, -1],
             [0, 1],
@@ -46,7 +50,7 @@ spells = {
             boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 2);
         }
     },
-    EX: function(){
+    VENT_HEAT: function(){
         let directions = [
             [-1, -1],
             [-1, 1],

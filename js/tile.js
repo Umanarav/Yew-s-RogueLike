@@ -2,11 +2,12 @@ readyToExit = false;
 readyToDrink = false;
 
 class Tile{
-	constructor(x, y, sprite, passable){
+	constructor(x, y, sprite, passable, hazard){
         this.x = x;
         this.y = y;
         this.sprite = sprite;
         this.passable = passable;
+        this.hazard = hazard;
 	}
 
 	replace(newTileType){
@@ -140,6 +141,16 @@ class BossFloor extends Tile{
         if(monster.isPlayer && !this.exit){
             readyToExit = false;
         }
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playSound("treasure");                        
+            this.treasure = false;
+            spawnMonster();
+        }
     }
 };
 
@@ -221,6 +232,46 @@ class Well extends Tile{
             readyToDrink = true;
             console.log(readyToDrink);
         }
+
+        if (monster.isPlayer && this.tier1Sword){
+            if(numSword === 0){
+            numSword +=1;
+            player.addSword();
+            playSound("pickup_sword");
+            this.tier1Sword = false;
+        }else{
+            score +=1;
+            this.tier1Sword = false;
+            playSound("pickup_sword");
+            return;
+            }
+        }
+
+        if (monster.isPlayer && this.tier1Armor){
+            if(numArmor === 0){
+            numArmor +=1;
+            player.addArmor();
+            playSound("pickup_armor")
+            this.tier1Armor = false;
+        }else{
+            score +=1;
+            this.tier1Armor = false;
+            playSound("pickup_armor");
+            return;
+            }
+
+        }
+
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playSound("treasure");                        
+            this.treasure = false;
+            spawnMonster();
+        }
     }
 }
 
@@ -233,12 +284,52 @@ class EmptyWell extends Tile{
         if(monster.isPlayer && welldepleted ===true){
            playSound("empty_well");
         }
+
+        if (monster.isPlayer && this.tier1Sword){
+            if(numSword === 0){
+            numSword +=1;
+            player.addSword();
+            playSound("pickup_sword");
+            this.tier1Sword = false;
+        }else{
+            score +=1;
+            this.tier1Sword = false;
+            playSound("pickup_sword");
+            return;
+            }
+        }
+
+        if (monster.isPlayer && this.tier1Armor){
+            if(numArmor === 0){
+            numArmor +=1;
+            player.addArmor();
+            playSound("pickup_armor")
+            this.tierArmor = false;
+        }else{
+            score +=1;
+            this.tier1Armor = false;
+            playSound("pickup_armor");
+            return;
+            }
+
+        }
+
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playSound("treasure");                        
+            this.treasure = false;
+            spawnMonster();
+        }
     }
 }
 
 class Rubble extends Tile{
     constructor(x, y){
-        super(x, y, 26, true);
+        super(x, y, 26, true, true);
     }
 
     stepOn(monster){
@@ -254,6 +345,17 @@ class Rubble extends Tile{
             }
             console.log(player.hp);
             playSound("hit1");
+        }
+
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playSound("treasure");                        
+            this.treasure = false;
+            spawnMonster();
         }
     }
 

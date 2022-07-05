@@ -1,3 +1,5 @@
+let bossDamageReduction = 1;
+
 class Monster{
 	constructor(tile, sprite, hp){
         this.move(tile);
@@ -9,7 +11,7 @@ class Monster{
         this.lastMove = [-1,0];
         this.bonusAttack = 0;
         this.baseAttack = 1;
-        this.damageReduction = 1;  
+        this.damageReduction = 1;
 	}
 
 	heal(damage){
@@ -17,10 +19,14 @@ class Monster{
     }
 
 	update(){
-		    this.teleportCounter--;
-		    if(this.stunned || this.teleportCounter > 0){ 
+		this.teleportCounter--;
+		if(this.stunned || this.teleportCounter > 0){ 
             this.stunned = false;
-            return;
+                if(this.isBoss && Math.random() > .5){
+                    this.doStuff();
+                }else{
+                return;
+            }
         }
         this.doStuff();
     }
@@ -77,6 +83,7 @@ class Monster{
               	if(this.isPlayer != newTile.monster.isPlayer){
                     this.attackedThisTurn = true;
                     newTile.monster.stunned = true;
+
                     newTile.monster.hit((this.baseAttack + this.bonusAttack));
                     this.bonusAttack = 0;
 
@@ -97,9 +104,12 @@ class Monster{
         
         if (this.isPlayer){
             this.hp -= ((damage)/this.damageReduction);
-        }else{
-            this.hp -= damage;
+        }else if(this.isBoss){
+            this.hp -= ((damage)/bossDamageReduction);
+        }else {
+            this.hp -= (damage);
         }
+
         
         if(this.hp <= 0){
             this.die();
@@ -164,7 +174,7 @@ class Monster{
 	        super(tile, 0, 3);
 	        this.isPlayer = true;
 	        this.teleportCounter = 0;
-	        this.spells = (Object.keys(spells)).splice(0,numSpells);
+	        this.spells = shuffle(Object.keys(spells)).splice(0,numSpells);
 	        this.swords = (Object.keys(swords)).splice(0,numSword);
             this.armors = (Object.keys(armors)).splice(0,numArmor);
 	    }
@@ -181,7 +191,7 @@ class Monster{
 
 	    addSpell(){
             if(numSpells < 6){                                                       
-    	        let newSpell = (Object.keys(spells))[numSpells - 1];
+    	        let newSpell = shuffle(Object.keys(spells))[numSpells - 1];
     	        this.spells.push(newSpell);
             }
 	    }
@@ -300,15 +310,25 @@ class Boss extends Monster{
         this.teleportCounter = 0;
     }
 
+    update(){
+        let startedStunned = this.stunned;
+        super.update();
+        if(!startedStunned){
+            this.stunned = true;
+        }
+    }
+
     doStuff(){
         this.attackedThisTurn = false;        
         super.doStuff();
 
-        if(Math.random() > 0.2){
-            //player.move(randomPassableTile());
+        if(Math.random() < 0.1){
+            player.move(randomHazardTile());
+            bossDamageReduction += 1;
+            console.log(bossDamageReduction);
         }
 
-        let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
+        let neighbors = this.tile.getAdjacentNeighbors().filter(t => t.passable && inBounds(t.x,t.y));
         if(neighbors.length){
             neighbors[0].replace(Rubble);
             this.heal(1);

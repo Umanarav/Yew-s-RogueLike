@@ -93,6 +93,40 @@ function randomPassableTile(){
     return tile;
 }
 
+function getTile(x, y){
+    if(inBounds(x,y)){
+        return tiles[x][y];
+    }else{
+        return new Wall(x,y);
+    }
+}
+
+function getBossTile(x, y){
+    if(inBounds(x,y)){
+        return tiles[x][y];
+    }else{
+        return new BossWall(x,y);
+    }
+}
+
+function randomHazardTile(){
+    let tile;
+    tryTo('get random hazard tile', function(){
+        let x = randomRange(0,numTiles-1);
+        let y = randomRange(0,numTiles-1);
+        if(level === 6){
+            tile = getBossTile(x, y);
+        }else{
+            tile = getTile(x, y);  
+        }
+
+        return tile.hazard && !tile.monster;
+    });
+    return tile;
+}
+
+
+
 
 function generateMonsters(){
     monsters = [];
@@ -111,9 +145,13 @@ function generateBossMonsters(){
 }
 
 function spawnMonster(){
+    if(level === 6){
+        return;
+    }else{
     let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester])[0];
     let monster = new monsterType(randomPassableTile());
     monsters.push(monster);
+    }
 }
 
 function spawnBossMonster(){

@@ -7,3 +7,12 @@
         text-align: center;
         margin-top: 50px;
     }
+
+    #audioSymbol {
+        position: fixed;
+        bottom: 6%;
+        right: 20%;
+        outline: 1px solid white;
+        border-radius: 50%;
+        
+    }

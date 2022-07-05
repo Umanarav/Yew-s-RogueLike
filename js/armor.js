@@ -1,7 +1,7 @@
 let tier1ArmorEquipped = false;
 
 armors = {
-    ARMOR: function(){
+    PLATING: function(){
         if (tier1ArmorEquipped === false){
             tier1ArmorEquipped = true
             player.damageReduction = 2

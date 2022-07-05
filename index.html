@@ -2,6 +2,7 @@
 <title>Yew's RogueLike</title>
 <link rel="stylesheet" href="styles.css">
 
+<body><img id="audioSymbol" src="images/img.png" onclick="muteAudio()"/></body>
 <canvas></canvas>
 <script src="js/game.js"></script>
 <script src="js/map.js"></script>
@@ -11,16 +12,19 @@
 <script src="js/spell.js"></script>
 <script src="js/sword.js"></script>
 <script src="js/armor.js"></script>
+<script src="js/Controller/Controller.min.js"></script>
+<script src="js/Controller/Controller.layouts.min.js"></script>
+<script src="js/Controller/controllerInputs.js"></script>
 
 <script>
     tileSize = 64;
     numTiles = 9;
     uiWidth = 4;
     level = 1;
-    maxHp = 6;
+    maxHp = 12;
 
     spritesheet = new Image();
-    spritesheet.src = 'spritesheet.png';
+    spritesheet.src = 'images/spritesheet.png';
     spritesheet.onload = showTitle;
                              
     gameState = "loading";  
@@ -31,7 +35,6 @@
     shakeAmount = 0;       
     shakeX = 0;                 
     shakeY = 0;         
-
 
     document.querySelector("html").onkeypress = function(e){
         console.log(e.key);
@@ -73,7 +76,7 @@
                         player.addSpell();
                     }
                 }else{
-                    player.hp = maxHp;
+                    player.hp += 6;
                     score += 3;
                     if(numSpells < 6){
                         numSpells += 1;
@@ -92,8 +95,20 @@
 
             if(e.key>=1 && e.key<=6) player.castSpell(e.key-1);
 
-            if(e.key=7) player.equipSword(e.key-7);
-            if(e.key=8) player.equipArmor(e.key-8);
+            if(e.key==7) player.equipSword(0);
+            if(e.key==8) player.equipArmor(0);
+
+            if(e.key=="m"){
+                if(soundStopped === false){
+                    document.getElementById('audioSymbol').src='images/imgX.png';
+                    pauseSound('music'); 
+                    soundStopped = true;
+                }else if(soundStopped === true){
+                    document.getElementById('audioSymbol').src='images/img.png';
+                    playSound('music'); 
+                    soundStopped = false;
+                }
+            }
     };
     
 
@@ -102,5 +117,17 @@
     setupCanvas();
 
     initSounds(); 
+
+    function muteAudio() {
+        if(soundStopped === false){
+            document.getElementById('audioSymbol').src='images/imgX.png';
+            pauseSound('music'); 
+            soundStopped = true;
+        }else if(soundStopped === true){
+            document.getElementById('audioSymbol').src='images/img.png';
+            playSound('music'); 
+            soundStopped = false;
+        }
+    }
     
 </script>
