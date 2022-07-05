@@ -306,7 +306,9 @@ function initSounds(){
         equip_armor: new Audio('sounds/equip_armor.wav'),
         equip_sword: new Audio('sounds/equip_sword.wav'),
         music: new Audio('sounds/music.wav'),
+
     };
+        sounds.music.loop = true;
 }
 
 function playSound(soundName){                       
