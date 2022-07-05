@@ -174,7 +174,7 @@ class Monster{
 	        super(tile, 0, 3);
 	        this.isPlayer = true;
 	        this.teleportCounter = 0;
-	        this.spells = shuffle(Object.keys(spells)).splice(0,numSpells);
+	        this.spells = (Object.keys(spells)).splice(0,numSpells);
 	        this.swords = (Object.keys(swords)).splice(0,numSword);
             this.armors = (Object.keys(armors)).splice(0,numArmor);
 	    }
@@ -191,7 +191,7 @@ class Monster{
 
 	    addSpell(){
             if(numSpells < 6){                                                       
-    	        let newSpell = shuffle(Object.keys(spells))[numSpells - 1];
+    	        let newSpell = (Object.keys(spells))[numSpells - 1];
     	        this.spells.push(newSpell);
             }
 	    }

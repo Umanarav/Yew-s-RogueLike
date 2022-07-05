@@ -53,23 +53,23 @@ function draw(){
                 let spellText4 = (4) + ") " + (player.spells[3] + ".EXE"  || "");
                 let spellText5 = (5) + ") " + (player.spells[4] + ".EXE"  || "");
                 let spellText6 = (6) + ") " + (player.spells[5] + ".EXE"  || "");
-                drawText(spellText1, 20, false, 170+0*21, "aqua");
-                drawText(spellText2, 20, false, 170+1*21, "aqua");        
-                drawText(spellText3, 20, false, 170+2*21, "aqua");        
-                drawText(spellText4, 20, false, 170+3*21, "aqua");        
-                drawText(spellText5, 20, false, 170+4*21, "aqua");        
-                drawText(spellText6, 20, false, 170+5*21, "aqua"); 
+                drawText(spellText1, 16, false, 170+0*21, "aqua");
+                drawText(spellText2, 16, false, 170+1*21, "aqua");        
+                drawText(spellText3, 16, false, 170+2*21, "aqua");        
+                drawText(spellText4, 16, false, 170+3*21, "aqua");        
+                drawText(spellText5, 16, false, 170+4*21, "aqua");        
+                drawText(spellText6, 16, false, 170+5*21, "aqua"); 
 
             drawText("Functions ", 21, false, 315 , "violet");
-                drawText("ENTER) USE(); ", 20, false, 345 , "aqua");
-                drawText("f) TICK(); ", 20, false, 366 , "aqua");
+                drawText("ENTER) USE(); ", 16, false, 345 , "aqua");
+                drawText("f) TICK(); ", 16, false, 366 , "aqua");
 
             drawText("Hardware ", 21, false, 406, "violet");
                 let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                          
-                drawText(swordText, 20, false, 436, "aqua");        
+                drawText(swordText, 16, false, 436, "aqua");        
 
                 let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                         
-                drawText(armorText, 20, false, 457, "aqua");        
+                drawText(armorText, 16, false, 457, "aqua");        
             
         }
 
@@ -81,25 +81,25 @@ function draw(){
                 let spellText4 = (4) + ") " + (player.spells[3] || "");
                 let spellText5 = (5) + ") " + (player.spells[4] || "");
                 let spellText6 = (6) + ") " + (player.spells[5] || "");
-                drawText("LT/" + spellText1, 20, false, 170+0*21, "aqua");
-                drawText("RT/" + spellText2, 20, false, 170+1*21, "aqua");        
-                drawText("LB/" + spellText3, 20, false, 170+2*21, "aqua");        
-                drawText("RB/" + spellText4, 20, false, 170+3*21, "aqua");        
-                drawText("X/" + spellText5, 20, false, 170+4*21, "aqua");        
-                drawText("Y/" + spellText6, 20, false, 170+5*21, "aqua");                
+                drawText("LT/" + spellText1, 16, false, 170+0*21, "aqua");
+                drawText("RT/" + spellText2, 16, false, 170+1*21, "aqua");        
+                drawText("LB/" + spellText3, 16, false, 170+2*21, "aqua");        
+                drawText("RB/" + spellText4, 16, false, 170+3*21, "aqua");        
+                drawText("X/" + spellText5, 16, false, 170+4*21, "aqua");        
+                drawText("Y/" + spellText6, 16, false, 170+5*21, "aqua");                
             
             drawText("Functions ", 21, false, 315 , "violet");
-                drawText("SELECT/ENTER) USE(); ", 20, false, 345 , "aqua");
-                drawText("START/f) TICK(); ", 20, false, 366 , "aqua");
+                drawText("SELECT/ENTER) USE(); ", 16, false, 345 , "aqua");
+                drawText("START/f) TICK(); ", 16, false, 366 , "aqua");
 
 
             drawText("Hardware ", 21, false, 406, "violet");
                 let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
-                drawText("A/" + swordText, 20, false, 436, "aqua");        
+                drawText("A/" + swordText, 16, false, 436, "aqua");        
             
             
                 let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                        
-                drawText("B/" + armorText, 20, false, 457, "aqua");        
+                drawText("B/" + armorText, 16, false, 457, "aqua");        
             
             drawText("Gamepad Connected ", 21, false, 555, "violet");
         }
