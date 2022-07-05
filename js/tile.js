@@ -197,7 +197,7 @@ class Exit extends Tile{
             numArmor +=1;
             player.addArmor();
             playSound("pickup_armor")
-            this.tier1Sword = false;
+            this.tier1Armor = false;
         }else{
             score +=1;
             this.tier1Armor = false;
