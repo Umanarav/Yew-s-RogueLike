@@ -21,7 +21,7 @@
     numTiles = 9;
     uiWidth = 4;
     level = 1;
-    maxHp = 6;
+    maxHp = 12;
 
     spritesheet = new Image();
     spritesheet.src = 'images/spritesheet.png';
@@ -76,7 +76,7 @@
                         player.addSpell();
                     }
                 }else{
-                    player.hp = maxHp;
+                    player.hp += 6;
                     score += 3;
                     if(numSpells < 6){
                         numSpells += 1;
