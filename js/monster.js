@@ -67,8 +67,8 @@ class Monster{
         for(let i=0; i<this.hp; i++){
             drawSprite(
                 9,
-                this.getDisplayX() + (i%6)*(2.6/16),   
-                this.getDisplayY() - Math.floor(i/6)*(2.6/16)
+                this.getDisplayX() + (i%6)*(2.66666666667/16),   
+                this.getDisplayY() - Math.floor(i/6)*(2.66666666667/16)
             );
         }
     }	
