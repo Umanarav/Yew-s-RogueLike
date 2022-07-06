@@ -192,11 +192,13 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     if(playerSpells){
         player.spells = playerSpells;
     } 
-    randomPassableTile().replace(Exit);
 
     if(Math.random() * 10 < 5){
      randomPassableTile().replace(Well);
     }
+
+    randomPassableTileNotWell().replace(Exit);
+
 }
 
 function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){         

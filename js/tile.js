@@ -2,12 +2,13 @@ readyToExit = false;
 readyToDrink = false;
 
 class Tile{
-	constructor(x, y, sprite, passable, hazard){
+	constructor(x, y, sprite, passable, hazard, object){
         this.x = x;
         this.y = y;
         this.sprite = sprite;
         this.passable = passable;
         this.hazard = hazard;
+        this.object = object;
 	}
 
 	replace(newTileType){
@@ -223,7 +224,7 @@ class Exit extends Tile{
 
 class Well extends Tile{
     constructor(x, y){
-        super(x, y, 19, true);
+        super(x, y, 19, true, false, true);
         this.well = true;
     }
 
@@ -277,7 +278,7 @@ class Well extends Tile{
 
 class EmptyWell extends Tile{
     constructor(x, y){
-        super(x, y, 20, true);
+        super(x, y, 20, true, false, true);
     }
 
     stepOn(monster){

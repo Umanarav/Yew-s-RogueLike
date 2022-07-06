@@ -125,6 +125,25 @@ function randomHazardTile(){
     return tile;
 }
 
+function randomPassableTileNotWell(){
+    let tile;
+    tryTo("get random passable tile that isn't well", function(){
+        let x = randomRange(0,numTiles-1);
+        let y = randomRange(0,numTiles-1);
+        if(level === 6){
+            tile = getBossTile(x, y);
+        }else{
+            tile = getTile(x, y);  
+        }
+
+        return tile.passable && !tile.monster && !tile.object;
+    });
+    return tile;
+}
+
+
+
+
 
 
 
