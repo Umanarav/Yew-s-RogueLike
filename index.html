@@ -4,6 +4,11 @@
 
 <body><img id="audioSymbol" src="images/img.png" onclick="muteAudio()"/></body>
 <canvas></canvas>
+<div style="display:none;">
+  <img id="rp0image"
+       src="images/spritesheet.png"
+       width="512" height="16">
+</div>
 <script src="js/game.js"></script>
 <script src="js/map.js"></script>
 <script src="js/tile.js"></script>
@@ -38,8 +43,10 @@
 
     document.querySelector("html").onkeypress = function(e){
         console.log(e.key);
-        if(gameState == "title"){                              
-            startGame();                
+        if(gameState == "title"){
+            showRpSection0();                              
+        }else if(gameState === "rpSection0"){
+            startGame();               
         }else if(gameState === "rpSection1"){
             startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState == "dead"){                             

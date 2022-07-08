@@ -163,14 +163,27 @@ function showTitle(){
     drawScores(); 
 }
 
+function showRpSection0(){                                          
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    gameState = "rpSection0";
+
+    drawText("RP", 40, true, canvas.height/2 - 110, "white");
+    drawText("SECTION 0", 70, true, canvas.height/2 - 50, "white"); 
+    drawText("(Press enter to continue)", 40, true, canvas.height/2, "white");
+    ctx.drawImage(rp0image, canvas.height/2 - 115, canvas.height/2 + 50) 
+}
+
 function showRpSection1(){                                          
-    ctx.fillStyle = 'rgba(0,0,0,.75)';
+    ctx.fillStyle = 'rgba(0,0,0,1)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     gameState = "rpSection1";
 
     drawText("RP", 40, true, canvas.height/2 - 110, "white");
-    drawText("SECTION", 70, true, canvas.height/2 - 50, "white");  
+    drawText("SECTION 1", 70, true, canvas.height/2 - 50, "white"); 
+    drawText("(Press enter to continue)", 40, true, canvas.height/2, "white"); 
 }
 
 function startGame(){
@@ -178,7 +191,7 @@ function startGame(){
     soundStopped = false;                                       
     level = 5;
     score = 0;
-    numSpells = 1;
+    numSpells = 6;
     numBossSpells = 1;
     numSword = 1;
     numArmor = 1;
