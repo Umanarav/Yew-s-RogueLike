@@ -163,15 +163,25 @@ function showTitle(){
     drawScores(); 
 }
 
+function showRpSection1(){                                          
+    ctx.fillStyle = 'rgba(0,0,0,.75)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    gameState = "rpSection1";
+
+    drawText("RP", 40, true, canvas.height/2 - 110, "white");
+    drawText("SECTION", 70, true, canvas.height/2 - 50, "white");  
+}
+
 function startGame(){
     playSound("music");
     soundStopped = false;                                       
-    level = 1;
+    level = 5;
     score = 0;
-    numSpells =0;
+    numSpells = 1;
     numBossSpells = 1;
-    numSword = 0;
-    numArmor = 0;
+    numSword = 1;
+    numArmor = 1;
     tier1SwordEquipped = false;
     tier1ArmorEquipped = false;
     startLevel(startingHp);
@@ -199,6 +209,8 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 
     randomPassableTileNotWell().replace(Exit);
 
+    gameState = "running";
+
 }
 
 function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){         
@@ -214,6 +226,7 @@ function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){
     if(playerSpells){
         player.spells = playerSpells;
     } 
+    gameState = "running";
 }
 
 function drawText(text, size, centered, textY, color){

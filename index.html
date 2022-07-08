@@ -40,6 +40,8 @@
         console.log(e.key);
         if(gameState == "title"){                              
             startGame();                
+        }else if(gameState === "rpSection1"){
+            startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState == "dead"){                             
             showTitle();                                        
         }else if(gameState == "running"){ 
@@ -55,8 +57,8 @@
                     addScore(score, true); 
                     showTitle();
                 }else if(level === 5){
-                    level++;
-                    startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+                    showRpSection1();
+                    level++;  
                 }else{
                     level++;
                     startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
