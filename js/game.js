@@ -64,7 +64,7 @@ function draw(){
                 drawText("ENTER) USE(); ", 16, false, 345 , "aqua");
                 drawText("f) TICK(); ", 16, false, 366 , "aqua");
 
-            drawText("Hardware ", 21, false, 406, "violet");
+            drawText("Hardware (Press # to Equip)", 21, false, 406, "violet");
                 let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                          
                 drawText(swordText, 16, false, 436, "aqua");        
 
@@ -93,7 +93,7 @@ function draw(){
                 drawText("START/f) TICK(); ", 16, false, 366 , "aqua");
 
 
-            drawText("Hardware ", 21, false, 406, "violet");
+            drawText("Hardware (Press # to Equip) ", 21, false, 406, "violet");
                 let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                        
                 drawText("A/" + swordText, 16, false, 436, "aqua");        
             
@@ -189,12 +189,12 @@ function showRpSection1(){
 function startGame(){
     playSound("music");
     soundStopped = false;                                       
-    level = 5;
+    level = 1;
     score = 0;
-    numSpells = 6;
+    numSpells = 1;
     numBossSpells = 1;
-    numSword = 1;
-    numArmor = 1;
+    numSword = 0;
+    numArmor = 0;
     tier1SwordEquipped = false;
     tier1ArmorEquipped = false;
     startLevel(startingHp);
