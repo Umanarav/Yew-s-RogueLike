@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="styles.css">
 
 <body><img id="audioSymbol" src="images/img.png" onclick="muteAudio()"/></body>
+
 <canvas></canvas>
 <div style="display:none;">
   <img id="rp0image"
@@ -44,8 +45,10 @@
     document.querySelector("html").onkeypress = function(e){
         console.log(e.key);
         if(gameState == "title"){
+            animatingTitle = false;
             showRpSection0();                              
         }else if(gameState === "rpSection0"){
+            animating = false; 
             startGame();               
         }else if(gameState === "rpSection1"){
             startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
@@ -76,6 +79,7 @@
             if(e.key==="Enter" && readyToDrink === true){
                 playSound("well");
                 welldepleted = true;
+                readyToDrink = false;
                 if(player.hp === maxHp){
                     score += 6;
                     if(numSpells < 6){

@@ -1,3 +1,151 @@
+/*animation*/
+const titleBackdrop0 = new Image();
+const titleBackdrop1 = new Image();
+const titleBackdrop2 = new Image();
+const titleBackdrop3 = new Image();
+const titleBackdrop4 = new Image();
+const titleBackdrop5 = new Image();
+const titleBackdrop6 = new Image();
+
+var someNumberTitle = 11;
+animatingTitle = false;
+
+function drawTitleBackdrop() {
+    if (animatingTitle === true){
+        someNumberTitle += 1;
+        console.log(someNumberTitle);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        ctx.fillStyle = 'rgba(0,0,0,.75)';
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+
+        if (someNumberTitle === 11 || someNumberTitle === 12){
+            someNumberTitle +=1
+            ctx.drawImage(titleBackdrop0, 0, 0,)
+        }else if(someNumberTitle === 13 || someNumberTitle === 14){
+            someNumberTitle +=1
+            ctx.drawImage(titleBackdrop1, 0, 0,)
+        }else if(someNumberTitle === 15 || someNumberTitle === 16){
+            someNumberTitle +=1
+            ctx.drawImage(titleBackdrop2, 0, 0,)
+        }else if(someNumberTitle === 17 || someNumberTitle === 18){
+            someNumberTitle +=1
+            ctx.drawImage(titleBackdrop3, 0, 0,)
+        }else if(someNumberTitle === 19 || someNumberTitle === 20){
+            someNumberTitle +=1
+            ctx.drawImage(titleBackdrop4, 0, 0,)
+        }else if(someNumberTitle === 21 || someNumberTitle === 22){
+            someNumberTitle +=1
+            ctx.drawImage(titleBackdrop5, 0, 0,)
+        }
+        else if(someNumberTitle === 23 || someNumberTitle === 24){
+            someNumberTitle = 11
+            ctx.drawImage(titleBackdrop6, 0, 0,)
+        }
+
+        drawText("Yew's", 40, true, canvas.height/2 - 110, "white");
+        drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white"); 
+        drawScores(); 
+
+        setTimeout(() => {
+            window.requestAnimationFrame(drawTitleBackdrop); 
+        }, 150);
+    }else {
+        return;
+    }
+}
+
+/*animation*/
+const rpSection0Backdrop0 = new Image();
+const rpSection0Backdrop1 = new Image();
+const rpSection0Backdrop2 = new Image();
+const rpSection0Backdrop3 = new Image();
+const rpSection0Backdrop4 = new Image();
+const rpSection0Backdrop5 = new Image();
+const rpSection0Backdrop6 = new Image();
+
+var someNumber = 10;
+animating = false;
+function init() {
+    rpSection0Backdrop0.src = 'rpSection0Backdrop/rpSection0Backdrop0.png'
+    rpSection0Backdrop1.src = 'rpSection0Backdrop/rpSection0Backdrop1.png'
+    rpSection0Backdrop2.src = 'rpSection0Backdrop/rpSection0Backdrop2.png'
+    rpSection0Backdrop3.src = 'rpSection0Backdrop/rpSection0Backdrop3.png'
+    rpSection0Backdrop4.src = 'rpSection0Backdrop/rpSection0Backdrop4.png'
+    rpSection0Backdrop5.src = 'rpSection0Backdrop/rpSection0Backdrop5.png'
+    rpSection0Backdrop6.src = 'rpSection0Backdrop/rpSection0Backdrop6.png'
+
+    titleBackdrop0.src = 'titleBackdrop/titleBackdrop0.png'
+    titleBackdrop1.src = 'titleBackdrop/titleBackdrop1.png'
+    titleBackdrop2.src = 'titleBackdrop/titleBackdrop2.png'
+    titleBackdrop3.src = 'titleBackdrop/titleBackdrop3.png'
+    titleBackdrop4.src = 'titleBackdrop/titleBackdrop4.png'
+    titleBackdrop5.src = 'titleBackdrop/titleBackdrop5.png'
+    titleBackdrop6.src = 'titleBackdrop/titleBackdrop6.png'
+
+    window.requestAnimationFrame(draw);
+}
+
+function drawRpSection0Backdrop() {
+    if (animating === true){
+        someNumber += 1;
+        console.log(someNumber);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        ctx.fillStyle = 'rgba(0,0,0,.75)';
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+
+        if (someNumber === 11 || someNumber === 12){
+            someNumber +=1
+            ctx.drawImage(rpSection0Backdrop0, 0, 0,)
+        }else if(someNumber === 13 || someNumber === 14){
+            someNumber +=1
+            ctx.drawImage(rpSection0Backdrop1, 0, 0,)
+        }else if(someNumber === 15 || someNumber === 16){
+            someNumber +=1
+            ctx.drawImage(rpSection0Backdrop2, 0, 0,)
+        }else if(someNumber === 17 || someNumber === 18){
+            someNumber +=1
+            ctx.drawImage(rpSection0Backdrop3, 0, 0,)
+        }else if(someNumber === 19 || someNumber === 20){
+            someNumber +=1
+            ctx.drawImage(rpSection0Backdrop4, 0, 0,)
+        }else if(someNumber === 21 || someNumber === 22){
+            someNumber +=1
+            ctx.drawImage(rpSection0Backdrop5, 0, 0,)
+        }
+        else if(someNumber === 23 || someNumber === 24){
+            someNumber = 11
+            ctx.drawImage(rpSection0Backdrop6, 0, 0,)
+        }
+
+        /*text, size, centered, textY, color*/
+
+        drawText("The Monsters", 20, false, 123, "black", 107);
+        drawText("have escaped!", 20, false, 145, "black", 107);
+        drawText("MX-01 released", 20, false, 178, "black", 107);
+        drawText("for containment", 20, false, 199, "black", 106);
+        drawText("protocol.", 20, false, 220, "black", 106);
+
+        drawText("The Monsters", 20, false, 121, "white", 105);
+        drawText("have escaped!", 20, false, 142, "white", 105);
+        drawText("MX-01 released", 20, false, 176, "white", 105);
+        drawText("for containment", 20, false, 197, "white", 104);
+        drawText("protocol.", 20, false, 218, "white", 104);     
+
+        drawText("(Press enter to continue)", 21, true, canvas.height/2, "white");
+        ctx.drawImage(rp0image, canvas.height/2 - 115, canvas.height/2 + 230) 
+
+        setTimeout(() => {
+            window.requestAnimationFrame(drawRpSection0Backdrop); 
+        }, 150);
+    }else {
+        return;
+    }
+}
+
+/*Other Functions*/
+
 function setupCanvas(){
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
@@ -155,24 +303,21 @@ function showTitle(){
     ctx.fillStyle = 'rgba(0,0,0,.75)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
+    animatingTitle = true;
     gameState = "title";
 
-    drawText("Yew's", 40, true, canvas.height/2 - 110, "white");
-    drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white"); 
+    drawTitleBackdrop();
 
-    drawScores(); 
 }
 
 function showRpSection0(){                                          
     ctx.fillStyle = 'rgba(0,0,0,1)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
+    animating = true;
     gameState = "rpSection0";
-
-    drawText("RP", 40, true, canvas.height/2 - 110, "white");
-    drawText("SECTION 0", 70, true, canvas.height/2 - 50, "white"); 
-    drawText("(Press enter to continue)", 40, true, canvas.height/2, "white");
-    ctx.drawImage(rp0image, canvas.height/2 - 115, canvas.height/2 + 50) 
+    drawRpSection0Backdrop();
+    
 }
 
 function showRpSection1(){                                          
@@ -242,14 +387,12 @@ function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){
     gameState = "running";
 }
 
-function drawText(text, size, centered, textY, color){
+function drawText(text, size, centered, textY, color, textX){
     ctx.fillStyle = color;
     ctx.font = size + "px monospace";
-    let textX;
+
     if(centered){
         textX = (canvas.width-ctx.measureText(text).width)/2;
-    }else{
-        textX = canvas.width-uiWidth*tileSize+25;
     }
 
     ctx.fillText(text, textX, textY);
@@ -349,4 +492,4 @@ function pauseSound(soundName){
     sounds[soundName].pause();
 }
 
-
+init();
