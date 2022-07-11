@@ -1,3 +1,4 @@
+//
 /*animation*/
 const titleBackdrop0 = new Image();
 const titleBackdrop1 = new Image();
