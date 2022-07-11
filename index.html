@@ -46,10 +46,12 @@
         console.log(e.key);
         if(gameState == "title"){
             animatingTitle = false;
+            gameState = "rpSection0";
             showRpSection0();                              
         }else if(gameState === "rpSection0"){
-            animating = false; 
-            startGame();               
+            animating = false;
+            gameState = "running";
+            startGame();              
         }else if(gameState === "rpSection1"){
             startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState == "dead"){                             

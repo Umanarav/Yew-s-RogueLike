@@ -8,6 +8,7 @@ const titleBackdrop5 = new Image();
 const titleBackdrop6 = new Image();
 
 var someNumberTitle = 11;
+
 animatingTitle = false;
 
 function drawTitleBackdrop() {
@@ -64,8 +65,25 @@ const rpSection0Backdrop4 = new Image();
 const rpSection0Backdrop5 = new Image();
 const rpSection0Backdrop6 = new Image();
 
+const monsterEscapeText0 = new Image();
+const monsterEscapeText1 = new Image();
+const monsterEscapeText2 = new Image();
+const monsterEscapeText3 = new Image();
+const monsterEscapeText4 = new Image();
+const monsterEscapeText5 = new Image();
+const monsterEscapeText6 = new Image();
+const monsterEscapeText7 = new Image();
+const monsterEscapeText8 = new Image();
+const monsterEscapeText9 = new Image();
+const monsterEscapeText10 = new Image();
+const monsterEscapeText11 = new Image();
+const monsterEscapeText12 = new Image();
+const monsterEscapeText13 = new Image();
+
 var someNumber = 10;
+var someNumberEscapeText = 10;
 animating = false;
+
 function init() {
     rpSection0Backdrop0.src = 'rpSection0Backdrop/rpSection0Backdrop0.png'
     rpSection0Backdrop1.src = 'rpSection0Backdrop/rpSection0Backdrop1.png'
@@ -83,13 +101,29 @@ function init() {
     titleBackdrop5.src = 'titleBackdrop/titleBackdrop5.png'
     titleBackdrop6.src = 'titleBackdrop/titleBackdrop6.png'
 
+    monsterEscapeText0.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText0.png'
+    monsterEscapeText1.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText1.png'
+    monsterEscapeText2.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText2.png'
+    monsterEscapeText3.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText3.png'
+    monsterEscapeText4.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText4.png'
+    monsterEscapeText5.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText5.png'
+    monsterEscapeText6.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText6.png'
+    monsterEscapeText7.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText7.png'
+    monsterEscapeText8.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText8.png'
+    monsterEscapeText9.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText9.png'
+    monsterEscapeText10.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText10.png'
+    monsterEscapeText11.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText11.png'
+    monsterEscapeText12.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText12.png'
+    monsterEscapeText13.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText13.png'
+
     window.requestAnimationFrame(draw);
 }
 
 function drawRpSection0Backdrop() {
     if (animating === true){
         someNumber += 1;
-        console.log(someNumber);
+        someNumberEscapeText +=1;
+        console.log(someNumberEscapeText);
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         ctx.fillStyle = 'rgba(0,0,0,.75)';
@@ -119,22 +153,54 @@ function drawRpSection0Backdrop() {
             ctx.drawImage(rpSection0Backdrop6, 0, 0,)
         }
 
-        /*text, size, centered, textY, color*/
+        if (someNumberEscapeText === 11 || someNumberEscapeText === 12){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText0, 0, 0,)
+        }else if(someNumberEscapeText === 13 || someNumberEscapeText === 14){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText1, 0, 0,)
+        }else if(someNumberEscapeText === 15 || someNumberEscapeText === 16){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText2, 0, 0,)
+        }else if(someNumberEscapeText === 17 || someNumberEscapeText === 18){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText3, 0, 0,)
+        }else if(someNumberEscapeText === 19 || someNumberEscapeText === 20){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText4, 0, 0,)
+        }else if(someNumberEscapeText === 21 || someNumberEscapeText === 22){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText5, 0, 0,)
+        }else if(someNumberEscapeText === 23 || someNumberEscapeText === 24){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText6, 0, 0,)
+        }
+        else if(someNumberEscapeText === 25 || someNumberEscapeText === 26){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText7, 0, 0,)
+        }else if(someNumberEscapeText === 27 || someNumberEscapeText === 28){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText8, 0, 0,)
+        }else if(someNumberEscapeText === 29 || someNumberEscapeText === 30){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText9, 0, 0,)
+        }else if(someNumberEscapeText === 31 || someNumberEscapeText === 32){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText10, 0, 0,)
+        }else if(someNumberEscapeText === 33 || someNumberEscapeText === 34){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText11, 0, 0,)
+        }else if(someNumberEscapeText === 35 || someNumberEscapeText === 36){
+            someNumberEscapeText +=1
+            ctx.drawImage(monsterEscapeText12, 0, 0,)
+        }else if(someNumberEscapeText >= 37){
+            someNumberEscapeText = 25
+            ctx.drawImage(monsterEscapeText13, 0, 0,)
+        }
 
-        drawText("The Monsters", 20, false, 123, "black", 107);
-        drawText("have escaped!", 20, false, 145, "black", 107);
-        drawText("MX-01 released", 20, false, 178, "black", 107);
-        drawText("for containment", 20, false, 199, "black", 106);
-        drawText("protocol.", 20, false, 220, "black", 106);
-
-        drawText("The Monsters", 20, false, 121, "white", 105);
-        drawText("have escaped!", 20, false, 142, "white", 105);
-        drawText("MX-01 released", 20, false, 176, "white", 105);
-        drawText("for containment", 20, false, 197, "white", 104);
-        drawText("protocol.", 20, false, 218, "white", 104);     
+        /*text, size, centered, textY, color*/  
 
         drawText("(Press enter to continue)", 21, true, canvas.height/2, "white");
-        ctx.drawImage(rp0image, canvas.height/2 - 115, canvas.height/2 + 230) 
 
         setTimeout(() => {
             window.requestAnimationFrame(drawRpSection0Backdrop); 
@@ -172,7 +238,7 @@ function drawSprite(sprite, x, y){
 }
 
 function draw(){
-    if(gameState == "running" || gameState == "dead"){  
+    if(gameState === 'running'|| gameState == "dead"){  
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         screenshake();
@@ -393,6 +459,8 @@ function drawText(text, size, centered, textY, color, textX){
 
     if(centered){
         textX = (canvas.width-ctx.measureText(text).width)/2;
+    }else if(textX === undefined){
+        textX = canvas.width-uiWidth*tileSize+25;
     }
 
     ctx.fillText(text, textX, textY);
