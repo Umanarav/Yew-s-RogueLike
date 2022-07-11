@@ -199,10 +199,6 @@ function drawRpSection0Backdrop() {
             ctx.drawImage(monsterEscapeText13, 0, 0,)
         }
 
-        /*text, size, centered, textY, color*/  
-
-        drawText("(Press enter to continue)", 21, true, canvas.height/2, "white");
-
         setTimeout(() => {
             window.requestAnimationFrame(drawRpSection0Backdrop); 
         }, 150);
