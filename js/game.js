@@ -1,3 +1,5 @@
+gameState = "Title";
+
 //
 /*animation*/
 const titleBackdrop0 = new Image();
@@ -314,8 +316,11 @@ function draw(){
             
             drawText("Gamepad Connected ", 21, false, 555, "violet");
         }
+    }else {
+        return;
     }
 }
+
  
 function tick(){
     for(let k=monsters.length-1;k>=0;k--){
@@ -423,6 +428,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     if(playerSpells){
         player.spells = playerSpells;
     } 
+
 
     if(Math.random() * 10 < 5){
      randomPassableTile().replace(Well);

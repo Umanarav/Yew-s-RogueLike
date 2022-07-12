@@ -88,7 +88,7 @@ function randomPassableTile(){
             tile = getTile(x, y);  
         }
 
-        return tile.passable && !tile.monster;
+        return tile.passable && !tile.monster && !tile.treasure;
     });
     return tile;
 }
