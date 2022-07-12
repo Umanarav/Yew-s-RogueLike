@@ -45,6 +45,7 @@
     document.querySelector("html").onkeypress = function(e){
         console.log(e.key);
         if(gameState == "title"){
+            initSounds();
             animatingTitle = false;
             gameState = "rpSection0";
             showRpSection0();                              
@@ -129,9 +130,7 @@
 
     setInterval(draw, 15);
 
-    setupCanvas();
-
-    initSounds(); 
+    setupCanvas(); 
 
     function muteAudio() {
         if(soundStopped === false){
