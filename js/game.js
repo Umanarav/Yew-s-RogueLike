@@ -71,6 +71,15 @@ const rpSection0Backdrop5 = new Image();
 const rpSection0Backdrop6 = new Image();
 
 const rpSection1Backdrop0 = new Image();
+const rpSection1Backdrop1 = new Image();
+const rpSection1Backdrop2 = new Image();
+const rpSection1Backdrop3 = new Image();
+const rpSection1Backdrop4 = new Image();
+const rpSection1Backdrop5 = new Image();
+const rpSection1Backdrop6 = new Image();
+const rpSection1Backdrop7 = new Image();
+const rpSection1Backdrop8 = new Image();
+const rpSection1Backdrop9 = new Image();
 
 const monsterEscapeText0 = new Image();
 const monsterEscapeText1 = new Image();
@@ -89,7 +98,9 @@ const monsterEscapeText13 = new Image();
 
 var someNumber = 10;
 var someNumberEscapeText = 10;
+var section1Number = 0;
 animating = false;
+animatingSection1 = false;
 
 function init() {
     rpSection0Backdrop0.src = 'rpSection0Backdrop/rpSection0Backdrop0.png'
@@ -101,6 +112,15 @@ function init() {
     rpSection0Backdrop6.src = 'rpSection0Backdrop/rpSection0Backdrop6.png'
 
     rpSection1Backdrop0.src = 'rpSection1Backdrop/rpSection1Backdrop0.png'
+    rpSection1Backdrop1.src = 'rpSection1Backdrop/rpSection1Backdrop1.png'
+    rpSection1Backdrop2.src = 'rpSection1Backdrop/rpSection1Backdrop2.png'
+    rpSection1Backdrop3.src = 'rpSection1Backdrop/rpSection1Backdrop3.png'
+    rpSection1Backdrop4.src = 'rpSection1Backdrop/rpSection1Backdrop4.png'
+    rpSection1Backdrop5.src = 'rpSection1Backdrop/rpSection1Backdrop5.png'
+    rpSection1Backdrop6.src = 'rpSection1Backdrop/rpSection1Backdrop6.png'
+    rpSection1Backdrop7.src = 'rpSection1Backdrop/rpSection1Backdrop7.png'
+    rpSection1Backdrop8.src = 'rpSection1Backdrop/rpSection1Backdrop8.png'
+    rpSection1Backdrop9.src = 'rpSection1Backdrop/rpSection1Backdrop9.png'
 
     titleBackdrop0.src = 'titleBackdrop/TitleBackdrop0.png'
     titleBackdrop1.src = 'titleBackdrop/TitleBackdrop1.png'
@@ -216,7 +236,47 @@ function drawRpSection0Backdrop() {
 }
 
 function drawRpSection1Backdrop() {
-    
+    if (animatingSection1 === true){
+        section1Number += 1;
+        console.log(section1Number);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        ctx.fillStyle = 'rgba(0,0,0,.75)';
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+
+        if (section1Number === 1){
+            ctx.drawImage(rpSection1Backdrop0, 0, 0,)
+        }else if(section1Number === 2){
+            ctx.drawImage(rpSection1Backdrop1, 0, 0,)
+        }else if(section1Number === 3){
+            ctx.drawImage(rpSection1Backdrop2, 0, 0,)
+        }else if(section1Number === 4){
+            ctx.drawImage(rpSection1Backdrop3, 0, 0,)
+        }else if(section1Number === 5){
+            ctx.drawImage(rpSection1Backdrop4, 0, 0,)
+        }else if(section1Number === 6){
+            ctx.drawImage(rpSection1Backdrop5, 0, 0,)
+        }else if(section1Number === 7){
+            ctx.drawImage(rpSection1Backdrop6, 0, 0,)
+        }else if(section1Number === 8){
+            ctx.drawImage(rpSection1Backdrop7, 0, 0,)
+        }else if(section1Number === 9){
+            ctx.drawImage(rpSection1Backdrop8, 0, 0,)
+        }else if(section1Number === 10){
+            section1Number = 0;
+            ctx.drawImage(rpSection1Backdrop9, 0, 0,)
+        }
+
+
+
+
+
+
+
+        setTimeout(() => {
+            window.requestAnimationFrame(drawRpSection1Backdrop); 
+        }, 150);
+    }
 }
 
 function drawRpSection2Backdrop() {
@@ -459,10 +519,10 @@ function showRpSection0(){
 function showRpSection1(){                                          
     ctx.fillStyle = 'rgba(0,0,0,1)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
-
+    animatingSection1 = true;
     gameState = "rpSection1";
-    drawText("(Press enter to continue)", 40, true, canvas.height/2 + 250, "white");
-    ctx.drawImage(rpSection1Backdrop0, 0, 0,) 
+    
+    drawRpSection1Backdrop();
 }
 
 function showRpSection2(){                                          
@@ -479,7 +539,7 @@ function showRpSection2(){
 function startGame(){
     playSound("music");
     soundStopped = false;                                       
-    level = 1;
+    level = 5;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
