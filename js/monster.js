@@ -43,6 +43,18 @@ class Monster{
        }
     }
 
+    doStuffOpposite(){
+       let neighbors = this.tile.getAdjacentPassableNeighbors();
+       
+       neighbors = neighbors.filter(t => !t.monster || t.monster.isPlayer);
+
+       if(neighbors.length){
+           neighbors.sort((a,b) => a.dist(player.tile) + b.dist(player.tile));
+           let newTile = neighbors[0];
+           this.tryMove(newTile.x - this.tile.x, newTile.y - this.tile.y);
+       }
+    }
+
     getDisplayX(){                     
         return this.tile.x + this.offsetX;
     }
@@ -77,7 +89,7 @@ class Monster{
         let newTile = this.tile.getNeighbor(dx,dy);
         if(newTile.passable){
         	this.lastMove = [dx,dy];
-            if(!newTile.monster){
+            if(!newTile.monster && !newTile.player){
                 this.move(newTile);
             }else{
               	if(this.isPlayer != newTile.monster.isPlayer){
@@ -87,14 +99,14 @@ class Monster{
                     newTile.monster.hit((this.baseAttack + this.bonusAttack));
                     this.bonusAttack = 0;
 
-                    shakeAmount = 5;
+                    shakeAmount = 4;
 
                     this.offsetX = (newTile.x - this.tile.x)/2;         
                     this.offsetY = (newTile.y - this.tile.y)/2;
                 }
             }
             return true;
-        }
+        };
     }
 
     hit(damage){
@@ -153,6 +165,8 @@ class Monster{
         this.tile.monster = null;
         if(this.isPlayer){
             this.sprite = 1;
+            gameState = "dead";
+            moonShoes = false;
         }
     }
 
@@ -243,6 +257,29 @@ class Bird extends Monster{
     }
 }
 
+class Mage extends Monster{
+    constructor(tile){
+        super(tile, 27, 2);
+        this.isMage = true;
+    }
+
+    doStuff(){
+        let mageX = Math.floor(Math.random() * 3)
+        let mageY = Math.floor(Math.random() * 3)
+
+        if (Math.random() > 0.5){
+            this.tryMove(-1 * (mageX), -1 * (mageY));  
+        }else {
+            this.tryMove(mageX, mageY);
+            let neighbors = this.tile.getAdjacentNeighbors().filter(t => t.passable && inBounds(t.x,t.y) && !t.exit);
+            if(neighbors.length){
+                neighbors[0].replace(MagicRubble);
+            }
+        }
+    }
+
+}
+
 class Snake extends Monster{
     constructor(tile){
         super(tile, 5, 1);
@@ -319,22 +356,52 @@ class Boss extends Monster{
     }
 
     doStuff(){
-        this.attackedThisTurn = false;        
-        super.doStuff();
-
-        if(Math.random() < 0.1){
-            player.move(randomHazardTile());
-            bossDamageReduction += 1;
-            console.log(bossDamageReduction);
+        let randomBossAbility = Math.floor(Math.random() * 5);
+        console.log(randomBossAbility);
+        if(randomBossAbility === 0 /*Mage ability*/){
+            let bossX = Math.floor(Math.random() * 3)
+            let bossY = Math.floor(Math.random() * 3)
+            let neighbors = this.tile.getAdjacentNeighbors().filter(t => t.passable && inBounds(t.x,t.y));
+                if(neighbors.length){
+                    neighbors[0].replace(Rubble);
+                    this.heal(1);
+                }
+            if (Math.random() > 0.5){
+                this.tryMove(-1 * (bossX), -1 * (bossY));  
+            }else {
+                this.tryMove(bossX, bossY);
+            }
         }
 
-        let neighbors = this.tile.getAdjacentNeighbors().filter(t => t.passable && inBounds(t.x,t.y));
-        if(neighbors.length){
-            neighbors[0].replace(Rubble);
-            this.heal(1);
-        }else if(!this.attackedThisTurn){
+        if(randomBossAbility === 1 /*Snake Abiity*/){
+            this.attackedThisTurn = false;
             super.doStuff();
-        };
+
+            if(!this.attackedThisTurn){
+                super.doStuff();
+            }  
+        }
+
+        if(randomBossAbility === 2 /*Tank Ability*/){
+            return;
+        }
+
+        if(randomBossAbility === 3 /*Eater Ability*/){
+            let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
+            if(neighbors.length){
+                neighbors[0].replace(BossFloor);
+                this.heal(0.5);
+            }else{
+                super.doStuff();
+            }    
+        }
+
+        if(randomBossAbility === 4){
+            let neighbors = this.tile.getAdjacentPassableNeighbors();
+            if(neighbors.length){
+                this.tryMove(neighbors[0].x - this.tile.x, neighbors[0].y - this.tile.y);
+            }
+        }
 
     }
 }

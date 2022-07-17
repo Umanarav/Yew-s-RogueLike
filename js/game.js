@@ -1,4 +1,6 @@
 gameState = "Title";
+moonShoes = false;
+
 
 //
 /*animation*/
@@ -68,6 +70,8 @@ const rpSection0Backdrop4 = new Image();
 const rpSection0Backdrop5 = new Image();
 const rpSection0Backdrop6 = new Image();
 
+const rpSection1Backdrop0 = new Image();
+
 const monsterEscapeText0 = new Image();
 const monsterEscapeText1 = new Image();
 const monsterEscapeText2 = new Image();
@@ -95,6 +99,8 @@ function init() {
     rpSection0Backdrop4.src = 'rpSection0Backdrop/rpSection0Backdrop4.png'
     rpSection0Backdrop5.src = 'rpSection0Backdrop/rpSection0Backdrop5.png'
     rpSection0Backdrop6.src = 'rpSection0Backdrop/rpSection0Backdrop6.png'
+
+    rpSection1Backdrop0.src = 'rpSection1Backdrop/rpSection1Backdrop0.png'
 
     titleBackdrop0.src = 'titleBackdrop/TitleBackdrop0.png'
     titleBackdrop1.src = 'titleBackdrop/TitleBackdrop1.png'
@@ -209,6 +215,14 @@ function drawRpSection0Backdrop() {
     }
 }
 
+function drawRpSection1Backdrop() {
+    
+}
+
+function drawRpSection2Backdrop() {
+    
+}
+
 /*Other Functions*/
 
 function setupCanvas(){
@@ -242,10 +256,24 @@ function draw(){
 
         screenshake();
 
-        for(let i=0;i<numTiles;i++){
-            for(let j=0;j<numTiles;j++){
-                getTile(i,j).draw();
-            }
+        if(level ===  6){
+            for(let i=0;i<numTiles;i++){
+                for(let j=0;j<numTiles;j++){
+                    getBossTile(i,j).draw();
+                }
+            }    
+        }else if (level === 7){
+           for(let i=0;i<numTiles;i++){
+                for(let j=0;j<numTiles;j++){
+                    getMutateTile(i,j).draw();
+                }
+            } 
+        }else {
+            for(let i=0;i<numTiles;i++){
+                for(let j=0;j<numTiles;j++){
+                    getTile(i,j).draw();
+                }
+            }    
         }
 
         for(let i=0;i<monsters.length;i++){
@@ -255,7 +283,7 @@ function draw(){
         player.draw();
 
         drawText("Level: "+level, 30, false, 40, "violet");
-        drawText("Score: "+score, 30, false, 70, "violet");
+        drawText("Disk(s): "+score, 30, false, 70, "violet");
         drawText("HP: "+player.hp, 30, false, 100, "violet");
 
         if(gamepadConnected === false){
@@ -277,12 +305,20 @@ function draw(){
                 drawText("ENTER) USE(); ", 16, false, 345 , "aqua");
                 drawText("f) TICK(); ", 16, false, 366 , "aqua");
 
-            drawText("Hardware (Press # to Equip)", 21, false, 406, "violet");
+            drawText("Hardware (Press #)", 21, false, 406, "violet");
                 let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));                          
                 drawText(swordText, 16, false, 436, "aqua");        
 
                 let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                         
-                drawText(armorText, 16, false, 457, "aqua");        
+                drawText(armorText, 16, false, 457, "aqua");
+
+            drawText("Mutations", 21, false, 497, "violet");
+                if (moonShoes === true){
+                    drawText("9) Move two (hold shift)", 16, false, 517, "aqua");     
+                }else if (readyToMutate === true){
+                    drawText("9) Press Enter to Mutate", 16, false, 517, "aqua");     
+                }
+                        
             
         }
 
@@ -332,15 +368,32 @@ function tick(){
 
     }
 
+    if (standingInFire === true){
+        player.hp -= 1
+        if (level === 6){
+            randomHazardTile().replace(BossFloor);
+        }else {
+            randomHazardTile().replace(Floor);  
+        }
+        if(player.hp <= 0){
+        player.die();
+        addScore(score, false);   
+        tier1SwordEquipped = false;
+        tier1ArmorEquipped = false;
+        readyToExit = false;
+        gameState = "dead";
+        }
+    }
+
     player.update();
 
-    console.log(bossDamageReduction);
+
+    //console.log(bossDamageReduction);
 
     if(bossDamageReduction > 1){
         bossDamageReduction -=1;
-        console.log(bossDamageReduction);
+        //console.log(bossDamageReduction);
     }
-
 
     if(level === 6){
         if(Math.random() < .5){ 
@@ -348,16 +401,31 @@ function tick(){
             if(bossDamageReduction > 1){
             }
         }
-    }
+    }else if(level >= 4 && level <= 6){
+        if(Math.random() < .5){ 
+            randomHazardTile().replace(Floor);
+        }
+    };
 
 
     if(player.dead){
+        player.die();
         addScore(score, false);   
         tier1SwordEquipped = false;
         tier1ArmorEquipped = false;
         readyToExit = false;
         gameState = "dead";
     }
+
+    if(player.hp <= 0){
+        player.die();
+        addScore(score, false);   
+        tier1SwordEquipped = false;
+        tier1ArmorEquipped = false;
+        readyToExit = false;
+        gameState = "dead";
+    }
+
 
     spawnCounter--;
     if(spawnCounter <= 0){  
@@ -393,9 +461,18 @@ function showRpSection1(){
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     gameState = "rpSection1";
+    drawText("(Press enter to continue)", 40, true, canvas.height/2 + 250, "white");
+    ctx.drawImage(rpSection1Backdrop0, 0, 0,) 
+}
+
+function showRpSection2(){                                          
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    gameState = "rpSection2";
 
     drawText("RP", 40, true, canvas.height/2 - 110, "white");
-    drawText("SECTION 1", 70, true, canvas.height/2 - 50, "white"); 
+    drawText("SECTION 2", 70, true, canvas.height/2 - 50, "white"); 
     drawText("(Press enter to continue)", 40, true, canvas.height/2, "white"); 
 }
 
@@ -410,6 +487,8 @@ function startGame(){
     numArmor = 0;
     tier1SwordEquipped = false;
     tier1ArmorEquipped = false;
+    //moonShoes = false;
+    readyToMutate = false;
     startLevel(startingHp);
 
     gameState = "running";
@@ -418,23 +497,34 @@ function startGame(){
 function startLevel(playerHp, playerSpells, playerBaseAttack = 1){         
     readyToExit = false;
     spawnRate = 15;              
-    spawnCounter = spawnRate;                  
-    generateLevel();
+    spawnCounter = spawnRate;
+    if (level === 7){
+        console.log(level);
+        generateMutationLevel();
+    }else {
+        generateLevel();       
+    } 
 
     player = new Player(randomPassableTile());
     player.hp = playerHp;
     player.baseAttack = playerBaseAttack;
     welldepleted = false;
+    mutatedepleted = false;
     if(playerSpells){
         player.spells = playerSpells;
     } 
 
-
-    if(Math.random() * 10 < 5){
-     randomPassableTile().replace(Well);
+    if (level < 6){
+        if(Math.random() * 10 < 5){
+            randomPassableTile().replace(Well);
+        }
     }
-
+    
     randomPassableTileNotWell().replace(Exit);
+
+    if (level === 7){
+        randomPassableTileNotWell().replace(Mutation1);    
+    }
 
     gameState = "running";
 
@@ -450,6 +540,7 @@ function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){
     player.hp = playerHp;
     player.baseAttack = playerBaseAttack;
     welldepleted = false;
+
     if(playerSpells){
         player.spells = playerSpells;
     } 

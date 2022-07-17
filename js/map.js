@@ -5,9 +5,13 @@ function generateLevel(){
 
     generateMonsters();
 
-    for(let i=0;i<3;i++){                                         
-        randomPassableTile().treasure = true;                            
-    }
+    if(level === 7){
+        return;
+    }else {
+        for(let i=0;i<3;i++){                                         
+            randomPassableTile().treasure = true;                            
+        }
+    }   
 }
 
 function generateBossLevel(){
@@ -17,6 +21,16 @@ function generateBossLevel(){
 
     generateBossMonsters();
 
+    /*for(let i=0;i<3;i++){                                         
+        randomPassableTile().treasure = true;                            
+    }*/
+}
+
+function generateMutationLevel(){
+    tryTo('generate map', function(){
+        return generateMutationTiles() == randomPassableTile().getConnectedTiles().length;
+    });
+    generateMonsters();
     /*for(let i=0;i<3;i++){                                         
         randomPassableTile().treasure = true;                            
     }*/
@@ -56,6 +70,23 @@ function generateBossTiles(){
     return passableTiles;
 }
 
+function generateMutationTiles(){
+    let passableTiles=0;
+    tiles = [];
+    for(let column=0;column<numTiles;column++){
+        tiles[column] = [];
+        for(let row=0;row<numTiles;row++){
+            if(Math.random() < 0.3 || !inBounds(column,row)){
+                tiles[column][row] = new MutateWall(column,row);
+            }else{
+                tiles[column][row] = new MutateFloor(column,row);
+                passableTiles++;
+            }
+        }
+    }
+    return passableTiles;
+}
+
 function inBounds(x,y){
     return x>0 && y>0 && x<numTiles-1 && y<numTiles-1;
 }
@@ -77,12 +108,20 @@ function getBossTile(x, y){
     }
 }
 
+function getMutateTile(x, y){
+    if(inBounds(x,y)){
+        return tiles[x][y];
+    }else{
+        return new MutateWall(x,y);
+    }
+}
+
 function randomPassableTile(){
     let tile;
     tryTo('get random passable tile', function(){
         let x = randomRange(0,numTiles-1);
         let y = randomRange(0,numTiles-1);
-        if(level === 6){
+        if(level === 6 || level === 7){
             tile = getBossTile(x, y);
         }else{
             tile = getTile(x, y);  
@@ -120,7 +159,7 @@ function randomHazardTile(){
             tile = getTile(x, y);  
         }
 
-        return tile.hazard && !tile.monster;
+        return tile.hazard && !tile.monster && !tile.exit;
     });
     return tile;
 }
@@ -130,7 +169,7 @@ function randomPassableTileNotWell(){
     tryTo("get random passable tile that isn't well", function(){
         let x = randomRange(0,numTiles-1);
         let y = randomRange(0,numTiles-1);
-        if(level === 6){
+        if(level === 6 || level === 7){
             tile = getBossTile(x, y);
         }else{
             tile = getTile(x, y);  
@@ -164,17 +203,40 @@ function generateBossMonsters(){
 }
 
 function spawnMonster(){
+    if(level === 7){
+        return;
+    }
     if(level === 6){
         return;
-    }else{
+    }else if (level >= 4 && level < 6 || level > 7){
+    let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester, Mage])[0];
+    let monster = new monsterType(randomPassableTile());
+    monsters.push(monster);
+    }else if (level === 3){
+    let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester])[0];
+    let monster = new monsterType(randomPassableTile());
+    monsters.push(monster);
+    }else if (level === 2){
+    let monsterType = shuffle([Bird, Tank, Eater, Jester])[0];
+    let monster = new monsterType(randomPassableTile());
+    monsters.push(monster);
+    }
+    else if (level === 1){
+    let monsterType = shuffle([Bird, Eater, Jester])[0];
+    let monster = new monsterType(randomPassableTile());
+    monsters.push(monster);
+    }
+    else {
     let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester])[0];
     let monster = new monsterType(randomPassableTile());
     monsters.push(monster);
     }
+
+
 }
 
 function spawnBossMonster(){
     let bossMonsterType = shuffle([Boss])[0];
     let bossMonster = new bossMonsterType(randomPassableTile());
     monsters.push(bossMonster);
-}
+};

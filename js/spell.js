@@ -61,6 +61,17 @@ spells = {
             boltTravel(directions[k], 14, 3);
         }
     },
+    MONSTER_SHOCK: function(){
+        let directions = [
+            [0, -1],
+            [0, 1],
+            [-1, 0],
+            [1, 0]
+        ];
+        for(let k=0;k<directions.length;k++){
+            boltTravelMonster(directions[k], 15 + Math.abs(directions[k][1]), 2);
+        }
+    },
 };
 
 function boltTravel(direction, effect, damage){
@@ -71,6 +82,22 @@ function boltTravel(direction, effect, damage){
             newTile = testTile;
             if(newTile.monster){
                 newTile.monster.hit(damage);
+            }
+            newTile.setEffect(effect);
+        }else{
+            break;
+        }
+    }
+};
+
+function boltTravelMonster(direction, effect, damage){
+    let newTile = mage.tile;
+    while(true){
+        let testTile = newTile.getNeighbor(direction[0], direction[1]);
+        if(testTile.passable){
+            newTile = testTile;
+            if(newTile.player){
+                newTile.player.hit(damage);
             }
             newTile.setEffect(effect);
         }else{

@@ -17,11 +17,4 @@
         
     }
 
-    #init {
-        position: absolute;
-        margin-right: 0px;
-        margin-left: 0px;
-        margin-top: 0px;
-        margin-bottom: 0px;
-        z-index: 1000;
-    }
+    

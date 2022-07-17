@@ -23,6 +23,7 @@
 <script src="js/Controller/controllerInputs.js"></script>
 
 <script>
+    moonShoes = false;
     tileSize = 64;
     numTiles = 9;
     uiWidth = 4;
@@ -36,16 +37,15 @@
     gameState = "loading";  
 
     startingHp = 3; 
-    numLevels = 7;    
+    numLevels = 8;    
 
     shakeAmount = 0;       
     shakeX = 0;                 
     shakeY = 0;         
 
     document.querySelector("html").onkeypress = function(e){
-        console.log(e.key);
+        //console.log(e.key);
         if(gameState == "title"){
-            initSounds();
             animatingTitle = false;
             gameState = "rpSection0";
             showRpSection0();                              
@@ -55,14 +55,26 @@
             startGame();              
         }else if(gameState === "rpSection1"){
             startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
-        }else if(gameState == "dead"){                             
+        }else if(gameState === "rpSection2"){
+            startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);  
+        }
+
+        else if(gameState == "dead"){                             
             showTitle();                                        
         }else if(gameState == "running"){ 
             if(e.key=="w") player.tryMove(0, -1);
             if(e.key=="s") player.tryMove(0, 1);
             if(e.key=="a") player.tryMove(-1, 0);
             if(e.key=="d") player.tryMove(1, 0);
+
+            if(e.key=="W" && moonShoes === true) player.tryMove(0, -2);
+            if(e.key=="S" && moonShoes === true) player.tryMove(0, 2);
+            if(e.key=="A" && moonShoes === true) player.tryMove(-2, 0);
+            if(e.key=="D" && moonShoes === true) player.tryMove(2, 0);
+
             if(e.key=="f") tick();
+            //if(e.key=="g") moonShoes = true;
+            
             if(e.key==="Enter" && readyToExit === true){
                     playSound("newLevel");
                     welldepleted = false  
@@ -72,7 +84,12 @@
                 }else if(level === 5){
                     showRpSection1();
                     level++;  
-                }else{
+                }else if (level === 7){
+                    showRpSection2();
+                    level++;
+                }
+
+                else{
                     level++;
                     startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
                 }
@@ -107,7 +124,22 @@
                             tile.replace(EmptyWell);
                     }
                 }
-            }   
+            }
+
+            if(e.key==="Enter" && readyToMutate === true){
+                playSound("well");
+                mutatedepleted = true;
+                readyToMutate = false;
+                moonShoes = true;
+                    for(let i=1;i<numTiles-1;i++){
+                        let findmutate = tiles[i].findIndex((tile) => tile instanceof Mutation1);
+                        console.log(findmutate);
+                    if (findmutate !== -1){
+                            let tile = getTile(i, findmutate);
+                            tile.replace(MutateFloor);
+                    }
+                }
+            }    
 
             if(e.key>=1 && e.key<=6) player.castSpell(e.key-1);
 
@@ -130,7 +162,9 @@
 
     setInterval(draw, 15);
 
-    setupCanvas(); 
+    setupCanvas();
+
+    initSounds(); 
 
     function muteAudio() {
         if(soundStopped === false){
@@ -141,17 +175,6 @@
             document.getElementById('audioSymbol').src='images/img.png';
             playSound('music'); 
             soundStopped = false;
-        }
-    }
-
-    if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
-
-        document.write('<a id="init" ontouchstart="javascript:sndInit();"></a>');
-
-        function sndInit(){
-        snd.play();
-        snd.pause();
-        document.getElementById('init').style.display = 'none';
         }
     }
     
