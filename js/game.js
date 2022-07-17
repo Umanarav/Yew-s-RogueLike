@@ -539,7 +539,7 @@ function showRpSection2(){
 function startGame(){
     playSound("music");
     soundStopped = false;                                       
-    level = 5;
+    level = 1;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
