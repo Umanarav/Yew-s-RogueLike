@@ -106,7 +106,7 @@ class Monster{
                 }
             }
             return true;
-        };
+        }
     }
 
     hit(damage){
@@ -255,6 +255,9 @@ class Bird extends Monster{
         super(tile, 4, 3);
         this.isBird = true;
     }
+    doStuff(){
+        super.doStuff();
+    }
 }
 
 class Mage extends Monster{
@@ -314,6 +317,7 @@ class Eater extends Monster{
     constructor(tile){
         super(tile, 7, 1);
     }
+
     doStuff(){
         let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
         if(neighbors.length){

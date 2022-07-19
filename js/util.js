@@ -4,7 +4,11 @@ function tryTo(description, callback){
             return;
         }
     }
-    throw 'Timeout while trying to '+description;
+    if (description === 'get random hazard tile'){
+        return;
+    }else {
+        throw 'Timeout while trying to '+description;
+    }
 }
 
 

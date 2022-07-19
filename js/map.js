@@ -127,7 +127,7 @@ function randomPassableTile(){
             tile = getTile(x, y);  
         }
 
-        return tile.passable && !tile.monster && !tile.treasure;
+        return tile.passable && !tile.monster && !tile.treasure && !tile.player;
     });
     return tile;
 }
@@ -159,7 +159,7 @@ function randomHazardTile(){
             tile = getTile(x, y);  
         }
 
-        return tile.hazard && !tile.monster && !tile.exit;
+        return tile.hazard && !tile.monster && !tile.exit && !tile.object;
     });
     return tile;
 }

@@ -59,9 +59,7 @@
             startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "rpSection2"){
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);  
-        }
-
-        else if(gameState == "dead"){                             
+        }else if(gameState == "dead"){             
             showTitle();                                        
         }else if(gameState == "running"){ 
             if(e.key=="w") player.tryMove(0, -1);

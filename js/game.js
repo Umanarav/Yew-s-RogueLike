@@ -55,7 +55,7 @@ function drawTitleBackdrop() {
 
         setTimeout(() => {
             window.requestAnimationFrame(drawTitleBackdrop); 
-        }, 150);
+        }, 142.8571428571429);
     }else {
         return;
     }
@@ -70,16 +70,15 @@ const rpSection0Backdrop4 = new Image();
 const rpSection0Backdrop5 = new Image();
 const rpSection0Backdrop6 = new Image();
 
-const rpSection1Backdrop0 = new Image();
-const rpSection1Backdrop1 = new Image();
-const rpSection1Backdrop2 = new Image();
-const rpSection1Backdrop3 = new Image();
-const rpSection1Backdrop4 = new Image();
-const rpSection1Backdrop5 = new Image();
-const rpSection1Backdrop6 = new Image();
-const rpSection1Backdrop7 = new Image();
-const rpSection1Backdrop8 = new Image();
-const rpSection1Backdrop9 = new Image();
+
+let rpSection1Backdrop = [];
+
+for(let i = 0;i < 114;i += 1){
+    rpSection1Backdrop[i] = new Image(); 
+}
+
+
+
 
 const monsterEscapeText0 = new Image();
 const monsterEscapeText1 = new Image();
@@ -111,16 +110,11 @@ function init() {
     rpSection0Backdrop5.src = 'rpSection0Backdrop/rpSection0Backdrop5.png'
     rpSection0Backdrop6.src = 'rpSection0Backdrop/rpSection0Backdrop6.png'
 
-    rpSection1Backdrop0.src = 'rpSection1Backdrop/rpSection1Backdrop0.png'
-    rpSection1Backdrop1.src = 'rpSection1Backdrop/rpSection1Backdrop1.png'
-    rpSection1Backdrop2.src = 'rpSection1Backdrop/rpSection1Backdrop2.png'
-    rpSection1Backdrop3.src = 'rpSection1Backdrop/rpSection1Backdrop3.png'
-    rpSection1Backdrop4.src = 'rpSection1Backdrop/rpSection1Backdrop4.png'
-    rpSection1Backdrop5.src = 'rpSection1Backdrop/rpSection1Backdrop5.png'
-    rpSection1Backdrop6.src = 'rpSection1Backdrop/rpSection1Backdrop6.png'
-    rpSection1Backdrop7.src = 'rpSection1Backdrop/rpSection1Backdrop7.png'
-    rpSection1Backdrop8.src = 'rpSection1Backdrop/rpSection1Backdrop8.png'
-    rpSection1Backdrop9.src = 'rpSection1Backdrop/rpSection1Backdrop9.png'
+
+
+    for(let i = 0; i < 114; i += 1){
+        rpSection1Backdrop[i].src = 'rpSection1Backdrop/rpSection1Backdrop' + i + '.png' 
+    }
 
     titleBackdrop0.src = 'titleBackdrop/TitleBackdrop0.png'
     titleBackdrop1.src = 'titleBackdrop/TitleBackdrop1.png'
@@ -229,7 +223,7 @@ function drawRpSection0Backdrop() {
 
         setTimeout(() => {
             window.requestAnimationFrame(drawRpSection0Backdrop); 
-        }, 150);
+        }, 142.8571428571429);
     }else {
         return;
     }
@@ -237,41 +231,20 @@ function drawRpSection0Backdrop() {
 
 function drawRpSection1Backdrop() {
     if (animatingSection1 === true){
-        section1Number += 1;
         console.log(section1Number);
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         ctx.fillStyle = 'rgba(0,0,0,.75)';
         ctx.fillRect(0,0,canvas.width, canvas.height);
 
-        if (section1Number === 1){
-            ctx.drawImage(rpSection1Backdrop0, 0, 0,)
-        }else if(section1Number === 2){
-            ctx.drawImage(rpSection1Backdrop1, 0, 0,)
-        }else if(section1Number === 3){
-            ctx.drawImage(rpSection1Backdrop2, 0, 0,)
-        }else if(section1Number === 4){
-            ctx.drawImage(rpSection1Backdrop3, 0, 0,)
-        }else if(section1Number === 5){
-            ctx.drawImage(rpSection1Backdrop4, 0, 0,)
-        }else if(section1Number === 6){
-            ctx.drawImage(rpSection1Backdrop5, 0, 0,)
-        }else if(section1Number === 7){
-            ctx.drawImage(rpSection1Backdrop6, 0, 0,)
-        }else if(section1Number === 8){
-            ctx.drawImage(rpSection1Backdrop7, 0, 0,)
-        }else if(section1Number === 9){
-            ctx.drawImage(rpSection1Backdrop8, 0, 0,)
-        }else if(section1Number === 10){
-            section1Number = 0;
-            ctx.drawImage(rpSection1Backdrop9, 0, 0,)
+        if (section1Number < 114){    
+            ctx.drawImage(rpSection1Backdrop[section1Number], 0, 0); 
+            section1Number += 1;   
         }
 
-
-
-
-
-
+        if (section1Number >= 114){
+            ctx.drawImage(rpSection1Backdrop[section1Number], 0, 0);
+        }
 
         setTimeout(() => {
             window.requestAnimationFrame(drawRpSection1Backdrop); 
@@ -408,7 +381,14 @@ function draw(){
             
             
                 let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                        
-                drawText("B/" + armorText, 16, false, 457, "aqua");        
+                drawText("B/" + armorText, 16, false, 457, "aqua");
+
+            drawText("Mutations", 21, false, 497, "violet");
+                if (moonShoes === true){
+                    drawText("9) Move two (toggle R Stick)", 16, false, 517, "aqua");     
+                }else if (readyToMutate === true){
+                    drawText("9) Press Start to Mutate", 16, false, 517, "aqua");     
+                }        
             
             drawText("Gamepad Connected ", 21, false, 555, "violet");
         }
@@ -539,7 +519,7 @@ function showRpSection2(){
 function startGame(){
     playSound("music");
     soundStopped = false;                                       
-    level = 1;
+    level = 5;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
