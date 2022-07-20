@@ -113,7 +113,7 @@ function init() {
 
 
     for(let i = 0; i < 114; i += 1){
-        rpSection1Backdrop[i].src = 'rpSection1Backdrop/rpSection1Backdrop' + i + '.png' 
+        rpSection1Backdrop[i].src = 'rpSection1Backdrop/rpSection1Backdrop' + i + '.png'; 
     }
 
     titleBackdrop0.src = 'titleBackdrop/TitleBackdrop0.png'
@@ -237,18 +237,20 @@ function drawRpSection1Backdrop() {
         ctx.fillStyle = 'rgba(0,0,0,.75)';
         ctx.fillRect(0,0,canvas.width, canvas.height);
 
-        if (section1Number < 114){    
+        if (section1Number < 113){    
             ctx.drawImage(rpSection1Backdrop[section1Number], 0, 0); 
-            section1Number += 1;   
+            section1Number += 1;
         }
 
-        if (section1Number >= 114){
-            ctx.drawImage(rpSection1Backdrop[section1Number], 0, 0);
+        if (section1Number === 113){
+            ctx.drawImage(rpSection1Backdrop[113], 0, 0);
+            animatingSection1 = false;
         }
-
+        
         setTimeout(() => {
             window.requestAnimationFrame(drawRpSection1Backdrop); 
         }, 150);
+        
     }
 }
 
@@ -519,7 +521,7 @@ function showRpSection2(){
 function startGame(){
     playSound("music");
     soundStopped = false;                                       
-    level = 5;
+    level = 1;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;

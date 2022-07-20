@@ -57,6 +57,7 @@
         }else if(gameState === "rpSection1"){
             animatingSection1 = false;
             startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+            section1Number = 0;
         }else if(gameState === "rpSection2"){
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);  
         }else if(gameState == "dead"){             
