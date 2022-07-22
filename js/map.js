@@ -148,7 +148,7 @@ function getBossTile(x, y){
     }
 }
 
-function randomHazardTile(){
+/*function randomHazardTile(){
     let tile;
     tryTo('get random hazard tile', function(){
         let x = randomRange(0,numTiles-1);
@@ -162,7 +162,7 @@ function randomHazardTile(){
         return tile.hazard && !tile.monster && !tile.exit && !tile.object;
     });
     return tile;
-}
+}*/
 
 function randomPassableTileNotWell(){
     let tile;

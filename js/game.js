@@ -407,23 +407,17 @@ function tick(){
         }else{
             monsters.splice(k,1);
         }
-
     }
 
     if (standingInFire === true){
-        player.hp -= 1
-        if (level === 6){
-            randomHazardTile().replace(BossFloor);
-        }else {
-            randomHazardTile().replace(Floor);  
-        }
+        player.hp -= 1    
         if(player.hp <= 0){
-        player.die();
-        addScore(score, false);   
-        tier1SwordEquipped = false;
-        tier1ArmorEquipped = false;
-        readyToExit = false;
-        gameState = "dead";
+            player.die();
+            addScore(score, false);   
+            tier1SwordEquipped = false;
+            tier1ArmorEquipped = false;
+            readyToExit = false;
+            gameState = "dead";
         }
     }
 
@@ -438,17 +432,28 @@ function tick(){
     }
 
     if(level === 6){
-        if(Math.random() < .5){ 
-            randomHazardTile().replace(BossFloor);
-            if(bossDamageReduction > 1){
-            }
+        if(Math.random() <= 0.34){ 
+            for(let i=1;i<numTiles-1;i++){
+                let findHazardBoss = tiles[i].findIndex((tile) => tile instanceof Rubble);
+                if (findHazardBoss !== -1){
+                    let tile = getBossTile(i, findHazardBoss);
+                    tile.replace(BossFloor);
+                    break;
+                }
+            }           
         }
-    }else if(level >= 4 && level <= 6){
-        if(Math.random() < .5){ 
-            randomHazardTile().replace(Floor);
+    }else if(level >= 4 && level < 6  || level > 7){
+        if(Math.random() <= 0.34){ 
+            for(let i=1;i<numTiles-1;i++){
+                let findHazard = tiles[i].findIndex((tile) => tile instanceof MagicRubble);
+                if (findHazard !== -1){
+                    let tile = getTile(i, findHazard);
+                    tile.replace(Floor);
+                    break;
+                }
+            }    
         }
     };
-
 
     if(player.dead){
         player.die();

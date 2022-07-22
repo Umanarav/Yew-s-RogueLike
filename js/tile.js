@@ -84,7 +84,8 @@ class Tile{
 
 class Floor extends Tile{
     constructor(x,y){
-        super(x, y, 2, true);
+        super(x, y, 2, true, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit
     };
 
     stepOn(monster){
@@ -142,6 +143,7 @@ class Floor extends Tile{
 class BossFloor extends Tile{
     constructor(x,y){
         super(x, y, 23, true);
+        //x, y, sprite, passable, hazard, object, exit
     };
     stepOn(monster){
         standingInFire = false;
@@ -186,7 +188,8 @@ class MutateFloor extends Tile{
 
 class Wall extends Tile{
     constructor(x, y){
-        super(x, y, 3, false);
+        super(x, y, 3, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit
     }
 };
 
@@ -213,8 +216,7 @@ class Exit extends Tile{
         if(monster.isPlayer){
             readyToExit = true;
             readyToDrink = false;
-            standingInFire = false;
-            console.log(readyToExit);          
+            standingInFire = false;          
         }
 
         if (monster.isPlayer && this.tier1Sword){
@@ -262,7 +264,8 @@ class Exit extends Tile{
 
 class Well extends Tile{
     constructor(x, y){
-        super(x, y, 19, true, false, true);
+        super(x, y, 19, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
         this.well = true;
     }
 
@@ -271,7 +274,6 @@ class Well extends Tile{
             readyToDrink = true;
             readyToExit = false;
             standingInFire = false;
-            console.log(readyToDrink);
         }
 
         if (monster.isPlayer && this.tier1Sword){

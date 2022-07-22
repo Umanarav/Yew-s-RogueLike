@@ -119,12 +119,11 @@
                 }
                     for(let i=1;i<numTiles-1;i++){
                         let findwell = tiles[i].findIndex((tile) => tile instanceof Well);
-                        console.log(findwell);
                     if (findwell !== -1){
                             let tile = getTile(i, findwell);
                             tile.replace(EmptyWell);
+                        }
                     }
-                }
             }
 
             if(e.key==="Enter" && readyToMutate === true){
@@ -134,7 +133,6 @@
                 moonShoes = true;
                     for(let i=1;i<numTiles-1;i++){
                         let findmutate = tiles[i].findIndex((tile) => tile instanceof Mutation1);
-                        console.log(findmutate);
                     if (findmutate !== -1){
                             let tile = getTile(i, findmutate);
                             tile.replace(MutateFloor);
