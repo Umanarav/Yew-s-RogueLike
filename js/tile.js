@@ -2,9 +2,11 @@ readyToExit = false;
 readyToDrink = false;
 standingInFire = false;
 readyToMutate = true;
+unlockDoor0 = false;
+unlockDoor1 = false;
 
 class Tile{
-	constructor(x, y, sprite, passable, hazard, object, exit){
+	constructor(x, y, sprite, passable, hazard, object, exit, button){
         this.x = x;
         this.y = y;
         this.sprite = sprite;
@@ -85,7 +87,7 @@ class Tile{
 class Floor extends Tile{
     constructor(x,y){
         super(x, y, 2, true, false, false, false);
-        //x, y, sprite, passable, hazard, object, exit
+        //x, y, sprite, passable, hazard, object, exit//
     };
 
     stepOn(monster){
@@ -104,9 +106,11 @@ class Floor extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
-            spawnMonster();
+            if (level < 6){
+                spawnMonster();
+            }
         }
 
         if (monster.isPlayer && this.tier1Sword){
@@ -156,7 +160,7 @@ class BossFloor extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }
@@ -165,7 +169,8 @@ class BossFloor extends Tile{
 
 class MutateFloor extends Tile{
     constructor(x,y){
-        super(x, y, 2, true);
+        super(x, y, 2, true, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
     };
     stepOn(monster){
         readyToMutate = false;
@@ -179,10 +184,71 @@ class MutateFloor extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
+            this.treasure = false;
+        }
+        if(monster.isShadow || monster.isMirror){
+            if (level > 6 && unlockDoor0 === false){
+                unlockDoor1 = false;
+            }
+            unlockDoor0 = false;
+        }
+    }
+};
+
+class MutateFloorButton extends Tile{
+    constructor(x,y){
+        super(x, y, 29, true, false, false, false, true);
+        //x, y, sprite, passable, hazard, object, exit, buttonpressed//
+    };
+    stepOn(monster){
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }
+        if(monster.isShadow || monster.isMirror){
+            unlockDoor0 = true;
+            //console.log(unlockDoor0, "unlockdoor");
+        }
+
+    }
+};
+
+class MutateFloorButton2 extends Tile{
+    constructor(x,y){
+        super(x, y, 29, true, false, false, false, true);
+        //x, y, sprite, passable, hazard, object, exit, buttonpressed//
+    };
+    stepOn(monster){
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playTreasureSounds();                        
+            this.treasure = false;
+            spawnMonster();
+        }
+        if(monster.isShadow || monster.isMirror){
+            unlockDoor1 = true;
+            //console.log(unlockDoor0, "unlockdoor");
+        }
+
     }
 };
 
@@ -254,11 +320,25 @@ class Exit extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }
 
+    }
+}
+
+class MutateExit extends Tile{
+    constructor(x, y){
+        super(x, y, 30, true, false, false, true);
+        /*x, y, sprite, passable, hazard, object, exit*/
+        this.exit = true;
+    }
+    stepOn(monster){
+        if(monster.isPlayer){
+            readyToExit = true;
+            standingInFire = false;          
+        }
     }
 }
 
@@ -311,7 +391,7 @@ class Well extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }
@@ -365,7 +445,7 @@ class EmptyWell extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }
@@ -398,7 +478,7 @@ class Rubble extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }
@@ -432,7 +512,7 @@ class MagicRubble extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }
@@ -497,7 +577,7 @@ class Mutation1 extends Tile{
                 numSpells += 1;                
                 player.addSpell();            
             }  
-            playSound("treasure");                        
+            playTreasureSounds();                        
             this.treasure = false;
             spawnMonster();
         }

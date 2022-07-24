@@ -107,6 +107,17 @@ class Monster{
             }
             return true;
         }
+        if(!newTile.passable && this.isPlayer){
+            this.lastMove = [dx,dy];
+            for(let k=monsters.length-1;k>=0;k--){
+                if(!monsters[k].dead){
+                monsters[k].update();
+                }else{
+                monsters.splice(k,1);
+                }   
+            }
+        }
+
     }
 
     hit(damage){
@@ -147,7 +158,13 @@ class Monster{
             }
 
             if(this.isBoss){
-                    randomPassableTile().replace(Exit);
+                    randomPassableTile().replace(MutateExit);
+            }
+            if(this.isShadow){
+                    spawnMonster();
+            }
+            if(this.isMirror){
+                    spawnMonster();
             }
 
         }
@@ -183,7 +200,7 @@ class Monster{
 
 }
 
-    class Player extends Monster{
+class Player extends Monster{
 	    constructor(tile){
 	        super(tile, 0, 3);
 	        this.isPlayer = true;
@@ -248,7 +265,7 @@ class Monster{
             }
         }
 
-	}
+}
 
 class Bird extends Monster{
     constructor(tile){
@@ -407,5 +424,25 @@ class Boss extends Monster{
             }
         }
 
+    }
+}
+
+class Shadow extends Monster{
+    constructor(tile){
+        super(tile, 31, 3);
+        this.isShadow = true;
+    }
+    doStuff(){
+        this.tryMove(pX, pY);
+    }
+}
+
+class Mirror extends Monster{
+    constructor(tile){
+        super(tile, 32, 3);
+        this.isMirror = true;
+    }
+    doStuff(){
+        this.tryMove(-1 * pX, pY * -1);
     }
 }

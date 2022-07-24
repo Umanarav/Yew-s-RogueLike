@@ -78,8 +78,6 @@ for(let i = 0;i < 114;i += 1){
 }
 
 
-
-
 const monsterEscapeText0 = new Image();
 const monsterEscapeText1 = new Image();
 const monsterEscapeText2 = new Image();
@@ -115,6 +113,8 @@ function init() {
     for(let i = 0; i < 114; i += 1){
         rpSection1Backdrop[i].src = 'rpSection1Backdrop/rpSection1Backdrop' + i + '.png'; 
     }
+
+
 
     titleBackdrop0.src = 'titleBackdrop/TitleBackdrop0.png'
     titleBackdrop1.src = 'titleBackdrop/TitleBackdrop1.png'
@@ -297,7 +297,7 @@ function draw(){
                     getBossTile(i,j).draw();
                 }
             }    
-        }else if (level === 7){
+        }else if (level >= 7){
            for(let i=0;i<numTiles;i++){
                 for(let j=0;j<numTiles;j++){
                     getMutateTile(i,j).draw();
@@ -475,10 +475,14 @@ function tick(){
 
 
     spawnCounter--;
-    if(spawnCounter <= 0){  
+    if (level > 6){
+        return;
+    }else {
+        if(spawnCounter <= 0){  
         spawnMonster();
         spawnCounter = spawnRate;
         spawnRate--;
+        }    
     }
 }
 
@@ -513,14 +517,25 @@ function showRpSection1(){
 }
 
 function showRpSection2(){                                          
-    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillStyle = 'rgba(0,0,0,.75)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     gameState = "rpSection2";
 
-    drawText("RP", 40, true, canvas.height/2 - 110, "white");
-    drawText("SECTION 2", 70, true, canvas.height/2 - 50, "white"); 
-    drawText("(Press enter to continue)", 40, true, canvas.height/2, "white"); 
+    drawText("press 1 for mutationX", 55, false, 144, "white", 89);
+    drawText("press 2 for mutationY", 55, false, 233, "white", 89); 
+    drawText("press 3 for mutationZ", 55, false, 377, "white", 89);
+    //text, size, centered, textY, color, textX// 
+}
+
+function showRpSection3(){                                          
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    gameState = "rpSection3";
+
+    drawText("drawfractalanimation", 55, false, 377, "white", 144);
+
 }
 
 function startGame(){
@@ -534,7 +549,7 @@ function startGame(){
     numArmor = 0;
     tier1SwordEquipped = false;
     tier1ArmorEquipped = false;
-    //moonShoes = false;
+    //moonShoes = true;
     readyToMutate = false;
     startLevel(startingHp);
 
@@ -545,9 +560,10 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     readyToExit = false;
     spawnRate = 15;              
     spawnCounter = spawnRate;
-    if (level === 7){
+    if (level > 6){
         console.log(level);
         generateMutationLevel();
+        spawnRate = 30
     }else {
         generateLevel();       
     } 
@@ -561,17 +577,20 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         player.spells = playerSpells;
     } 
 
-    if (level < 6){
-        if(Math.random() * 10 < 5){
-            randomPassableTile().replace(Well);
-        }
+    if(Math.random() * 10 < 5){
+        randomPassableTile().replace(Well);
     }
     
     randomPassableTileNotWell().replace(Exit);
 
-    if (level === 7){
-        randomPassableTileNotWell().replace(Mutation1);    
+    if (level === 7 || level === 9){
+        randomPassableTileNotWell().replace(MutateFloorButton);    
     }
+    if (level === 8 || level === 10 || level === 11 || level === 12){
+        randomPassableTileNotWell().replace(MutateFloorButton);
+        randomPassableTileNotWell().replace(MutateFloorButton2);    
+    }
+
 
     gameState = "running";
 
@@ -677,6 +696,7 @@ function initSounds(){
         hit1: new Audio('sounds/hit1.wav'),
         hit2: new Audio('sounds/hit2.wav'),
         treasure: new Audio('sounds/treasure.wav'),
+        treasure2: new Audio('sounds/treasure2.wav'),
         newLevel: new Audio('sounds/newLevel.wav'),
         spell: new Audio('sounds/spell.wav'),
         well: new Audio('sounds/well.wav'),
@@ -700,5 +720,13 @@ function pauseSound(soundName){
     sounds[soundName].currentTime = 0;  
     sounds[soundName].pause();
 }
+
+function playTreasureSounds(){
+    if (Math.random() > .5){
+        playSound("treasure");
+    }else {
+        playSound("treasure2");
+    }
+};
 
 init();

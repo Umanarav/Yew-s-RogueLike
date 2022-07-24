@@ -61,7 +61,7 @@ function generateBossTiles(){
         for(let row=0;row<numTiles;row++){
             if(Math.random() < 0.3 || !inBounds(column,row)){
                 tiles[column][row] = new BossWall(column,row);
-            }else{
+            }else {
                 tiles[column][row] = new BossFloor(column,row);
                 passableTiles++;
             }
@@ -121,13 +121,15 @@ function randomPassableTile(){
     tryTo('get random passable tile', function(){
         let x = randomRange(0,numTiles-1);
         let y = randomRange(0,numTiles-1);
-        if(level === 6 || level === 7){
+        if(level === 6){
             tile = getBossTile(x, y);
-        }else{
+        }else if(level > 6){
+            tile = getMutateTile(x, y);
+        }else {
             tile = getTile(x, y);  
         }
 
-        return tile.passable && !tile.monster && !tile.treasure && !tile.player;
+        return tile.passable && !tile.monster && !tile.treasure && !tile.player && !tile.exit;
     });
     return tile;
 }
@@ -175,7 +177,7 @@ function randomPassableTileNotWell(){
             tile = getTile(x, y);  
         }
 
-        return tile.passable && !tile.monster && !tile.object;
+        return tile.passable && !tile.monster && !tile.object && !tile.exit && !tile.button;
     });
     return tile;
 }
@@ -189,9 +191,24 @@ function randomPassableTileNotWell(){
 function generateMonsters(){
     monsters = [];
     let numMonsters = level+1;
-    for(let i=0;i<numMonsters;i++){
-        spawnMonster();
+
+    if (level > 6){
+        numMonsters = level - 6;
+        if (level === 9 || level === 11 || level === 12){
+            numMonsters = 1
+        }else if (level === 10){
+            numMonsters = 2
+        }
+        for(let i=0;i<numMonsters;i++){
+            spawnMonster();          
+        }    
+    }else {
+        for(let i=0;i<numMonsters;i++){
+            spawnMonster();
+            console.log(numMonsters);
+        }    
     }
+
 }
 
 function generateBossMonsters(){
@@ -203,12 +220,31 @@ function generateBossMonsters(){
 }
 
 function spawnMonster(){
-    if(level === 7){
-        return;
+    if (level === 11 || level === 12){
+        let monsterType = ([Shadow])[0];
+        let monster = new monsterType(randomPassableTile());
+        monsters.push(monster);
+        let monsterType2 = ([Mirror])[0];
+        let monster2 = new monsterType2(randomPassableTile());
+        monsters.push(monster2);
+
     }
-    if(level === 6){
+    if (level === 9 || level === 10){
+        let monsterType = ([Mirror])[0];
+        let monster = new monsterType(randomPassableTile());
+        monsters.push(monster);
+    }
+    if (level === 8){
+        let monsterType = shuffle([Shadow])[0];
+        let monster = new monsterType(randomPassableTile());
+        monsters.push(monster);
+    }else if(level === 7){
+        let monsterType = shuffle([Shadow])[0];
+        let monster = new monsterType(randomPassableTile());
+        monsters.push(monster);
+    }else if(level === 6){
         return;
-    }else if (level >= 4 && level < 6 || level > 7){
+    }else if (level === 4 || level === 5){
     let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester, Mage])[0];
     let monster = new monsterType(randomPassableTile());
     monsters.push(monster);
@@ -225,12 +261,11 @@ function spawnMonster(){
     let monsterType = shuffle([Bird, Eater, Jester])[0];
     let monster = new monsterType(randomPassableTile());
     monsters.push(monster);
-    }
-    else {
+    }/*else {
     let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester])[0];
     let monster = new monsterType(randomPassableTile());
     monsters.push(monster);
-    }
+    }*/
 
 
 }
