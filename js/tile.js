@@ -169,7 +169,7 @@ class BossFloor extends Tile{
 
 class MutateFloor extends Tile{
     constructor(x,y){
-        super(x, y, 2, true, false, false, false, false);
+        super(x, y, 33, true, false, false, false, false);
         //x, y, sprite, passable, hazard, object, exit//
     };
     stepOn(monster){
@@ -187,6 +187,35 @@ class MutateFloor extends Tile{
             playTreasureSounds();                        
             this.treasure = false;
         }
+
+        if (monster.isPlayer && this.tier1Sword){
+            if(numSword === 0){
+                numSword +=1;
+                player.addSword();
+                playSound("pickup_sword");
+                this.tier1Sword = false;
+            }else{
+                score +=1;
+                this.tier1Sword = false;
+                playSound("pickup_sword");
+                return;
+                }
+        }
+
+        if (monster.isPlayer && this.tier1Armor){
+            if(numArmor === 0){
+                numArmor +=1;
+                player.addArmor();
+                playSound("pickup_armor")
+                this.tier1Armor = false;
+        }else{
+            score +=1;
+            this.tier1Armor = false;
+            playSound("pickup_armor");
+            return;
+            }
+        }
+
         if(monster.isShadow || monster.isMirror){
             if (level > 6 && unlockDoor0 === false){
                 unlockDoor1 = false;
@@ -267,7 +296,7 @@ class BossWall extends Tile{
 
 class MutateWall extends Tile{
     constructor(x, y){
-        super(x, y, 24, false);
+        super(x, y, 34, false);
     }
 };
 

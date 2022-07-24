@@ -25,6 +25,7 @@
 
 <script>
     moonShoes = false;
+    eaterSoul = false;
     tileSize = 64;
     numTiles = 9;
     uiWidth = 4;
@@ -37,7 +38,7 @@
                              
     gameState = "loading";  
 
-    startingHp = 3; 
+    startingHp = 12; 
     numLevels = 13;    
 
     shakeAmount = 0;       
@@ -48,7 +49,7 @@
     pY = 0;         
 
     document.querySelector("html").onkeypress = function(e){
-        //console.log(e.key);
+        console.log(e.key);
         if(gameState == "title"){
             animatingTitle = false;
             gameState = "rpSection0";
@@ -64,6 +65,10 @@
         }else if(gameState === "rpSection2"){
             if(e.key=="1"){
                 moonShoes = true;
+                showRpSection3();
+            }
+            if(e.key=="2"){
+                eaterSoul = true;
                 showRpSection3();
             } 
         }else if(gameState === "rpSection3"){
@@ -196,7 +201,26 @@
                     soundStopped = false;
                 }
             }
+
+            if(e.key=="`"){
+                startLevel(Math.min(maxHp, player.hp),undefined, player.baseAttack);
+            }            
     };
+
+    document.querySelector("html").addEventListener("keydown", (e) => {
+        if (e.key === "k" && eaterSoul === true) {
+            eatsWalls = true;
+            //console.log(eatsWalls);
+        }
+    });
+    document.querySelector("html").addEventListener("keyup", (e) => {
+        if (e.key === "k" && eaterSoul === true) {
+            eatsWalls = false;
+            //console.log(eatsWalls);
+        }
+    });
+
+
     
 
     setInterval(draw, 15);

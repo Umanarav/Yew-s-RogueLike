@@ -171,6 +171,9 @@ function randomPassableTileNotWell(){
     tryTo("get random passable tile that isn't well", function(){
         let x = randomRange(0,numTiles-1);
         let y = randomRange(0,numTiles-1);
+        if(level > 7){
+            tile = getMutateTile(x, y);
+        }
         if(level === 6 || level === 7){
             tile = getBossTile(x, y);
         }else{
@@ -194,13 +197,14 @@ function generateMonsters(){
 
     if (level > 6){
         numMonsters = level - 6;
-        if (level === 9 || level === 11 || level === 12){
+        if (level === 9){
             numMonsters = 1
-        }else if (level === 10){
+        }else if (level === 10 || level === 11 || level === 12){
             numMonsters = 2
         }
         for(let i=0;i<numMonsters;i++){
-            spawnMonster();          
+            spawnMonster();
+            spawnInitialWave();          
         }    
     }else {
         for(let i=0;i<numMonsters;i++){
@@ -221,13 +225,9 @@ function generateBossMonsters(){
 
 function spawnMonster(){
     if (level === 11 || level === 12){
-        let monsterType = ([Shadow])[0];
+        let monsterType = shuffle([Shadow, Mirror])[0];
         let monster = new monsterType(randomPassableTile());
         monsters.push(monster);
-        let monsterType2 = ([Mirror])[0];
-        let monster2 = new monsterType2(randomPassableTile());
-        monsters.push(monster2);
-
     }
     if (level === 9 || level === 10){
         let monsterType = ([Mirror])[0];
@@ -262,11 +262,10 @@ function spawnMonster(){
     let monster = new monsterType(randomPassableTile());
     monsters.push(monster);
     }/*else {
-    let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester])[0];
+    let monsterType = shuffle([Bird, Snake, Tank, Eater, Jester, Mage])[0];
     let monster = new monsterType(randomPassableTile());
     monsters.push(monster);
     }*/
-
 
 }
 
@@ -275,3 +274,15 @@ function spawnBossMonster(){
     let bossMonster = new bossMonsterType(randomPassableTile());
     monsters.push(bossMonster);
 };
+
+function spawnInitialWave(){
+    let monsterTypeDream = shuffle([Bird, Snake, Tank, Eater, Jester])[0];
+    let monsterDream = new monsterTypeDream(randomPassableTile());
+    monsters.push(monsterDream);    
+}
+
+function spawnAdditionalPaperweight(){
+    let monsterTypePaperweight = shuffle([Shadow, Mirror])[0];
+    let monsterPaperweight = new monsterTypePaperweight(randomPassableTile());
+    monsters.push(monsterPaperweight);
+}

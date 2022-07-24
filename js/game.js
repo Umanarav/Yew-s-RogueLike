@@ -317,8 +317,18 @@ function draw(){
         
         player.draw();
 
-        drawText("Level: "+level, 30, false, 40, "violet");
-        drawText("Disk(s): "+score, 30, false, 70, "violet");
+        if (level > 6){
+            drawText("Level: 2."+(level - 6), 30, false, 40, "violet");
+        }else {
+            drawText("Level: 1."+(level), 30, false, 40, "violet");    
+        }
+
+        if (score === 1){
+            drawText("Disk: "+score, 30, false, 70, "violet");    
+        }else {
+            drawText("Disks: "+score, 30, false, 70, "violet");    
+        }
+
         drawText("HP: "+player.hp, 30, false, 100, "violet");
 
         if(gamepadConnected === false){
@@ -352,6 +362,11 @@ function draw(){
                     drawText("9) Move two (hold shift)", 16, false, 517, "aqua");     
                 }else if (readyToMutate === true){
                     drawText("9) Press Enter to Mutate", 16, false, 517, "aqua");     
+                }
+                if(eatsWalls === true && eaterSoul === true){
+                    drawText("Eat walls enabled", 16, false, 538, "aqua");            
+                }else if (eatsWalls === false && eaterSoul === true){
+                    drawText("Hold k to eat walls", 16, false, 538, "aqua");
                 }
                         
             
@@ -549,7 +564,7 @@ function startGame(){
     numArmor = 0;
     tier1SwordEquipped = false;
     tier1ArmorEquipped = false;
-    //moonShoes = true;
+    //moonShoes = false;
     readyToMutate = false;
     startLevel(startingHp);
 

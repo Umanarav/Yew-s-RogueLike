@@ -1,4 +1,5 @@
 let bossDamageReduction = 1;
+eatsWalls = false;
 
 class Monster{
 	constructor(tile, sprite, hp){
@@ -116,6 +117,16 @@ class Monster{
                 monsters.splice(k,1);
                 }   
             }
+
+            if(eatsWalls === true){
+                console.log(eatsWalls, "should eat this")
+                newTile.replace(MutateFloor);
+                /*let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
+                if(neighbors.length){
+                    if(level > 6){
+                        neighbors[0].replace(MutateFloor);
+                        this.heal(0.5);*/
+            }
         }
 
     }
@@ -158,13 +169,10 @@ class Monster{
             }
 
             if(this.isBoss){
-                    randomPassableTile().replace(MutateExit);
+                randomPassableTile().replace(MutateExit);
             }
-            if(this.isShadow){
-                    spawnMonster();
-            }
-            if(this.isMirror){
-                    spawnMonster();
+            if(this.isShadow === true || this.isMirror === true){
+                spawnAdditionalPaperweight();
             }
 
         }
@@ -338,8 +346,13 @@ class Eater extends Monster{
     doStuff(){
         let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
         if(neighbors.length){
-            neighbors[0].replace(Floor);
-            this.heal(0.5);
+            if(level > 6){
+                neighbors[0].replace(MutateFloor);
+                this.heal(0.5);    
+            }else {
+                neighbors[0].replace(Floor);
+                this.heal(0.5);    
+            }
         }else{
             super.doStuff();
         }
