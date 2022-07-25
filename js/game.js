@@ -524,6 +524,7 @@ function showTitle(){
     gameState = "title";
 
     drawTitleBackdrop();
+    pauseSound('music3');
 
 }
 
@@ -647,6 +648,10 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         pauseSound('bossmusic');
         playSound('music2');
     }
+    if (level === 14){
+        pauseSound('music2');
+        playSound('music3');
+    }
     /*if (level === 14){
         pauseSound('music2');
         playSound('music3');
@@ -765,7 +770,7 @@ function initSounds(){
         equip_sword: new Audio('sounds/equip_sword.wav'),
         music: new Audio('sounds/music.wav'),
         music2: new Audio('sounds/music2.wav'),
-        music3: new Audio('sounds/music2.wav'),
+        music3: new Audio('sounds/music3.wav'),
         bossmusic: new Audio('sounds/bossmusic.wav'),
         rpSection0Music : new Audio('sounds/rpSection0Music.wav'),
 
