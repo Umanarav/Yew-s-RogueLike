@@ -3,7 +3,9 @@
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <link rel="stylesheet" href="styles.css">
 
-<body><img id="audioSymbol" src="images/img.png" onclick="muteAudio()"/></body>
+<body>
+    <img id="audioSymbol" src="images/img.png" onclick="muteAudio()"/>
+</body>
 
 <canvas></canvas>
 <div style="display:none;">
@@ -38,8 +40,8 @@
                              
     gameState = "loading";  
 
-    startingHp = 12; 
-    numLevels = 13;    
+    startingHp = 3; 
+    numLevels = 20;    
 
     shakeAmount = 0;       
     shakeX = 0;                 
@@ -57,6 +59,7 @@
         }else if(gameState === "rpSection0"){
             animating = false;
             gameState = "running";
+            pauseSound('rpSection0Music');
             startGame();              
         }else if(gameState === "rpSection1"){
             animatingSection1 = false;
@@ -66,15 +69,28 @@
             if(e.key=="1"){
                 moonShoes = true;
                 showRpSection3();
+                pauseSound('music');
+                pauseSound('bossmusic');
             }
             if(e.key=="2"){
                 eaterSoul = true;
-                showRpSection3();
+                gameState = "rpSection4";
+                showRpSection4();
+                pauseSound('music');
+                pauseSound('bossmusic');
             } 
         }else if(gameState === "rpSection3"){
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+        }else if(gameState === "rpSection4"){
+            playSound('music3');
+            level = 14;
+            startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);    
         }else if(gameState == "dead"){             
-            showTitle();                                        
+            showTitle();
+            pauseSound('music');
+            pauseSound('music2');
+            pauseSound('music3');
+            pauseSound('bossmusic');                                        
         }else if(gameState == "running"){ 
             if(e.key=="w"){
                 pY = -1;
@@ -204,7 +220,17 @@
 
             if(e.key=="`"){
                 startLevel(Math.min(maxHp, player.hp),undefined, player.baseAttack);
-            }            
+            }
+
+            if(e.key=="/"){
+                numSpells = 6;
+                numSword = 1;
+                numArmor = 1;
+                player.hp = 12;
+                moonShoes = true;
+                eaterSoul = true;
+            }
+
     };
 
     document.querySelector("html").addEventListener("keydown", (e) => {

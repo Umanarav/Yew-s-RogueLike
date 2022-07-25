@@ -297,13 +297,20 @@ function draw(){
                     getBossTile(i,j).draw();
                 }
             }    
-        }else if (level >= 7){
+        }else if (level >= 7 && level <= 13){
            for(let i=0;i<numTiles;i++){
                 for(let j=0;j<numTiles;j++){
                     getMutateTile(i,j).draw();
                 }
             } 
-        }else {
+        }else if (level >= 14 && level <= 20){
+           for(let i=0;i<numTiles;i++){
+                for(let j=0;j<numTiles;j++){
+                    getEaterMutateTile(i,j).draw();
+                }
+            } 
+        }
+        else {
             for(let i=0;i<numTiles;i++){
                 for(let j=0;j<numTiles;j++){
                     getTile(i,j).draw();
@@ -317,8 +324,10 @@ function draw(){
         
         player.draw();
 
-        if (level > 6){
-            drawText("Level: 2."+(level - 6), 30, false, 40, "violet");
+        if (level > 13){
+            drawText("Level: Y."+(level - 13), 30, false, 40, "violet");    
+        }else if (level > 6 && level <= 13){
+            drawText("Level: X."+(level - 6), 30, false, 40, "violet");
         }else {
             drawText("Level: 1."+(level), 30, false, 40, "violet");    
         }
@@ -446,6 +455,12 @@ function tick(){
         //console.log(bossDamageReduction);
     }
 
+    if (level >= 14){
+        if(Math.random() <= 0.34){
+            randomPassableTile().replace(EaterMutateWall);
+        }    
+    }
+
     if(level === 6){
         if(Math.random() <= 0.34){ 
             for(let i=1;i<numTiles-1;i++){
@@ -490,13 +505,13 @@ function tick(){
 
 
     spawnCounter--;
-    if (level > 6){
+    if (level > 6 && level <= 13){
         return;
     }else {
         if(spawnCounter <= 0){  
-        spawnMonster();
-        spawnCounter = spawnRate;
-        spawnRate--;
+            spawnMonster();
+            spawnCounter = spawnRate;
+            spawnRate--;
         }    
     }
 }
@@ -518,6 +533,7 @@ function showRpSection0(){
 
     animating = true;
     gameState = "rpSection0";
+    playSound("rpSection0Music");
     drawRpSection0Backdrop();
     
 }
@@ -529,6 +545,9 @@ function showRpSection1(){
     gameState = "rpSection1";
     
     drawRpSection1Backdrop();
+
+    pauseSound('music');
+    playSound('bossmusic');
 }
 
 function showRpSection2(){                                          
@@ -550,6 +569,16 @@ function showRpSection3(){
     gameState = "rpSection3";
 
     drawText("drawfractalanimation", 55, false, 377, "white", 144);
+
+}
+
+function showRpSection4(){                                          
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    gameState = "rpSection4";
+
+    drawText("drawfractalanimation2", 55, false, 377, "white", 144);
 
 }
 
@@ -575,7 +604,9 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     readyToExit = false;
     spawnRate = 15;              
     spawnCounter = spawnRate;
-    if (level > 6){
+    if (level >= 14){
+        generateEaterMutationLevel();    
+    }else if (level > 6 && level <= 13){
         console.log(level);
         generateMutationLevel();
         spawnRate = 30
@@ -596,7 +627,11 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         randomPassableTile().replace(Well);
     }
     
-    randomPassableTileNotWell().replace(Exit);
+    if (level >= 14){
+        console.log("this is where an exit would have been drawn");
+    }else {
+        randomPassableTileNotWell().replace(Exit);    
+    }
 
     if (level === 7 || level === 9){
         randomPassableTileNotWell().replace(MutateFloorButton);    
@@ -606,8 +641,16 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         randomPassableTileNotWell().replace(MutateFloorButton2);    
     }
 
-
     gameState = "running";
+
+    if (level === 7){
+        pauseSound('bossmusic');
+        playSound('music2');
+    }
+    /*if (level === 14){
+        pauseSound('music2');
+        playSound('music3');
+    }*/
 
 }
 
@@ -721,9 +764,18 @@ function initSounds(){
         equip_armor: new Audio('sounds/equip_armor.wav'),
         equip_sword: new Audio('sounds/equip_sword.wav'),
         music: new Audio('sounds/music.wav'),
+        music2: new Audio('sounds/music2.wav'),
+        music3: new Audio('sounds/music2.wav'),
+        bossmusic: new Audio('sounds/bossmusic.wav'),
+        rpSection0Music : new Audio('sounds/rpSection0Music.wav'),
 
     };
         sounds.music.loop = true;
+        sounds.bossmusic.loop = true;
+        sounds.music2.loop = true;
+        sounds.music3.loop = true;
+        sounds.rpSection0Music.loop = true;
+
 }
 
 function playSound(soundName){                       

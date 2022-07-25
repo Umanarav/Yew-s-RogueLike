@@ -36,6 +36,14 @@ function generateMutationLevel(){
     }*/
 }
 
+function generateEaterMutationLevel(){
+    generateEaterMutationTiles();
+    generateMonsters();
+    /*for(let i=0;i<3;i++){                                         
+        randomPassableTile().treasure = true;                            
+    }*/
+}
+
 function generateTiles(){
     let passableTiles=0;
     tiles = [];
@@ -87,6 +95,20 @@ function generateMutationTiles(){
     return passableTiles;
 }
 
+function generateEaterMutationTiles(){
+    tiles = [];
+    for(let column=0;column<numTiles;column++){
+        tiles[column] = [];
+        for(let row=0;row<numTiles;row++){
+            if(Math.random() <= 0.34 || !inBounds(column,row)){
+                tiles[column][row] = new EaterMutateWall(column,row);
+            }else{
+                tiles[column][row] = new EaterMutateFloor(column,row);
+            }
+        }
+    }
+}
+
 function inBounds(x,y){
     return x>0 && y>0 && x<numTiles-1 && y<numTiles-1;
 }
@@ -116,6 +138,14 @@ function getMutateTile(x, y){
     }
 }
 
+function getEaterMutateTile(x, y){
+    if(inBounds(x,y)){
+        return tiles[x][y];
+    }else{
+        return new EaterMutateWall(x,y);
+    }
+}
+
 function randomPassableTile(){
     let tile;
     tryTo('get random passable tile', function(){
@@ -123,8 +153,10 @@ function randomPassableTile(){
         let y = randomRange(0,numTiles-1);
         if(level === 6){
             tile = getBossTile(x, y);
-        }else if(level > 6){
+        }else if(level > 6 && level <= 13){
             tile = getMutateTile(x, y);
+        }else if(level >= 14){
+            tile = getEaterMutateTile(x, y);
         }else {
             tile = getTile(x, y);  
         }
@@ -171,12 +203,13 @@ function randomPassableTileNotWell(){
     tryTo("get random passable tile that isn't well", function(){
         let x = randomRange(0,numTiles-1);
         let y = randomRange(0,numTiles-1);
-        if(level > 7){
-            tile = getMutateTile(x, y);
-        }
-        if(level === 6 || level === 7){
+        if(level === 6){
             tile = getBossTile(x, y);
-        }else{
+        }else if(level > 6 && level <= 13){
+            tile = getMutateTile(x, y);
+        }else if(level >= 14){
+            tile = getEaterMutateTile(x, y);
+        }else {
             tile = getTile(x, y);  
         }
 
@@ -195,7 +228,14 @@ function generateMonsters(){
     monsters = [];
     let numMonsters = level+1;
 
-    if (level > 6){
+    if (level >= 14){
+        numMonsters = level - 13
+        for(let i=0;i<numMonsters;i++){
+            spawnMonster();          
+        }     
+    }
+
+    if (level > 6 && level <= 13){
         numMonsters = level - 6;
         if (level === 9){
             numMonsters = 1
@@ -224,6 +264,11 @@ function generateBossMonsters(){
 }
 
 function spawnMonster(){
+    if (level > 13){
+        let monsterType = shuffle([Shadow, Mirror,Bird, Snake, Tank, Eater, Jester])[0];
+        let monster = new monsterType(randomPassableTile());
+        monsters.push(monster);    
+    }
     if (level === 11 || level === 12){
         let monsterType = shuffle([Shadow, Mirror])[0];
         let monster = new monsterType(randomPassableTile());

@@ -17,4 +17,17 @@
         
     }
 
+    label {
+        position: fixed;
+        bottom: 6%;
+        right: 3%;
+            
+    }
+
+    input {
+        position: fixed;
+        bottom: 6%;
+        right: 5%;
+   
+    }
     

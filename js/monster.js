@@ -120,7 +120,17 @@ class Monster{
 
             if(eatsWalls === true){
                 console.log(eatsWalls, "should eat this")
-                newTile.replace(MutateFloor);
+                player.hp += 0.5
+                if (level >= 14){
+                    if (Math.random() >= .21){
+                        newTile.replace(EaterMutateFloor);    
+                    }else {
+                        newTile.replace(Exit);    
+                    }
+
+                }else if (level > 6 && level <= 13){
+                    newTile.replace(MutateFloor);    
+                }
                 /*let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
                 if(neighbors.length){
                     if(level > 6){
@@ -346,7 +356,10 @@ class Eater extends Monster{
     doStuff(){
         let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
         if(neighbors.length){
-            if(level > 6){
+            if(level >= 14){
+                neighbors[0].replace(EaterMutateFloor);
+                this.heal(0.5);
+            }else if(level > 6 && level <= 13){
                 neighbors[0].replace(MutateFloor);
                 this.heal(0.5);    
             }else {
