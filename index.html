@@ -48,7 +48,8 @@
     shakeY = 0;
 
     pX = 0;
-    pY = 0;         
+    pY = 0;     
+    playerDirection = "down";    
 
     document.querySelector("html").onkeypress = function(e){
         console.log(e.key);
@@ -68,23 +69,61 @@
         }else if(gameState === "rpSection2"){
             if(e.key=="1"){
                 moonShoes = true;
+                gameState = "rpSection3";
                 showRpSection3();
                 pauseSound('music');
                 pauseSound('bossmusic');
             }
             if(e.key=="2"){
                 eaterSoul = true;
-                gameState = "rpSection4";
+                cancelAnimationFrame(myReq);
+                gameState = "rpSection4"
                 showRpSection4();
                 pauseSound('music');
                 pauseSound('bossmusic');
             } 
         }else if(gameState === "rpSection3"){
+            ctx.shadowBlur = 0;
+            animatingMutationSelection1 = false;
+            cancelAnimationFrame(myReq);
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "rpSection4"){
+            ctx.shadowBlur = 0;
+            animatingMutationSelection1 = false;
+            cancelAnimationFrame(myReq);
             playSound('music3');
             level = 14;
-            startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);    
+            startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+               
+        }else if(gameState === "rpSection5"){
+            startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+        }else if(gameState === "rpSection6"){
+            startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+        }else if(gameState === "interactiveSection1"){
+            if(e.key=="w"){
+                interactiveX1 -= 55;
+                console.log(interactiveX1);
+                showInteractiveSection1(); 
+            }
+            if(e.key=="s"){
+                interactiveX1 += 55;
+                console.log(interactiveX1);
+                showInteractiveSection1(); 
+            }
+            if(e.key=="d"){
+                interactiveY1 += 89;
+                console.log(interactiveY1);
+                showInteractiveSection1(); 
+            }
+            if(e.key=="a"){
+                interactiveY1 -= 89;
+                console.log(interactiveY1);
+                showInteractiveSection1(); 
+            }
+            if(e.key=="Enter" && interactiveY1 === 89 && interactiveX1 === 55){
+                showInteractiveSection2();
+            }
+
         }else if(gameState == "dead"){             
             showTitle();
             pauseSound('music');
@@ -95,34 +134,53 @@
             if(e.key=="w"){
                 pY = -1;
                 pX = 0;
+                playerDirection = "up";
                 player.tryMove(0, -1);
                 //console.log(pY);    
             }
             if(e.key=="s"){
                 pY = 1;
                 pX = 0;
+                playerDirection = "down";
                 player.tryMove(0, 1);
                 //console.log(pY);
             }
             if(e.key=="a"){
                 pY = 0;
                 pX = -1;
+                playerDirection = "left";
                 player.tryMove(-1, 0);
                 //console.log(pX);    
             }
             if(e.key=="d"){
                 pY = 0;
                 pX = 1;
+                playerDirection = "right";
                 player.tryMove(1, 0);
                 //console.log(pX);    
             }
 
-            if(e.key=="W" && moonShoes === true) player.tryMove(0, -2);
-            if(e.key=="S" && moonShoes === true) player.tryMove(0, 2);
-            if(e.key=="A" && moonShoes === true) player.tryMove(-2, 0);
-            if(e.key=="D" && moonShoes === true) player.tryMove(2, 0);
+            if(e.key=="W" && moonShoes === true){
+                player.tryMove(0, -2);
+                playerDirection = "up";    
+            } 
+            if(e.key=="S" && moonShoes === true){
+                player.tryMove(0, 2);
+                playerDirection = "down";
+            } 
+            if(e.key=="A" && moonShoes === true){
+                player.tryMove(-2, 0);
+                playerDirection = "left";
+            }
+            if(e.key=="D" && moonShoes === true){
+                player.tryMove(2, 0);
+                playerDirection = "right";
+            }
 
-            if(e.key=="f") tick();
+            if(e.key=="f"){
+                playerDirection = "down";
+                tick();    
+            }
             //if(e.key=="g") moonShoes = true;
             
             if(e.key==="Enter" && readyToExit === true){
@@ -135,6 +193,7 @@
                     showRpSection1();
                     level++;  
                 }else if (level === 6){
+                    animatingMutationSelection1 = true;
                     showRpSection2();
                     level += 1
                 }else if(level === 7){
@@ -146,12 +205,20 @@
                     }
                 }else if(level === 8 || level === 10 || level === 11 || level === 12){
                     if (unlockDoor0 === true && unlockDoor1 === true){
-                        level++;
-                        startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);     
+                        if(level === 12){
+                            level++;
+                            showRpSection5();
+                        }else{
+                            level++;
+                        startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);    
+                        }     
                     }else {
                         return;
                     }
-                }else {
+                }else if(level === 19){
+                    showRpSection6();    
+                }
+                else {
                     level++;
                     startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
                 }

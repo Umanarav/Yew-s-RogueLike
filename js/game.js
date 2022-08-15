@@ -1,5 +1,24 @@
 gameState = "Title";
 moonShoes = false;
+let interactiveX1 = 275;
+let interactiveY1 = 712;
+let interactiveX2 = 416;
+let interactiveY2 = 288;
+let descending = true;
+let ascending = false;
+
+let trackingRotation = 0
+
+let shrinking = false;
+let shrinkingCounter = 0;
+let shrinkingNumber = -1;
+
+let rotateClockwise = true;
+
+let myReq;
+
+let animatingMutationSelection1 = false;
+
 
 
 //
@@ -376,9 +395,7 @@ function draw(){
                     drawText("Eat walls enabled", 16, false, 538, "aqua");            
                 }else if (eatsWalls === false && eaterSoul === true){
                     drawText("Hold k to eat walls", 16, false, 538, "aqua");
-                }
-                        
-            
+                } 
         }
 
         if(gamepadConnected === true){
@@ -457,7 +474,7 @@ function tick(){
 
     if (level >= 14){
         if(Math.random() <= 0.34){
-            randomPassableTile().replace(EaterMutateWall);
+            randomPassableTile().replace(EatableEaterMutateWall);
         }    
     }
 
@@ -553,35 +570,893 @@ function showRpSection1(){
 
 function showRpSection2(){                                          
     ctx.fillStyle = 'rgba(0,0,0,.75)';
+
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     gameState = "rpSection2";
 
-    drawText("press 1 for mutationX", 55, false, 144, "white", 89);
-    drawText("press 2 for mutationY", 55, false, 233, "white", 89); 
-    drawText("press 3 for mutationZ", 55, false, 377, "white", 89);
-    //text, size, centered, textY, color, textX// 
+    animatingMutationSelection1 = true;
+
+    showInteractiveSection2();
+
+    //text, size, centered, textY, color, textX//
+
+
+
 }
 
-function showRpSection3(){                                          
-    ctx.fillStyle = 'rgba(0,0,0,1)';
-    ctx.fillRect(0,0,canvas.width, canvas.height);
+function showRpSection3(){    
+    //drawfractalanimation                                      
+        ctx.fillStyle = 'rgba(0,0,0,1)';
+        ctx.translate(interactiveX2, interactiveY2);
+        ctx.rotate((0.0023998277 * trackingRotation) * -1);
+        ctx.translate(-interactiveX2, -interactiveY2);
 
-    gameState = "rpSection3";
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillRect(0,0,canvas.width, canvas.height);
 
-    drawText("drawfractalanimation", 55, false, 377, "white", 144);
-
+        gameState = "rpSection3";
+        showInteractiveSection2();
 }
 
 function showRpSection4(){                                          
     ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.translate(interactiveX2, interactiveY2);
+    ctx.rotate((0.0023998277 * trackingRotation) * -1);
+    ctx.translate(-interactiveX2, -interactiveY2);
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     gameState = "rpSection4";
 
-    drawText("drawfractalanimation2", 55, false, 377, "white", 144);
+    showInteractiveSection2();
 
 }
+
+function showRpSection5(){
+    level = 13;                                         
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    gameState = "rpSection5";
+
+    drawText("mutation X boss fight", 55, false, 377, "white", 144);
+
+}
+
+function showRpSection6(){
+    level = 20;                                         
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    gameState = "rpSection6";
+
+    drawText("mutation Y boss fight", 55, false, 377, "white", 144);
+
+}
+
+function showInteractiveSection1(){
+    gameState = "interactiveSection1";
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    ctx.fillStyle = 'rgba(55,55,55,1)';
+    ctx.fillRect(55,55,610, 610);
+
+    ctx.fillStyle = 'rgba(89,89,89,1)';
+    ctx.fillRect(55,55,377, 377);
+
+    ctx.fillStyle = 'rgba(144,144,144,1)';
+    ctx.fillRect(55,55,233, 233);
+
+    ctx.fillStyle = 'rgba(233,233,233,1)';
+    ctx.fillRect(55,55,144, 144);
+
+    ctx.fillStyle = 'rgba(255,255,255,1)';
+    ctx.fillRect(55,55,89, 89);
+
+    ctx.fillStyle = 'rgba(55,89,144,1)';
+    ctx.fillRect(interactiveX1,interactiveX1,interactiveY1, interactiveY1);
+
+    
+
+    if(interactiveX1 === 55){
+        X1Color = "yellow"
+    }else{
+        X1Color = "white"    
+    }
+    if(interactiveY1 === 89){
+        Y1Color = "yellow"
+    }else{
+        Y1Color = "white"    
+    }    
+
+    drawText(""+interactiveX1, 89, false, 420, X1Color, 666);
+    drawText(""+interactiveY1, 89, false, 555, Y1Color, 666);
+
+}
+
+function showInteractiveSection2(){
+    if (animatingMutationSelection1 === true){
+    //gameState = "interactiveSection2";
+    //ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#D7B8D9';
+    //ctx.fillRect(0,0,canvas.width, canvas.height);
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 21;
+    
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, 233 + shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, 144 + shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, 89 + shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, 55 + shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, 34 + shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, 21 + shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, 13 + shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    //ctx.beginPath();
+    //ctx.moveTo(interactiveX2, interactiveY2);
+    ctx.fillStyle = '#F088F2';
+    ctx.shadowBlur = 5;
+    //Begin arm 1a
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, .5, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - 3.7795275591 , (1 - shrinkingNumber), 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 2) , 2 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 3) , 3 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 5) , 5 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 8) , 8 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 13) , 13 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 21) , 21 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 34) , 34 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 - (3.7795275591 * 55) , 55 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    //Begin arm 1b
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2, .5, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + 3.7795275591 , 1 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 2 - shrinkingNumber) , 2, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 3 - shrinkingNumber) , 3, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 5 - shrinkingNumber) , 5, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 8 - shrinkingNumber) , 8, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 13 - shrinkingNumber) , 13, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 21 - shrinkingNumber) , 21, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 34 - shrinkingNumber) , 34, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2, interactiveY2 + (3.7795275591 * 55 - shrinkingNumber) , 55, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+
+    //begin arm 2a
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795), interactiveY2 + (2.8346456693) , 1, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 2), interactiveY2 + (2.8346456693 * 2  - shrinkingNumber), 2, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 3), interactiveY2 + (2.8346456693 * 3 - shrinkingNumber) , 2, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 5), interactiveY2 + (2.8346456693 * 5 - shrinkingNumber) , 5, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 8), interactiveY2 + (2.8346456693 * 8 - shrinkingNumber) , 8, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 13), interactiveY2 + (2.8346456693 * 13 - shrinkingNumber) , 13, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 21), interactiveY2 + (2.8346456693 * 21 - shrinkingNumber) , 21, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 34), interactiveY2 + (2.8346456693 * 34 - shrinkingNumber) , 34, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55 - shrinkingNumber) , 55, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    //begin arm 2b
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795), interactiveY2 - (2.8346456693) , 1 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 2), interactiveY2 - (2.8346456693 * 2 - shrinkingNumber), 2, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 3), interactiveY2 - (2.8346456693 * 3 - shrinkingNumber) , 2, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 5), interactiveY2 - (2.8346456693 * 5 - shrinkingNumber) , 5, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 8), interactiveY2 - (2.8346456693 * 8 - shrinkingNumber) , 8, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 13), interactiveY2 - (2.8346456693 * 13 - shrinkingNumber) , 13, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 21), interactiveY2 - (2.8346456693 * 21 - shrinkingNumber) , 21, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 34), interactiveY2 - (2.8346456693 * 34 - shrinkingNumber) , 34, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (1.8897637795 * 55), interactiveY2 - (2.8346456693 * 55 - shrinkingNumber) , 55, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    //begin arm 3a
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - 3.7795275591, interactiveY2 , 1 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 2), interactiveY2 , 2 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 3), interactiveY2 , 3 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 5), interactiveY2 , 5 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 8), interactiveY2 , 8 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 13), interactiveY2 , 13 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 21), interactiveY2 , 21 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 34), interactiveY2 , 34 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 - (3.7795275591 * 55), interactiveY2 , 55 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    //begin arm 3b
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + 3.7795275591, interactiveY2 , 1 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 2), interactiveY2 , 2 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 3), interactiveY2 , 3 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 5), interactiveY2 , 5 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 8), interactiveY2 , 8 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 13), interactiveY2 , 13 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 21), interactiveY2 , 21 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 34), interactiveY2 , 34 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(interactiveX2 + (3.7795275591 * 55), interactiveY2 , 55 - shrinkingNumber, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    //lines 1a to 2a
+    ctx.lineWidth = 0 - (shrinkingNumber) / 2;
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 5 - (shrinkingNumber) /2 ;
+    ctx.lineCap = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 1), interactiveY2 + (2.8346456693 * 1));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 1));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 2), interactiveY2 + (2.8346456693 * 2));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 2));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 3), interactiveY2 + (2.8346456693 * 3));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 3));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 5), interactiveY2 + (2.8346456693 * 5));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 5));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 8), interactiveY2 + (2.8346456693 * 8));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 8));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 13), interactiveY2 + (2.8346456693 * 13));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 13));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 21), interactiveY2 + (2.8346456693 * 21));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 21));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 34), interactiveY2 + (2.8346456693 * 34));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 34));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55));
+    ctx.stroke();
+
+    //lines 1b to 2b
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 1), interactiveY2 - (2.8346456693 * 1));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 1));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 2), interactiveY2 - (2.8346456693 * 2));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 2));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 3), interactiveY2 - (2.8346456693 * 3));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 3));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 5), interactiveY2 - (2.8346456693 * 5));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 5));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 8), interactiveY2 - (2.8346456693 * 8));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 8));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 13), interactiveY2 - (2.8346456693 * 13));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 13));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 21), interactiveY2 - (2.8346456693 * 21));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 21));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 34), interactiveY2 - (2.8346456693 * 34));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 34));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 55), interactiveY2 - (2.8346456693 * 55));
+    ctx.stroke();
+
+    //lines 2a to 3a
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795), interactiveY2 + (2.8346456693));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 1), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 1), interactiveY2 + (2.8346456693 * 1));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 2), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 2), interactiveY2 + (2.8346456693 * 2));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 3), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 3), interactiveY2 + (2.8346456693 * 3));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 5), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 5), interactiveY2 + (2.8346456693 * 5));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 8), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 8), interactiveY2 + (2.8346456693 * 8));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 13), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 13), interactiveY2 + (2.8346456693 * 13));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 21), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 21), interactiveY2 + (2.8346456693 * 21));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 34), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 34), interactiveY2 + (2.8346456693 * 34));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    //lines 2b to 3b
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795), interactiveY2 - (2.8346456693));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 1), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 1), interactiveY2 - (2.8346456693 * 1));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 2), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 2), interactiveY2 - (2.8346456693 * 2));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 3), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 3), interactiveY2 - (2.8346456693 * 3));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 5), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 5), interactiveY2 - (2.8346456693 * 5));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 8), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 8), interactiveY2 - (2.8346456693 * 8));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 13), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 13), interactiveY2 - (2.8346456693 * 13));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 21), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 21), interactiveY2 - (2.8346456693 * 21));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 34), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 34), interactiveY2 - (2.8346456693 * 34));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    //lines 3a to 1a
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 1), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 2));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 2), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 3));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 3), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 5));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 5), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 8));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 8), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 13));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 13), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 21));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 21), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 34));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 34), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 55));
+    ctx.stroke();
+
+    //lines 3b to 1b
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 1), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 2));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 2), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 3));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 3), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 5));
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 5), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 8));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 8), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 13));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 13), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 21));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 21), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 34));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 34), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 55));
+    ctx.stroke();
+
+    //lines all around top layer 1a
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 55));
+    ctx.lineTo(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 - (3.7795275591 * 55));
+    ctx.stroke();
+
+    //lines all around top layer 1b
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 + (3.7795275591 * 55));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 55), interactiveY2 - (2.8346456693 * 55));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (1.8897637795 * 55), interactiveY2 - (2.8346456693 * 55));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (3.7795275591 * 55), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 55));
+    ctx.stroke();
+
+    //lines from 1a
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 55));
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 55));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 55));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2, interactiveY2 - (3.7795275591 * 55));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 55), interactiveY2 - (2.8346456693 * 55));
+    ctx.stroke();
+
+    //lines from 2a
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55));
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 55));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55));
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55));
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 55), interactiveY2 - (2.8346456693 * 55));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 + (1.8897637795 * 55), interactiveY2 + (2.8346456693 * 55));
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    //lines from 3a
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.lineTo(interactiveX2, interactiveY2 + (3.7795275591 * 55));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.lineTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.lineTo(interactiveX2 - (1.8897637795 * 55), interactiveY2 - (2.8346456693 * 55));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(interactiveX2 - (3.7795275591 * 55), interactiveY2);
+    ctx.lineTo(interactiveX2 + (3.7795275591 * 55), interactiveY2);
+    ctx.stroke();
+
+    if (interactiveY2 === 275){
+        descending = true;
+        ascending = false;
+    }
+
+    if (descending === true){
+        interactiveY2 += 1   
+    }
+
+    if (interactiveY2 === 301){
+        descending = false;
+        ascending = true;
+    }
+
+    if (ascending === true){
+        interactiveY2 -= 1
+  
+    }
+
+
+    if(gameState === 'rpSection2'){   
+
+        if (trackingRotation === -137){
+            rotateClockwise = true;
+        }
+        if (rotateClockwise === true){
+            trackingRotation += 1;
+            ctx.translate(interactiveX2, interactiveY2);
+            ctx.rotate(0.0023998277);
+            ctx.translate(-interactiveX2, -interactiveY2);      
+        }
+        if (trackingRotation === 137){
+            rotateClockwise = false;
+        }
+        if (rotateClockwise === false){
+            trackingRotation -= 1;
+            ctx.translate(interactiveX2, interactiveY2);
+            ctx.rotate(-0.0023998277);
+            ctx.translate(-interactiveX2, -interactiveY2);      
+        }
+    }
+
+        if (shrinking === false){
+            shrinkingNumber += -.1375
+            shrinkingCounter += 1;
+        }
+
+        if (shrinking === true){
+            shrinkingNumber += .1375
+            shrinkingCounter -= 1;
+        }
+
+        if (shrinkingCounter === 21){
+            shrinking = true;    
+        }
+
+        if (shrinkingCounter === 0){
+            shrinking = false;    
+        }
+    
+
+    if (gameState === 'rpSection2'){
+        drawText("press 1 for Moon Shoes", 55 - shrinkingNumber, false, 141 + shrinkingNumber, "black", 89 - shrinkingNumber);
+        drawText("press 2 for Eater Soul", 55 + shrinkingNumber, false, 230 - shrinkingNumber, "black", 89 + shrinkingNumber); 
+        drawText("press 3 for mutationZ", 55 - shrinkingNumber, false, 374 + shrinkingNumber, "black", 89 - shrinkingNumber);
+
+        drawText("press 1 for Moon Shoes", 55 - shrinkingNumber, false, 144 + shrinkingNumber, "white", 89 - shrinkingNumber);
+        drawText("press 2 for Eater Soul", 55 + shrinkingNumber, false, 233 - shrinkingNumber, "white", 89 + shrinkingNumber); 
+        drawText("press 3 for mutationZ", 55 - shrinkingNumber, false, 377 + shrinkingNumber, "white", 89 - shrinkingNumber);
+    }
+    
+    myReq = window.requestAnimationFrame(showInteractiveSection2); 
+        
+    //drawText("Ineractive Section 2", 55, false, 377, "white", 144);
+    }else {
+        return;
+    }
+}
+
+
 
 function startGame(){
     playSound("music");
@@ -629,7 +1504,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     }
     
     if (level >= 14){
-        console.log("this is where an exit would have been drawn");
+        console.log("this is where an exit would have been drawn, but level Y Exits are hidden in the walls!");
     }else {
         randomPassableTileNotWell().replace(Exit);    
     }
@@ -662,8 +1537,13 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){         
     readyToExit = false;
     spawnRate = 15;              
-    spawnCounter = spawnRate;                                 
-    generateBossLevel();
+    spawnCounter = spawnRate;
+    if (level === 6){
+        generateBossLevel();
+    }else if (level === 13){
+        generateBossLevel2();    
+    }                                 
+    
 
     player = new Player(randomPassableTile());
     player.hp = playerHp;

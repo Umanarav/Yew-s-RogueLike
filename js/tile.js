@@ -6,7 +6,7 @@ unlockDoor0 = false;
 unlockDoor1 = false;
 
 class Tile{
-	constructor(x, y, sprite, passable, hazard, object, exit, button){
+	constructor(x, y, sprite, passable, hazard, object, exit, button, eatable){
         this.x = x;
         this.y = y;
         this.sprite = sprite;
@@ -14,6 +14,8 @@ class Tile{
         this.hazard = hazard;
         this.object = object;
         this.exit = exit;
+        this.button = button;
+        this.eatable = eatable;
 	}
 
 	replace(newTileType){
@@ -218,10 +220,10 @@ class MutateFloor extends Tile{
 
         if(monster.isShadow || monster.isMirror){
             if (level > 6 && unlockDoor0 === true){
-                unlockDoor0 = false;
+                unlockDoor1 = false;
             }
             if (level > 6 && unlockDoor1 === true){
-                unlockDoor1 = false;
+                unlockDoor0 = false;
             }
         }
     }
@@ -348,9 +350,22 @@ class Wall extends Tile{
     }
 };
 
+class EatableWall extends Tile{
+    constructor(x, y){
+        super(x, y, 3, false, false, false, false, false, true);
+        //x, y, sprite, passable, hazard, object, exit, button, uneatable
+        this.uneatable = true;
+    }
+};
+
 class BossWall extends Tile{
     constructor(x, y){
         super(x, y, 24, false);
+    }
+};
+class EatableBossWall extends Tile{
+    constructor(x, y){
+        super(x, y, 24, false, false, false, false, false, true);
     }
 };
 
@@ -359,9 +374,21 @@ class MutateWall extends Tile{
         super(x, y, 34, false);
     }
 };
+class EatableMutateWall extends Tile{
+    constructor(x, y){
+        super(x, y, 34, false, false, false, false, false, true);
+    }
+};
+
+
 class EaterMutateWall extends Tile{
     constructor(x, y){
         super(x, y, 36, false);
+    }
+};
+class EatableEaterMutateWall extends Tile{
+    constructor(x, y){
+        super(x, y, 36, false, false, false, false, false, true);
     }
 };
 

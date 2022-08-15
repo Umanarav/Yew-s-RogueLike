@@ -1,5 +1,8 @@
 let bossDamageReduction = 1;
 eatsWalls = false;
+explodingMonsterAnimating = 5;
+explodingMonsterMoving = false;
+
 
 class Monster{
 	constructor(tile, sprite, hp){
@@ -65,11 +68,19 @@ class Monster{
     }   
 
 	draw(){
-		if(this.teleportCounter > 0){                                        
-           	drawSprite(10, this.getDisplayX(),  this.getDisplayY());                     
+		if(this.teleportCounter > 0){
+            if (level <= 6){
+                drawSprite(10, this.getDisplayX(),  this.getDisplayY());    
+            }else if (level >= 6 && level <= 13){
+                drawSprite(59, this.getDisplayX(),  this.getDisplayY());
+            }else if (level >= 14){
+                drawSprite(60, this.getDisplayX(),  this.getDisplayY());  
+            }                                                             
         }else{        
 	        drawSprite(this.sprite, this.getDisplayX(),  this.getDisplayY());
-	        this.drawHp();
+            if (!this.isBigBird){
+	           this.drawHp();
+            }
 	    }
 
 	    this.offsetX -= Math.sign(this.offsetX)*(1/8);     
@@ -93,7 +104,7 @@ class Monster{
             if(!newTile.monster && !newTile.player){
                 this.move(newTile);
             }else{
-              	if(this.isPlayer != newTile.monster.isPlayer){
+              	if(this.isPlayer != newTile.monster.isPlayer || this.isShadow || this.isMirror){
                     this.attackedThisTurn = true;
                     newTile.monster.stunned = true;
 
@@ -104,11 +115,22 @@ class Monster{
 
                     this.offsetX = (newTile.x - this.tile.x)/2;         
                     this.offsetY = (newTile.y - this.tile.y)/2;
+                    if (this.isExplodingMonster){
+                        this.hp -= 1;
+                        this.sprite = 40; 
+                        this.die();
+                        this.tile.setEffect(14); 
+                    }
+                    if(this.isLargeExplodingMonster){
+                        this.hp -= 3;
+                        this.sprite = 53; 
+                        this.die();
+                        this.tile.setEffect(14);
+                    }
                 }
             }
             return true;
-        }
-        if(!newTile.passable && this.isPlayer){
+        }else if(!newTile.passable && this.isPlayer){
             this.lastMove = [dx,dy];
             for(let k=monsters.length-1;k>=0;k--){
                 if(!monsters[k].dead){
@@ -117,19 +139,27 @@ class Monster{
                 monsters.splice(k,1);
                 }   
             }
+            player.update();
 
-            if(eatsWalls === true){
+            if(eatsWalls === true && newTile.eatable){
                 console.log(eatsWalls, "should eat this")
-                player.hp += 0.5
                 if (level >= 14){
-                    if (Math.random() >= .21){
+                    player.hp += 0.5;
+                    if (Math.random() >= .89 - (level * 4 / 100) ){
                         newTile.replace(EaterMutateFloor);    
                     }else {
                         newTile.replace(Exit);    
                     }
 
                 }else if (level > 6 && level <= 13){
-                    newTile.replace(MutateFloor);    
+                    newTile.replace(MutateFloor);
+                    player.hp += 0.5;    
+                }else if (level < 6){
+                    newTile.replace(Floor);
+                    player.hp += .25;      
+                }else if (level === 6){
+                    newTile.replace(BossFloor);
+                    player.hp += 0.5;    
                 }
                 /*let neighbors = this.tile.getAdjacentNeighbors().filter(t => !t.passable && inBounds(t.x,t.y));
                 if(neighbors.length){
@@ -152,6 +182,24 @@ class Monster{
             this.hp -= ((damage)/bossDamageReduction);
         }else {
             this.hp -= (damage);
+        }
+
+        if (this.isBigBird){
+            player.hp -= .25
+            this.tryMove(pX, pY);
+            this.stunned = true;
+
+            if(this.hp >= 5){
+                if(Math.random() >= .5){
+                this.sprite = 54;    
+                }else {
+                    this.sprite = 58;     
+                }    
+            }else if(Math.random() >= .5){
+                this.sprite = 61;    
+                }else {
+                    this.sprite = 62;     
+                }
         }
 
         
@@ -185,6 +233,10 @@ class Monster{
                 spawnAdditionalPaperweight();
             }
 
+            if(this.isExplodingMonster || this.isLargeExplodingMonster){
+                this.tile.setEffect(14);   
+            }
+
         }
 
         if(this.isPlayer){                                                     
@@ -202,6 +254,9 @@ class Monster{
             this.sprite = 1;
             gameState = "dead";
             moonShoes = false;
+        }
+        if(this.isExplodingMonster){
+            this.sprite = 40;
         }
     }
 
@@ -229,7 +284,17 @@ class Player extends Monster{
 	    }
 
 	    update(){          
-        this.shield--;                                                      
+        this.shield--;
+            if (playerDirection === "right"){
+                this.sprite = 41;
+            }else if (playerDirection === "left"){
+                this.sprite = 42;
+            }else if (playerDirection === "down"){
+                this.sprite = 0;
+            }
+            else if (playerDirection === "up"){
+                this.sprite = 43;
+            }                                                             
     	} 
 
 	    tryMove(dx, dy){
@@ -315,7 +380,28 @@ class Mage extends Monster{
             }
         }
     }
+}
 
+class Mage2 extends Monster{
+    constructor(tile){
+        super(tile, 52, 4);
+        this.isMage = true;
+    }
+
+    doStuff(){
+        let mage2X = Math.floor(Math.random() * 3)
+        let mage2Y = Math.floor(Math.random() * 3)
+
+        if (Math.random() > 0.5){
+            this.tryMove(-1 * (mage2X), -1 * (mage2Y));  
+        }else {
+            this.tryMove(mage2X, mage2Y);
+            let neighbors = this.tile.getAdjacentNeighbors().filter(t => t.passable && inBounds(t.x,t.y) && !t.exit);
+            if(neighbors.length && Math.random() <= .34 ){
+                spawnWave();
+            }
+        }
+    }
 }
 
 class Snake extends Monster{
@@ -470,5 +556,175 @@ class Mirror extends Monster{
     }
     doStuff(){
         this.tryMove(-1 * pX, pY * -1);
+    }
+}
+
+class ShadowOpposite extends Monster{
+    constructor(tile){
+        super(tile, 37, 3);
+        this.isShadow = true;
+    }
+    doStuff(){
+        this.tryMove(pY, pX);
+    }
+}
+
+class MirrorOpposite extends Monster{
+    constructor(tile){
+        super(tile, 38, 3);
+        this.isMirror = true;
+    }
+    doStuff(){
+        this.tryMove(-1 * pY, pX * -1);
+    }
+}
+
+class DarkMX extends Monster{
+    constructor(tile){
+        super(tile, 0, 6);
+        this.isShadow = true;
+    }
+    doStuff(){
+        super.doStuff();
+        this.tryMove(-1 * pX, pY);
+    }
+}
+
+class ExplodingMonster extends Monster{
+    constructor(tile){
+        super(tile, 39, 1);
+        this.isExplodingMonster = true;
+        this.baseAttack = 3;
+    }
+
+    tryMove(dx, dy){
+        if (super.tryMove(dx,dy)){
+            console.log(dx, dy);
+            
+            if (dx === 1){
+                this.sprite = 39;
+            }else if (dx === -1){
+                this.sprite = 44;
+            }else if (dy === 1){
+                this.sprite = 45;
+            }
+            else if (dy === -1){
+                this.sprite = 46;
+            } 
+            
+            if(this.hp <= 0){
+                this.sprite = 40;
+            }          
+        }
+    }
+
+    doStuff(){
+        super.doStuff();         
+    }    
+}
+
+class LargeExplodingMonster extends Monster{
+    constructor(tile){
+        super(tile, 47, 3);
+        this.isLargeExplodingMonster = true;
+        this.baseAttack = 5;
+    }
+
+    update(){
+        let startedStunned = this.stunned;
+        super.update();
+        if(!startedStunned){
+            this.stunned = true;
+        }
+    }
+
+    tryMove(dx, dy){
+        if (super.tryMove(dx,dy)){
+            console.log(dx, dy);
+
+           
+                if (dx === 1){
+                    this.sprite = 47;
+                }else if (dx === -1){
+                    this.sprite = 48;
+                }else if (dy === 1){
+                    this.sprite = 49;
+                }else if (dy === -1){
+                    this.sprite = 50;
+                }   
+            }
+
+            if(this.hp <= 0){
+                this.sprite = 51;
+            }        
+        }
+
+    doStuff(){
+        super.doStuff();         
+    }
+
+}
+
+class BigBird extends Monster{
+    constructor(tile){
+        super(tile, 53, 21);
+        this.isBigBird = true;
+    }
+
+    tryMove(dx, dy){
+        if (super.tryMove(dx,dy)){
+            console.log(dx, dy);
+            
+            if(this.hp >= 5){
+                if (dx === 1){
+                    this.sprite = 56;
+                }else if (dx === -1){
+                    this.sprite = 53;
+                }else if (dy === 1){
+                    this.sprite = 55;
+                }
+                else if (dy === -1){
+                    this.sprite = 57;
+                } 
+                
+                if(this.hp <= 0){
+                    this.sprite = 54;
+                }  
+            }else{
+                if (dx === 1){
+                    this.sprite = 65;
+                }else if (dx === -1){
+                    this.sprite = 63;
+                }else if (dy === 1){
+                    this.sprite = 64;
+                }
+                else if (dy === -1){
+                    this.sprite = 66;
+                } 
+                
+                if(this.hp <= 0){
+                    this.sprite = 64;
+                }  
+            }           
+        }
+    }
+
+    update(){
+        let startedStunned = this.stunned;
+        super.update();
+        if(!startedStunned){
+            this.stunned = true;
+        }
+    }
+
+    doStuff(){
+        if (this.hp >= 5){
+            super.doStuff();
+        }else {
+            let neighbors = this.tile.getAdjacentPassableNeighbors();
+            if(neighbors.length){
+                this.tryMove(neighbors[0].x - this.tile.x, neighbors[0].y - this.tile.y);
+            }
+        }
     }
 }
