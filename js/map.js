@@ -121,7 +121,7 @@ function generateMutationTiles(){
                 tiles[column][row] = new EatableMutateWall(column,row);
             }else if(!inBounds(column,row)){
                 tiles[column][row] = new MutateWall(column,row);    
-            }else{
+            }else {
                 tiles[column][row] = new MutateFloor(column,row);
                 passableTiles++;
             }
@@ -132,17 +132,68 @@ function generateMutationTiles(){
 
 function generateEaterMutationTiles(){
     tiles = [];
-    for(let column=0;column<numTiles;column++){
+    if (level === 20){
+        for(let column=0;column<numTiles;column++){
         tiles[column] = [];
-        for(let row=0;row<numTiles;row++){
-            if(Math.random() <= 0.34){
-                tiles[column][row] = new EatableEaterMutateWall(column,row);
-            }else if(!inBounds(column,row)){
-                tiles[column][row] = new EaterMutateWall(column,row);    
-            }else{
-                tiles[column][row] = new EaterMutateFloor(column,row);
+            for(let row=0;row<numTiles;row++){
+                if(Math.random() <= 0.34){
+                    tiles[column][row] = new EaterMutateBossFloor(column,row);
+                }else if(!inBounds(column,row)){
+                    tiles[column][row] = new EaterMutateWall(column,row);    
+                }else{
+                    tiles[column][row] = new EaterMutateBossFloor(column,row);
+                }
             }
         }
+        //middle tiles
+            tiles[2][2] = new EaterMutateBossFloor2(2, 2);
+            tiles[6][2] = new EaterMutateBossFloor2(6, 2);
+            tiles[4][7] = new EaterMutateBossFloor2(4, 7);      
+        //surrounding tiles left
+            tiles[1][2] = new EaterMutateBossWall2(1, 2);
+            tiles[5][2] = new EaterMutateBossWall2(5, 2);
+            tiles[3][7] = new EaterMutateBossWall2(3, 7);
+            //tiles[1][6] = new Floor(1, 6);
+            //tiles[5][6] = new Floor(5, 6);
+        //surrounding right
+            tiles[3][2] = new EaterMutateBossWall2(3, 2);
+            tiles[7][2] = new EaterMutateBossWall2(7, 2);
+            tiles[5][7] = new EaterMutateBossWall2(5, 7);
+            //tiles[3][6] = new Floor(3, 6);
+            //tiles[7][6] = new Floor(7, 6);
+        //surrounding up
+            tiles[2][1] = new EaterMutateBossWall2(2, 1);
+            tiles[6][1] = new EaterMutateBossWall2(6, 1);
+            tiles[4][6] = new EaterMutateBossWall2(4, 6);
+            //tiles[2][5] = new Floor(2, 5);
+            //tiles[6][5] = new Floor(6, 5);
+        //surrounding down
+            tiles[2][3] = new EaterMutateBossWall2(2, 3);
+            tiles[6][3] = new EaterMutateBossWall2(6, 3);
+            //tiles[2][7] = new Floor(2, 7);
+            //tiles[6][7] = new Floor(6, 7);
+
+        //buttons
+            tiles[6][5] = new boss2bButtonR(6, 5);
+            tiles[2][5] = new boss2bButtonL(2, 5);
+
+
+
+
+
+    }else {
+        for(let column=0;column<numTiles;column++){
+        tiles[column] = [];
+            for(let row=0;row<numTiles;row++){
+                if(Math.random() <= 0.34){
+                    tiles[column][row] = new EatableEaterMutateWall(column,row);
+                }else if(!inBounds(column,row)){
+                    tiles[column][row] = new EaterMutateWall(column,row);    
+                }else{
+                    tiles[column][row] = new EaterMutateFloor(column,row);
+                }
+            }
+        }    
     }
 }
 
@@ -178,8 +229,10 @@ function getMutateTile(x, y){
 function getEaterMutateTile(x, y){
     if(inBounds(x,y)){
         return tiles[x][y];
-    }else{
-        return new EaterMutateWall(x,y);
+    }else if(level === 20){
+        return new EaterMutateBossWall(x,y);
+    }else {
+        return new EaterMutateWall(x,y);    
     }
 }
 
@@ -196,6 +249,34 @@ function randomPassableTile(){
             tile = getEaterMutateTile(x, y);
         }else {
             tile = getTile(x, y);  
+        }
+
+        return tile.passable && !tile.monster && !tile.treasure && !tile.player && !tile.exit;
+    });
+    return tile;
+}
+
+function certainPassableTile(){
+    let tile;
+    tryTo('get random passable tile', function(){
+        let x = 4;
+        let y = 4;
+        if(level === 20){
+            tile = getEaterMutateTile(4, 4);
+        }
+
+        return tile.passable && !tile.monster && !tile.treasure && !tile.player && !tile.exit;
+    });
+    return tile;
+}
+
+function certainPassableBossTile(){
+    let tile;
+    tryTo('get random passable tile', function(){
+        let x = 2;
+        let y = 4;
+        if(level === 20){
+            tile = getEaterMutateTile(2, 4);
         }
 
         return tile.passable && !tile.monster && !tile.treasure && !tile.player && !tile.exit;
@@ -265,11 +346,15 @@ function generateMonsters(){
     monsters = [];
     let numMonsters = level+1;
 
-    if (level === 20){
-        return;
-    }else if (level >= 14){
+     if (level >= 14){
         numMonsters = level - 13
-        if (level === 19){
+
+        if (level === 20){
+            monsters.push(new EaterBoss(tiles[4][1]));
+            bossLocation = 0;
+            boss2bHP = 34;
+            boss2bDefeated = false;     
+        }else if (level === 19){
             numMonsters = 2;
         }
         if (level === 18){
@@ -311,6 +396,9 @@ function generateBossMonsters(){
 }
 
 function spawnMonster(){
+    if (level === 20){
+        //monsters.push(new EaterBoss(tiles[4][1]));        
+    }
     if (level === 19){
         let monsterType = shuffle([BigBird])[0];
         let monster = new monsterType(randomPassableTile());

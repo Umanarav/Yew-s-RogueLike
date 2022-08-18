@@ -3,6 +3,10 @@ eatsWalls = false;
 explodingMonsterAnimating = 5;
 explodingMonsterMoving = false;
 
+let bossLocation = 0;
+let boss2bHP;
+let boss2bHPCorrection = 0;
+
 
 class Monster{
 	constructor(tile, sprite, hp){
@@ -78,7 +82,7 @@ class Monster{
             }                                                             
         }else{        
 	        drawSprite(this.sprite, this.getDisplayX(),  this.getDisplayY());
-            if (!this.isBigBird){
+            if (!this.isBigBird && !this.isEaterBoss){
 	           this.drawHp();
             }
 	    }
@@ -119,13 +123,15 @@ class Monster{
                         this.hp -= 1;
                         this.sprite = 40; 
                         this.die();
-                        this.tile.setEffect(14); 
+                        this.tile.setEffect(14);
+                        playSound('smallexplosion'); 
                     }
                     if(this.isLargeExplodingMonster){
                         this.hp -= 3;
                         this.sprite = 53; 
                         this.die();
                         this.tile.setEffect(14);
+                        playSound('smallexplosion');
                     }
                 }
             }
@@ -143,12 +149,43 @@ class Monster{
 
             if(eatsWalls === true && newTile.eatable){
                 console.log(eatsWalls, "should eat this")
-                if (level >= 14){
+
+                if (level === 20){
+                    if (newTile.pylon){
+                        console.log('where boss takes damge');
+                        boss2bHP -= 1;
+                        if (newTile.hp > 0){
+                            newTile.hp -= 1;
+                            newTile.sprite += 2;
+                            playSound('dig1');
+                            shakeAmount = 3;
+                            screenshake();  
+                            return;    
+                        }else{
+                            newTile.replace(EaterMutateBossFloor);
+                            playSound('dig2');
+                            shakeAmount = 5;
+                            screenshake(); 
+                            return;    
+                        }
+
+                    }
+                    player.hp += 0.25;
+                    if (Math.random() >= .89 - (level * 4 / 100) ){
+                        newTile.replace(EaterMutateBossFloor);
+                        playSound('dig1');    
+                    }else {
+                        newTile.replace(EaterMutateBossFloor);
+                        playSound('dig2');    
+                    };
+                }else if (level >= 14 && level != 20){
                     player.hp += 0.5;
                     if (Math.random() >= .89 - (level * 4 / 100) ){
-                        newTile.replace(EaterMutateFloor);    
+                        newTile.replace(EaterMutateFloor);
+                        playSound('dig1');    
                     }else {
-                        newTile.replace(Exit);    
+                        newTile.replace(Exit);
+                        playSound('dig2');    
                     }
 
                 }else if (level > 6 && level <= 13){
@@ -243,9 +280,24 @@ class Monster{
             playSound("hit1");                                              
         }else{                                                       
             playSound("hit2");                                              
-        }   
+        }
 
-    }
+        if(this.isEaterBoss){
+            this.doStuff();
+            console.log(this.hp, 'true hp');
+            if (tier1SwordEquipped === true){
+                boss2bHP -= 3;    
+            }else{
+                boss2bHP -= 1;    
+            }
+            if (boss2bHP <= 0){
+                this.die();
+                tiles[4][4] = new MutateExit(4, 4);
+            }
+             console.log(boss2bHP, 'hp bar boss');
+            this.sprite = 86;
+        }
+}
 
     die(){
         this.dead = true;
@@ -726,5 +778,156 @@ class BigBird extends Monster{
                 this.tryMove(neighbors[0].x - this.tile.x, neighbors[0].y - this.tile.y);
             }
         }
+    }
+}
+
+class EaterBoss extends Monster{
+    constructor(tile){
+        super(tile, 71, 34);
+        this.isEaterBoss = true;
+        this.teleportCounter = 2;
+    }
+    doStuff(){
+        console.log(bossLocation);
+        if (this.hp <= 0 || boss2bHP <= 0){
+            this.die();
+        }
+        if (bossLocation === 0){
+                //movetoL
+                this.tryMove(-2, 1);
+                bossLocation = 1;
+                    turnOnL();
+            } 
+        if (Math.random() >= .75){
+            if (bossLocation === 1){
+                    turnOffL();              
+                if (Math.random() >= .5){
+                    //moveToR
+                        this.tryMove(4, 0);
+                        bossLocation = 2;
+                            turnOnR();
+                            
+                }else {
+                    //moveToB
+                    this.tryMove(2, 5);
+                    bossLocation = 3;
+                        turnOnB();
+                }          
+            }else if (bossLocation === 2){
+                        turnOffR();
+                if (Math.random() >= .5){
+                    //moveToB
+                    this.tryMove(-2, 5);
+                    bossLocation = 3;
+                        turnOnB();    
+                }else {
+                    //movetoL
+                    this.tryMove(-4, 0);
+                    bossLocation = 1;
+                        turnOnL();
+                }    
+                         
+            }else if (bossLocation === 3){
+                        turnOffB();
+                if (Math.random() >= .5){
+                    //moveToR
+                    this.tryMove(2, -5);
+                    bossLocation = 2;
+                        turnOnR();    
+                }else {
+                    //movetoL
+                    this.tryMove(-2, -5);
+                    bossLocation = 1;
+                        turnOnL();
+                }                
+            }
+            //super.doStuff();
+            console.log(bossLocation);
+        }
+    }
+
+    update(){
+
+        if (this.sprite === 71){
+            this.sprite = 78
+        }else if (this.sprite === 78){
+            if(Math.random() >= .5){
+                this.sprite = 71;
+            }else {
+                this.sprite = 80;    
+            }
+        }else if (this.sprite === 80){
+            this.sprite = 82;
+        }else if (this.sprite >= 82 && this.sprite < 85){
+            this.sprite += 1;
+        }else if (this.sprite === 85){
+            this.sprite = 78;
+        }else if (this.sprite >= 86 && this.sprite < 90){
+            this.sprite += 1;
+        }
+        else if (this.sprite === 90){
+            this.sprite = 71;
+        }
+        if (boss2bHPCorrection > 0){
+            this.hp -= boss2bHPCorrection;
+            boss2bHPCorrection -= boss2bHPCorrection;
+            this.sprite = 86;
+        }
+        let startedStunned = this.stunned;
+        super.update();
+        if(!startedStunned){
+            this.stunned = true;
+        }
+    }
+}
+
+//boss 2b functions                        
+function turnOffL(){
+    tiles[1][2] = new EaterMutateBossWall2(1, 2);
+    tiles[3][2] = new EaterMutateBossWall2(3, 2);
+    tiles[2][1] = new EaterMutateBossWall2(2, 1);
+    tiles[2][3] = new EaterMutateBossWall2(2, 3);       
+}
+
+function turnOffR(){
+    tiles[5][2] = new EaterMutateBossWall2(5, 2);
+    tiles[7][2] = new EaterMutateBossWall2(7, 2);
+    tiles[6][1] = new EaterMutateBossWall2(6, 1);
+    tiles[6][3] = new EaterMutateBossWall2(6, 3);       
+}
+
+function turnOffB(){
+    tiles[3][7] = new EaterMutateBossWall2(3, 7);
+    tiles[5][7] = new EaterMutateBossWall2(5, 7);
+    tiles[4][6] = new EaterMutateBossWall2(4, 6);       
+}
+
+function turnOnL(){
+    tiles[1][2] = new EaterMutateBossWall3(1, 2);
+    tiles[3][2] = new EaterMutateBossWall3(3, 2);
+    tiles[2][1] = new EaterMutateBossWall3(2, 1);
+    tiles[2][3] = new EaterMutateBossWall3(2, 3);       
+}
+
+function turnOnR(){
+    tiles[5][2] = new EaterMutateBossWall3(5, 2);
+    tiles[7][2] = new EaterMutateBossWall3(7, 2);
+    tiles[6][1] = new EaterMutateBossWall3(6, 1);
+    tiles[6][3] = new EaterMutateBossWall3(6, 3);       
+}
+
+function turnOnB(){
+    tiles[3][7] = new EaterMutateBossWall3(3, 7);
+    tiles[5][7] = new EaterMutateBossWall3(5, 7);
+    tiles[4][6] = new EaterMutateBossWall3(4, 6);       
+}
+
+class Boss2bLackey extends Monster{
+    constructor(tile){
+        super(tile, 78, 3);
+        this.isBoss2bLackey = true;
+    }
+    doStuff(){
+        super.doStuff();
     }
 }

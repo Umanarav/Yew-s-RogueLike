@@ -7,12 +7,16 @@
     <img id="audioSymbol" src="images/img.png" onclick="muteAudio()"/>
 </body>
 
-<canvas></canvas>
+<canvas id="layer1" style="z-index: 1;" />
+<canvas id="layer2" style="z-index: 2;" />
+
 <div style="display:none;">
   <img id="rp0image"
        src="images/spritesheet.png"
        width="512" height="16">
 </div>
+<script src="js/animation.js"></script>
+<script src="js/audio.js"></script>
 <script src="js/game.js"></script>
 <script src="js/map.js"></script>
 <script src="js/tile.js"></script>
@@ -49,7 +53,9 @@
 
     pX = 0;
     pY = 0;     
-    playerDirection = "down";    
+    playerDirection = "down";
+
+    boss2bButtonRCooldown = 0;    
 
     document.querySelector("html").onkeypress = function(e){
         console.log(e.key);
@@ -69,6 +75,7 @@
         }else if(gameState === "rpSection2"){
             if(e.key=="1"){
                 moonShoes = true;
+                cancelAnimationFrame(myReq);
                 gameState = "rpSection3";
                 showRpSection3();
                 pauseSound('music');
@@ -86,15 +93,18 @@
             ctx.shadowBlur = 0;
             animatingMutationSelection1 = false;
             cancelAnimationFrame(myReq);
+            pauseSound('transitionMusic2a');
+            ctx.restore();
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "rpSection4"){
             ctx.shadowBlur = 0;
             animatingMutationSelection1 = false;
             cancelAnimationFrame(myReq);
+            pauseSound('transitionMusic2b');
             playSound('music3');
             level = 14;
+            ctx.restore();
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
-               
         }else if(gameState === "rpSection5"){
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "rpSection6"){
@@ -298,6 +308,21 @@
                 eaterSoul = true;
             }
 
+            if (level === 20 && e.key=="Enter"){
+                tick();
+            }
+
+            if(e.key=="Enter" && boss2bButtonRPushed === true && boss2bBombable && boss2bButtonRCooldown === 0 && reveal2bHelper === true){
+                boss2bHP -= 8;
+                boss2bHPCorrection +=8;
+                    shakeAmount = 10;
+                    screenshake();
+                boss2bDamageAnimation = 34;
+                drawBoss2bDamageAnimation();
+
+                boss2bButtonRCooldown = 144;
+            }
+
     };
 
     document.querySelector("html").addEventListener("keydown", (e) => {
@@ -319,6 +344,7 @@
     setInterval(draw, 15);
 
     setupCanvas();
+    setupCanvas2();
 
     initSounds(); 
 
