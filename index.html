@@ -17,6 +17,7 @@
 </div>
 <script src="js/animation.js"></script>
 <script src="js/audio.js"></script>
+<script src="js/cutscene.js"></script>
 <script src="js/game.js"></script>
 <script src="js/map.js"></script>
 <script src="js/tile.js"></script>
@@ -108,6 +109,10 @@
         }else if(gameState === "rpSection5"){
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "rpSection6"){
+            animatingCutscene1 = false;
+            cancelAnimationFrame(myReq);
+            ctx.shadowBlur = 0;
+            pauseSound('rpSection0Music'); 
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "interactiveSection1"){
             if(e.key=="w"){

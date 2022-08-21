@@ -319,9 +319,8 @@ function tick(){
 }
 
 function startGame(){
-    playSound("music");
     soundStopped = false;                                       
-    level = 20;
+    level = 19;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
@@ -334,6 +333,12 @@ function startGame(){
     startLevel(startingHp);
 
     gameState = "running";
+    if (level >= 15 && level < 20){
+        playSound("music3");
+    }else {
+        playSound("music");    
+    }
+
 }
 
 function startLevel(playerHp, playerSpells, playerBaseAttack = 1){         
@@ -399,6 +404,8 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 
     if (level === 20){
         //play level 20 music
+        pauseSound('music');
+        playSound('boss2bMusic')
         num2bMonsters = 0;
     }
 
@@ -507,6 +514,7 @@ function screenshake(){
 
 function initSounds(){          
     sounds = {
+        boss2bMusic: new Audio('sounds/5)m.wav'),
         dig1: new Audio('sounds/dig1.wav'),
         dig2: new Audio('sounds/dig2.wav'),
 

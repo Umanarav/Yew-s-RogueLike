@@ -39,6 +39,7 @@ let boss2bDamageAnimation = 0;
 
 
 
+
 //
 /*animation*/
 const titleBackdrop0 = new Image();
@@ -175,6 +176,17 @@ function init() {
     monsterEscapeText11.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText11.png'
     monsterEscapeText12.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText12.png'
     monsterEscapeText13.src = 'rpSection0Backdrop/monsterEscapeText/monsterEscapeText13.png'
+
+    boss2b.src = 'images/boss2b.png'
+    boss2b2.src = 'images/boss2b2.png'
+    boss2b3.src = 'images/boss2b3.png'
+    boss2b4.src = 'images/boss2b4.png'
+    boss2b5.src = 'images/boss2b5.png'
+    boss2b6.src = 'images/boss2b6.png'
+    boss2b7.src = 'images/boss2b7.png'
+
+    boss2bFloor.src = 'images/boss2bFloor.png'
+    teleport2b.src = 'images/teleport2b.png'
 
     window.requestAnimationFrame(draw);
 }
@@ -411,11 +423,16 @@ function showRpSection5(){
 }
 
 function showRpSection6(){
-    level = 20;                                         
+    level = 20;
+    pauseSound('music3');
+    playSound('rpSection0Music');                                         
     ctx.fillStyle = 'rgba(0,0,0,1)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     gameState = "rpSection6";
+
+    animatingCutscene1 = true;
+    showPreBoss2bCutscene();
 
     drawText("mutation Y boss fight", 55, false, 377, "white", 144);
 
@@ -1783,10 +1800,9 @@ function drawBoss2bHelperHighlight(){
     } 
 }
 
-const boss2bDamageAnimationImage = new Image();
+
 
 function drawBoss2bDamageAnimation(){
-    boss2bDamageAnimationImage.src = 'images/rocket.png'
     if (boss2bDamageAnimation >= 1){
         boss2bDamageAnimation -=1;
         drawText('damage!', 21 + boss2bDamageAnimation, false, alienFloaterY + boss2bDamageAnimation, 'white', alienFloaterX + boss2bDamageAnimation);
@@ -1795,6 +1811,3 @@ function drawBoss2bDamageAnimation(){
         return;
     }
 }
-
-
-

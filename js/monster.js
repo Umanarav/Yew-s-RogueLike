@@ -789,9 +789,6 @@ class EaterBoss extends Monster{
     }
     doStuff(){
         console.log(bossLocation);
-        if (this.hp <= 0 || boss2bHP <= 0){
-            this.die();
-        }
         if (bossLocation === 0){
                 //movetoL
                 this.tryMove(-2, 1);
@@ -847,6 +844,9 @@ class EaterBoss extends Monster{
     }
 
     update(){
+        if (this.hp <= 0 || boss2bHP <= 0){
+            this.die();
+        }
 
         if (this.sprite === 71){
             this.sprite = 78
