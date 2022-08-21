@@ -320,7 +320,7 @@ function tick(){
 
 function startGame(){
     soundStopped = false;                                       
-    level = 19;
+    level = 1;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
