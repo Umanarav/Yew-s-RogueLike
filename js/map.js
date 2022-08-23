@@ -177,6 +177,11 @@ function generateEaterMutationTiles(){
             tiles[6][5] = new boss2bButtonR(6, 5);
             tiles[2][5] = new boss2bButtonL(2, 5);
 
+        //cable between Buttons
+            tiles[3][5] = new EaterMutateBossFloorCableDormant1(3, 5);
+            tiles[4][5] = new EaterMutateBossFloorCableDormant2(4, 5); 
+            tiles[5][5] = new EaterMutateBossFloorCableDormant3(5, 5); 
+
 
 
 
@@ -365,14 +370,14 @@ function generateMonsters(){
         }     
     }else if (level > 6 && level < 13){
         numMonsters = level - 6;
+        spawnInitialWave(); 
         if (level === 9){
             numMonsters = 1
         }else if (level === 10 || level === 11 || level === 12){
             numMonsters = 2
         }
         for(let i=0;i<numMonsters;i++){
-            spawnMonster();
-            spawnInitialWave();          
+            spawnMonster();         
         }    
     }else if (level === 13){
             numMonsters = 1;

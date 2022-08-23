@@ -37,6 +37,21 @@ let reveal2bHelperCounter = 0;
 let boss2bBombable = false;
 let boss2bDamageAnimation = 0;
 
+let circleRadius2ACounter = 0;
+let arc2Aascending = false;
+let arc2AX1Counter = 0;
+
+let animateButtonRCounter = 1;
+
+let level2aInfoX = 0;
+let level2aInfoXCounter = 0;
+
+let spriteModifier2aInfo = 29;
+let spriteModifier2aInfo2 = 0;
+
+let level2aAlphaCounter = 0;
+let level2aAlphaAscending = true;
+let animatingLevel2aTooltip = false;
 
 
 
@@ -316,6 +331,7 @@ function showTitle(){
 
     drawTitleBackdrop();
     pauseSound('music3');
+    pauseSound('boss2bMusic');
 
 }
 
@@ -1748,7 +1764,7 @@ function drawBoss2bHelper() {
 
         if(reveal2bHelper === true){
             if (reveal2bHelperCounter > 0){
-                console.log(reveal2bHelperCounter);
+                //console.log(reveal2bHelperCounter);
                 ctx.save();
                 ctx.fillStyle = 'rgba(0,0,0,.75)';
                 ctx.beginPath();
@@ -1770,6 +1786,10 @@ function drawBoss2bHelper() {
                 }
             }else if (reveal2bHelperCounter === 0){
                 reveal2bHelper = false;
+                pauseSound("powderFuseTicking");
+                cancelAnimationFrame(myReq);
+                animateDormantCable();
+                tiles[2][5] = new boss2bButtonL(2, 5);
                 return;
             }
         }
@@ -1811,3 +1831,324 @@ function drawBoss2bDamageAnimation(){
         return;
     }
 }
+
+function drawLevel2aPauseIndicator(){
+
+        ctx.save();
+        ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},100%,10%)`;
+        ctx.beginPath();
+        ctx.arc(377 + arc2AX1Counter, 32, 26, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = `hsl(${circleRadius2ACounter * 111},00%,50%)`;
+        ctx.beginPath();
+        ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, (2 - circleRadius2ACounter) * Math.PI);
+        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
+        ctx.beginPath();
+        ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, circleRadius2ACounter * Math.PI);
+        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
+
+
+        if (circleRadius2ACounter < 2){
+            circleRadius2ACounter += 0.0055555555555556
+        }else {
+            circleRadius2ACounter = 0;   
+        }
+
+        if(arc2Aascending === false && arc2AX1Counter > -144){
+            arc2AX1Counter -= 1;
+        }else if(arc2AX1Counter <= -144){
+            arc2Aascending = true;
+        }
+
+        if(arc2Aascending === true && arc2AX1Counter < 0){
+            arc2AX1Counter += 1;
+        }else if(arc2AX1Counter >= 0){
+            arc2Aascending = false;
+        }
+}
+
+function animateTile() {
+    animateButtonRCounter += 1;
+
+        if(animateButtonRCounter === 10){
+            tiles[6][5] = new boss2bButtonR2(6, 5);
+        }else if(animateButtonRCounter === 20){
+            tiles[6][5] = new boss2bButtonR3(6, 5);
+        }else if(animateButtonRCounter === 30){
+            tiles[6][5] = new boss2bButtonR4(6, 5);
+        }else if(animateButtonRCounter === 40){
+            tiles[6][5] = new boss2bButtonR5(6, 5);
+        }else if(animateButtonRCounter === 50){
+            tiles[6][5] = new boss2bButtonR6(6, 5);
+        }else if(animateButtonRCounter === 60){
+            tiles[6][5] = new boss2bButtonR7(6, 5);
+        }else if(animateButtonRCounter === 70){
+            tiles[6][5] = new boss2bButtonR8(6, 5);
+        }else if(animateButtonRCounter === 80){
+            tiles[6][5] = new boss2bButtonR2(6, 5);
+            animateButtonRCounter = 1;
+        }
+
+        if (reveal2bHelperCounter > 0){
+            myReq = window.requestAnimationFrame(animateTile);
+        }else {
+            cancelAnimationFrame(myReq);
+            animateButtonRCounter += 1
+            tiles[6][5] = new boss2bButtonRPushedCosmetic(6, 5);
+            return;
+            console.log(animateButtonRCounter); 
+        }
+    }
+
+    function animateActiveCable(){
+        tiles[3][5] = new EaterMutateBossFloorCableActive1(3, 5);
+        tiles[4][5] = new EaterMutateBossFloorCableActive2(4, 5); 
+        tiles[5][5] = new EaterMutateBossFloorCableActive3(5, 5); 
+    }
+
+    function animateDormantCable(){
+        tiles[3][5] = new EaterMutateBossFloorCableDormant1(3, 5);
+        tiles[4][5] = new EaterMutateBossFloorCableDormant2(4, 5); 
+        tiles[5][5] = new EaterMutateBossFloorCableDormant3(5, 5); 
+    }
+
+    function showLevel2aTooltip(){
+        if (animatingLevel2aTooltip = true){
+            //main black box
+            ctx.save();
+            ctx.fillStyle = `rgba(0,0,0,${1})`;
+
+            ctx.fillRect(144,144 - level2aAlphaCounter * 100,544, 244);
+            ctx.restore();
+
+            //color rectangles
+
+            
+
+            //bottom
+            ctx.save();
+            ctx.shadowColor = 'black';
+            ctx.shadowBlur = 8;
+            ctx.filter = `blur(8px )`;
+            ctx.fillStyle = `hsl(${level2aAlphaCounter * 1059}, 13%,8%)`;
+            ctx.fillRect(157,267 - level2aAlphaCounter * 100,518, 58);
+
+            ctx.fillStyle = `hsl(${level2aAlphaCounter* 1059}, 21%,13%)`;
+            ctx.fillRect(157,267 - level2aAlphaCounter * 100,518, 55);
+
+            ctx.fillStyle = `hsl(${level2aAlphaCounter* 1059}, 34%, 21%)`;
+            ctx.fillRect(157,254 - level2aAlphaCounter * 100,518, 55);
+            ctx.restore();
+
+            ctx.save();
+            ctx.shadowColor = 'black';
+            ctx.shadowBlur = 3;
+            ctx.filter = `blur(5px)`;
+            ctx.fillStyle = `hsl(${level2aAlphaCounter* 1059}, 89%,55%)`;
+            ctx.fillRect(157,233 - level2aAlphaCounter * 100,518, 55);
+            ctx.restore();
+
+            //+3
+            ctx.save();
+            ctx.shadowColor = 'black';
+            ctx.shadowBlur = 2;
+            ctx.filter = `blur(2px)`;
+            ctx.fillStyle = `hsl(${level2aAlphaCounter* 1059}, 97%,89%)`;
+            ctx.fillRect(157,233 - level2aAlphaCounter * 100,518, 8);
+            ctx.restore();
+
+
+            //outline
+            ctx.save();
+            ctx.shadowColor = `hsl(${(level2aAlphaCounter * 1059)},100%,50%)`;
+            ctx.shadowBlur = 2;
+            ctx.strokeStyle = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
+            ctx.lineWidth = 2;
+            ctx.moveTo(149, 149 - level2aAlphaCounter * 100);
+            ctx.lineTo(683,149 - level2aAlphaCounter * 100);
+            ctx.lineTo(683,383 - level2aAlphaCounter * 100);
+            ctx.lineTo(149,383 - level2aAlphaCounter * 100);
+            ctx.lineTo(149,149 - level2aAlphaCounter * 100);
+            ctx.stroke();
+            ctx.restore();
+
+            
+            ctx.save();
+            ctx.shadowColor = 'white';
+            ctx.shadowBlur = 5;
+            drawText("MX-01 is rebooting... meanwhile they dream...", 21, false, 178 - level2aAlphaCounter * 100, "white", 165);
+            if(level2aInfoXCounter >= 64){
+                drawText("Work with MX-01's Shadow(s) to finish.", 21, false, 212 - level2aAlphaCounter * 100, "white", 165);
+            }
+        
+            if(level2aInfoXCounter >= 128){
+                drawText("*Shadows can be FROZEN in place.", 21, false, 350 - level2aAlphaCounter * 100, "white", 165);
+            }
+            ctx.restore();
+
+            ctx.save();
+            ctx.shadowColor = 'yellow';
+            ctx.shadowBlur = 5;
+            drawText("Press any key to continue", 21 + level2aAlphaCounter, false, 372 - level2aAlphaCounter * 100, "yellow", 370 - level2aAlphaCounter * 610);
+            ctx.restore();
+
+            ctx.save();
+            ctx.shadowColor = 'black';
+            ctx.shadowBlur = 13;
+            //shadowexit
+            ctx.drawImage(
+                spritesheet,
+                spriteModifier2aInfo *16,
+                0,
+                16,
+                16,
+                293,
+                246 - level2aAlphaCounter * 100,
+                tileSize,
+                tileSize
+            );
+
+            if(level2aInfoXCounter >= 256){
+
+            }else {
+                //shadow
+                ctx.drawImage(
+                    spritesheet,
+                    31*16,
+                    0,
+                    16,
+                    16,
+                    165 + level2aInfoX,
+                    246 - level2aAlphaCounter * 100,
+                    tileSize,
+                    tileSize
+                );
+            }
+            
+            //REG Exit
+            ctx.drawImage(
+                spritesheet,
+                92*16,
+                0,
+                16,
+                16,
+                549,
+                246 - level2aAlphaCounter * 100,
+                tileSize,
+                tileSize
+            );
+
+            if(level2aInfoXCounter >= 256){
+
+            }else {
+                //MX-01
+                ctx.drawImage(
+                    spritesheet,
+                    0*16,
+                    0,
+                    16,
+                    16,
+                    421 + level2aInfoX,
+                    246 - level2aAlphaCounter * 100,
+                    tileSize,
+                    tileSize
+                );
+            }
+            ctx.restore();
+
+            ctx.save();
+            ctx.shadowColor = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
+            ctx.shadowBlur = level2aAlphaCounter * 100;
+            ctx.strokeStyle = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
+            ctx.fillStyle = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
+            ctx.beginPath();
+            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 17.6 + level2aAlphaCounter * 10  , 0, ((level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+            
+            ctx.save();
+            ctx.shadowColor = `hsl(${120 + (level2aAlphaCounter * 1059)},100%,50%)`;
+            ctx.shadowBlur = level2aAlphaCounter * 80;
+            ctx.strokeStyle = `hsl(${120 + (level2aAlphaCounter * 1059)},100%,50%)`;
+            ctx.beginPath();
+            ctx.arc(644  - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 9.6 + level2aAlphaCounter * 10  , 0, (2 - (level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+
+            ctx.save();
+            ctx.shadowColor = `hsl(${240 + (level2aAlphaCounter * 1059)},100%,50%)`;
+            ctx.shadowBlur = level2aAlphaCounter * 50;
+            ctx.strokeStyle = `hsl(${240 + (level2aAlphaCounter * 1059)},100%,50%)`;
+            ctx.beginPath();
+            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 4.6 + level2aAlphaCounter * 10  , 0, ((level2aAlphaCounter * 5.882352941176471) - 0.76388888888889) * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+
+            ctx.save();
+            ctx.shadowColor = `hsl(${360 + (level2aAlphaCounter * 1059)},100%,50%)`;
+            ctx.shadowBlur = level2aAlphaCounter * 30;
+            ctx.strokeStyle = `hsl(${360 + (level2aAlphaCounter * 1059)},100%,50%)`;
+            ctx.beginPath();
+            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 1.6 + level2aAlphaCounter * 10  , 0, (2 - (level2aAlphaCounter * 5.882352941176471) + 0.76388888888889) * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+
+             if(level2aInfoXCounter < 128){
+                spriteModifier2aInfo = 29;
+                spriteModifier2aInfo2 = 11;
+                level2aInfoX += 1;
+                level2aInfoXCounter += 1;
+            }else if (level2aInfoXCounter >= 128 && level2aInfoXCounter < 256){
+                level2aInfoXCounter += 1;
+                spriteModifier2aInfo = 91;
+                spriteModifier2aInfo2 = 92;
+                if(level2aInfoXCounter === 128 || level2aInfoXCounter === 129 ){
+                    level2aInfoXCounter += 2;
+                    playSound('buttonIn');
+                }
+            }else if (level2aInfoXCounter >= 256 && level2aInfoXCounter < 384){
+                level2aInfoXCounter += 1;
+
+                spriteModifier2aInfo = 29;
+                spriteModifier2aInfo2 = 11;
+
+                if(level2aInfoXCounter === 256 || level2aInfoXCounter === 257){
+                    level2aInfoXCounter += 2;
+                    playSound('buttonOut');
+                }
+            }else if (level2aInfoXCounter >= 384){
+                level2aInfoX = 0;
+                level2aInfoXCounter = 0;
+            }
+
+            if (level2aAlphaCounter < .34 && level2aAlphaAscending === true){
+                level2aAlphaCounter += 0.001
+            }else if (level2aAlphaCounter >= .34){
+                level2aAlphaAscending = false;
+            }
+            if (level2aAlphaAscending === false){
+                level2aAlphaCounter -= 0.001
+                if(level2aAlphaCounter <= 0){
+                    level2aAlphaAscending = true;
+                }
+            }
+
+            console.log(level2aAlphaCounter);
+            myReq = window.requestAnimationFrame(showLevel2aTooltip); 
+
+        }else{
+            return;
+        }
+          
+    }

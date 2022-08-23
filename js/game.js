@@ -97,6 +97,20 @@ function draw(){
 
         drawText("HP: "+player.hp, 30, false, 100, "violet");
 
+        if (level > 6 && level < 13 && monster2aPaused === true){
+            ctx.save();
+            ctx.shadowBlur = 5;
+            drawText("Shadows Frozen ", 21, false, 38, "white", 144 + arc2AX1Counter);
+
+            ctx.restore();
+            drawLevel2aPauseIndicator();    
+        }else if (level > 6 && level < 13 && monster2aPaused === false && readyToExit != true && readyToDrink != true && animatingLevel2aTooltip === false){
+            ctx.save();
+            ctx.shadowBlur = 5;
+            drawText("Press Enter to freeze Shadows ", 21, false, 38, "white", 34);
+            ctx.restore();    
+        }
+
         if (level === 20 && boss2bHP > 0){
 
             //background
@@ -136,7 +150,19 @@ function draw(){
                 drawText(spellText6, 16, false, 170+5*21, "aqua"); 
 
             drawText("Functions ", 21, false, 315 , "violet");
-                drawText("ENTER) USE(); ", 16, false, 345 , "aqua");
+                if(readyToExit === true){
+                    drawText("ENTER) useDoor(); ", 16, false, 345 , "aqua");
+                }else if(readyToDrink === true){
+                    drawText("ENTER) useWell(); ", 16, false, 345 , "aqua");
+                }else if(level === 20 && boss2bButtonRPushed === true){
+                    drawText("ENTER) fireWeapon(); ", 16, false, 345 , "aqua");
+                }else if(level > 6 && level < 13 && monster2aPaused === false && readyToExit != true && readyToDrink != true){
+                    drawText("ENTER) freezeShadows(); ", 16, false, 345 , "aqua");    
+                }else if(level > 6 && level < 13 && monster2aPaused === true && readyToExit != true && readyToDrink != true){
+                    drawText("ENTER) unFreezeShadows(); ", 16, false, 345 , "aqua");    
+                }else {
+                    drawText("ENTER) use(); ", 16, false, 345 , "aqua");
+                }
                 drawText("f) TICK(); ", 16, false, 366 , "aqua");
 
             drawText("Hardware (Press #)", 21, false, 406, "violet");
@@ -239,6 +265,11 @@ function tick(){
         }    
     }
 
+    if(level === 7 ){
+        //console.log(unlockDoor0);
+    
+    }
+
     if(level === 6){
         if(Math.random() <= 0.34){ 
             for(let i=1;i<numTiles-1;i++){
@@ -250,7 +281,7 @@ function tick(){
                 }
             }           
         }
-    }else if(level >= 4 && level < 6  || level > 7){
+    }else if(level >= 4 && level < 6){
         if(Math.random() <= 0.34){ 
             for(let i=1;i<numTiles-1;i++){
                 let findHazard = tiles[i].findIndex((tile) => tile instanceof MagicRubble);
@@ -295,7 +326,21 @@ function tick(){
 
     if (boss2bHP <= 0 && boss2bDefeated === false){
         tiles[4][4] = new MutateExit(4, 4);
+        tiles[2][5] = new boss2bButtonL(2, 5);
+        reveal2bHelperCounter = 0;
+        if (bossLocation === 1){
+            turnOffL();
+        }else if (bossLocation === 2){
+            turnOffR();
+        }else if (bossLocation === 3){
+            turnOffB();
+        }
+        playSound('boss2bDeathCry');
+        pauseSound("powderFuseTicking");
+        cancelAnimationFrame(myReq);
+        animateDormantCable();
         boss2bDefeated = true;
+
     }
 
     if (level === 20 && boss2bDefeated === false){
@@ -320,7 +365,7 @@ function tick(){
 
 function startGame(){
     soundStopped = false;                                       
-    level = 1;
+    level = 7;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
@@ -333,10 +378,18 @@ function startGame(){
     startLevel(startingHp);
 
     gameState = "running";
-    if (level >= 15 && level < 20){
+    if (level === 20){
+        //
+    }else if (level >= 15 && level < 20){
         playSound("music3");
+    }else if(level > 6 && level < 13){
+        if (level === 7){
+            animatingLevel2aTooltip = true;
+            showLevel2aTooltip();
+        }
+        pauseSound("rpSection0Music");    
     }else {
-        playSound("music");    
+        playSound("music"); 
     }
 
 }
@@ -345,6 +398,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     readyToExit = false;
     spawnRate = 15;              
     spawnCounter = spawnRate;
+
     if (level >= 14){
         generateEaterMutationLevel();    
     }else if (level > 6 && level <= 13){
@@ -375,6 +429,8 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     
     if (level >= 14){
         console.log("this is where an exit would have been drawn, but level Y Exits are hidden in the walls!");
+    }else if(level > 6 && level < 13){
+        randomPassableTileNotWell().replace(ExitLocked);
     }else {
         randomPassableTileNotWell().replace(Exit);    
     }
@@ -391,7 +447,12 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 
     if (level === 7){
         pauseSound('bossmusic');
+        pauseSound("rpSection0Music");
         playSound('music2');
+
+        animatingLevel2aTooltip = true;
+        showLevel2aTooltip();
+        
     }
     if (level === 14){
         pauseSound('music2');
@@ -408,6 +469,8 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         playSound('boss2bMusic')
         num2bMonsters = 0;
     }
+
+    reveal2bHelperCounter = 0;
 
 }
 
@@ -514,7 +577,15 @@ function screenshake(){
 
 function initSounds(){          
     sounds = {
+        boss2bExplosion: new Audio('sounds/boss2bExplosion.wav'),
         boss2bMusic: new Audio('sounds/5)m.wav'),
+        buttonIn: new Audio('sounds/buttonIn.wav'),
+        buttonOut: new Audio('sounds/buttonOut.ogg'),
+        shadowFreeze: new Audio('sounds/shadowFreeze.wav'),
+        shadowUnfreeze: new Audio('sounds/shadowUnfreeze.wav'),
+        unlockDoor: new Audio('sounds/unlockDoor.wav'),
+        doorLocked: new Audio('sounds/doorLocked.wav'),
+
         dig1: new Audio('sounds/dig1.wav'),
         dig2: new Audio('sounds/dig2.wav'),
 
@@ -538,12 +609,20 @@ function initSounds(){
         rpSection0Music: new Audio('sounds/rpSection0Music.wav'),
         transitionMusic2b: new Audio('sounds/transition1.wav'),
         transitionMusic2a: new Audio('sounds/transition2.wav'),
+        powderFuseTicking: new Audio('sounds/powderFuseTicking.wav'),
+        boss2bWoosh: new Audio('sounds/boss2bWoosh.wav'),
+        boss2bWoosh2: new Audio('sounds/boss2bWoosh2.wav'),
+        boss2bWoosh3: new Audio('sounds/boss2bWoosh3.flac'),
+        boss2bDeathCry: new Audio('sounds/boss2bDeathCry.wav'),
+
     };
         sounds.music.loop = true;
         sounds.bossmusic.loop = true;
         sounds.music2.loop = true;
         sounds.music3.loop = true;
         sounds.rpSection0Music.loop = true;
+
+        sounds.powderFuseTicking.loop = true;
 
 }
 
@@ -566,3 +645,5 @@ function playTreasureSounds(){
 };
 
 init();
+
+

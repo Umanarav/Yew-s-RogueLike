@@ -1,4 +1,4 @@
-let audioContext;
+/*let audioContext;
 
 function playSynth (delay, pitch, duration) {
   var startTime = audioContext.currentTime + delay
@@ -23,5 +23,4 @@ function playSynth (delay, pitch, duration) {
   filter.frequency.setValueAtTime(10000, audioContext.currentTime + delay)
   filter.frequency.linearRampToValueAtTime(500, audioContext.currentTime + duration)
 
-}
-
+}*/

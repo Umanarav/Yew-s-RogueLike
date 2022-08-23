@@ -93,6 +93,10 @@ class Tile{
         this.effectCounter = 30;
     }
 
+    update(){
+
+    }
+
 }
 
 class Floor extends Tile{
@@ -189,6 +193,10 @@ class MutateFloor extends Tile{
         if(monster.isPlayer && !this.exit){
             readyToExit = false;
         }
+        if(monster.isPlayer && !this.well){
+            readyToDrink = false;
+            standingInFire = false;
+        }
         if(monster.isPlayer && this.treasure){   
             score++;
             if(score % 3 == 0 && numSpells < 6){                         
@@ -228,12 +236,69 @@ class MutateFloor extends Tile{
         }
 
         if(monster.isShadow || monster.isMirror){
-            if (level > 6 && unlockDoor0 === true){
-                unlockDoor1 = false;
+            if (level > 6 && level < 13){
+                if (unlockDoor0 === true){
+                    unlockDoor0 = false;
+                playSound("buttonOut");
+                    for(let i=1;i<numTiles-1;i++){
+                        let findMutateFloorButton = tiles[i].findIndex((tile) => tile instanceof MutateFloorButton);
+                        if (findMutateFloorButton !== -1){
+                            let tile = getMutateTile(i, findMutateFloorButton);
+                            tile.replace(MutateFloorButton);
+                            break;
+                        }
+                    }
+                    for(let i=1;i<numTiles-1;i++){
+                        let findExit = tiles[i].findIndex((tile) => tile instanceof Exit);
+                        if (findExit !== -1){
+                            let tile = getMutateTile(i, findExit);
+                            tile.replace(ExitLocked);
+                            playSound("doorLocked");
+                            break;
+                        }
+                    }
+                }          
             }
-            if (level > 6 && unlockDoor1 === true){
-                unlockDoor0 = false;
+
+            if (level === 8 || level === 10 || level === 11 || level === 12 ){
+                if (unlockDoor1 === true){
+                    unlockDoor1 = false;
+                playSound("buttonOut");
+                    for(let i=1;i<numTiles-1;i++){
+                        let findMutateFloorButton2 = tiles[i].findIndex((tile) => tile instanceof MutateFloorButton2);
+                        if (findMutateFloorButton2 !== -1){
+                            let tile = getMutateTile(i, findMutateFloorButton2);
+                            tile.replace(MutateFloorButton2);
+                            break;
+                        }
+                    }
+                }
+
+                    if(unlockDoor1 === false || unlockDoor0 === false){
+                        for(let i=1;i<numTiles-1;i++){
+                            let findExit = tiles[i].findIndex((tile) => tile instanceof Exit);
+                            if (findExit !== -1){
+                                let tile = getMutateTile(i, findExit);
+                                tile.replace(ExitLocked);
+                                playSound("doorLocked");
+                                break;
+                            }
+                        }  
+                    } 
+                  
             }
+
+            /*if (level === 8 && unlockDoor1 === true && unlockDoor0 === true || level === 10 && unlockDoor1 === true && unlockDoor0 === true || level === 12 && unlockDoor1 === true && unlockDoor0 === true){
+                for(let i=1;i<numTiles-1;i++){
+                        let findExitLocked = tiles[i].findIndex((tile) => tile instanceof ExitLocked);
+                        if (findExitLocked !== -1){
+                            let tile = getMutateTile(i, findExitLocked);
+                            tile.replace(Exit);
+                            break;
+                        }
+                    }      
+            }*/
+
         }
     }
 };
@@ -309,11 +374,172 @@ class EaterMutateBossFloor extends Tile{
         }
         if (monster.isPlayer && boss2bButtonRPushed === true){
             boss2bButtonRPushed = false;
+            cancelAnimationFrame(myReq);
             tiles[6][5] = new boss2bButtonR(6, 5);
+
+            playSound('buttonOut');
         }
         if (monster.isPlayer && boss2bButtonLPushed === true){
             boss2bButtonLPushed = false;
-            tiles[2][5] = new boss2bButtonL(2, 5);
+            playSound('buttonOut');
+            reveal2bHelperCounter = 233;
+        }    
+    }
+};
+
+class EaterMutateBossFloorCableDormant1 extends Tile{
+    constructor(x,y){
+        super(x, y, 101, true, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+    stepOn(monster){
+        readyToMutate = false;
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if (monster.isPlayer && boss2bButtonRPushed === true){
+            boss2bButtonRPushed = false;
+            cancelAnimationFrame(myReq);
+            tiles[6][5] = new boss2bButtonR(6, 5);
+
+            playSound('buttonOut');
+        }
+        if (monster.isPlayer && boss2bButtonLPushed === true){
+            boss2bButtonLPushed = false;
+            playSound('buttonOut');
+            reveal2bHelperCounter = 233;
+        }    
+    }
+};
+
+class EaterMutateBossFloorCableDormant2 extends Tile{
+    constructor(x,y){
+        super(x, y, 102, true, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+    stepOn(monster){
+        readyToMutate = false;
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if (monster.isPlayer && boss2bButtonRPushed === true){
+            boss2bButtonRPushed = false;
+            cancelAnimationFrame(myReq);
+            tiles[6][5] = new boss2bButtonR(6, 5);
+
+            playSound('buttonOut');
+        }
+        if (monster.isPlayer && boss2bButtonLPushed === true){
+            boss2bButtonLPushed = false;
+            playSound('buttonOut');
+            reveal2bHelperCounter = 233;
+        }    
+    }
+};
+
+class EaterMutateBossFloorCableDormant3 extends Tile{
+    constructor(x,y){
+        super(x, y, 103, true, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+    stepOn(monster){
+        readyToMutate = false;
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if (monster.isPlayer && boss2bButtonRPushed === true){
+            boss2bButtonRPushed = false;
+            cancelAnimationFrame(myReq);
+            tiles[6][5] = new boss2bButtonR(6, 5);
+
+            playSound('buttonOut');
+        }
+        if (monster.isPlayer && boss2bButtonLPushed === true){
+            boss2bButtonLPushed = false;
+            animateDormantCable();
+            playSound('buttonOut');
+            reveal2bHelperCounter = 233;
+        }    
+    }
+};
+
+class EaterMutateBossFloorCableActive1 extends Tile{
+    constructor(x,y){
+        super(x, y, 105, true, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+    stepOn(monster){
+        readyToMutate = false;
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if (monster.isPlayer && boss2bButtonRPushed === true){
+            boss2bButtonRPushed = false;
+            cancelAnimationFrame(myReq);
+            tiles[6][5] = new boss2bButtonR(6, 5);
+
+            playSound('buttonOut');
+        }
+        if (monster.isPlayer && boss2bButtonLPushed === true){
+            boss2bButtonLPushed = false;
+            playSound('buttonOut');
+            reveal2bHelperCounter = 233;
+        }    
+    }
+};
+
+class EaterMutateBossFloorCableActive2 extends Tile{
+    constructor(x,y){
+        super(x, y, 106, true, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+    stepOn(monster){
+        readyToMutate = false;
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if (monster.isPlayer && boss2bButtonRPushed === true){
+            boss2bButtonRPushed = false;
+            cancelAnimationFrame(myReq);
+            tiles[6][5] = new boss2bButtonR(6, 5);
+
+            playSound('buttonOut');
+        }
+        if (monster.isPlayer && boss2bButtonLPushed === true){
+            boss2bButtonLPushed = false;
+            
+            playSound('buttonOut');
+            reveal2bHelperCounter = 233;
+        }    
+    }
+};
+
+class EaterMutateBossFloorCableActive3 extends Tile{
+    constructor(x,y){
+        super(x, y, 107, true, false, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+    stepOn(monster){
+        readyToMutate = false;
+        standingInFire = false;
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+        }
+        if (monster.isPlayer && boss2bButtonRPushed === true){
+            boss2bButtonRPushed = false;
+            cancelAnimationFrame(myReq);
+            tiles[6][5] = new boss2bButtonR(6, 5);
+
+            playSound('buttonOut');
+        }
+        if (monster.isPlayer && boss2bButtonLPushed === true){
+            boss2bButtonLPushed = false;
+            playSound('buttonOut');
             reveal2bHelperCounter = 233;
         }    
     }
@@ -358,9 +584,46 @@ class MutateFloorButton extends Tile{
         }
         if(monster.isShadow || monster.isMirror){
             unlockDoor0 = true;
+            playSound("buttonIn");
+            this.sprite = 91;
             //console.log(unlockDoor0, "unlockdoor");
-        }
+            if (level === 7 || level === 9 || level === 11 ){
+                for(let i=1;i<numTiles-1;i++){
+                let findExitLocked = tiles[i].findIndex((tile) => tile instanceof ExitLocked);
+                    if (findExitLocked !== -1){
+                        let tile = getMutateTile(i, findExitLocked);
+                        tile.replace(Exit);
+                        playSound("unlockDoor");
+                        break;
+                    }
+                }
+            }else if (level === 8 || level === 10 || level === 11 || level === 12){
+                if(unlockDoor0 === true && unlockDoor1 === true){
+                    playSound("buttonIn");
+                    for(let i=1;i<numTiles-1;i++){
+                    let findExitLocked = tiles[i].findIndex((tile) => tile instanceof ExitLocked);
+                        if (findExitLocked !== -1){
+                            let tile = getMutateTile(i, findExitLocked);
+                            tile.replace(Exit);
+                            playSound("unlockDoor");
+                            break;
+                        }
+                    }
 
+                }
+
+            }
+            
+        }
+        
+    }
+
+    update(){
+        if(unlockDoor0 === true){
+            this.sprite = 91;
+        }else if (unlockDoor0 === false){
+            this.sprite = 29;
+        }
     }
 };
 
@@ -386,7 +649,24 @@ class MutateFloorButton2 extends Tile{
         }
         if(monster.isShadow || monster.isMirror){
             unlockDoor1 = true;
+            playSound("buttonIn");
+            this.sprite = 91;
             //console.log(unlockDoor0, "unlockdoor");
+            if (level === 8 || level === 10 || level === 11 || level === 12){
+                if(unlockDoor0 === true && unlockDoor1 === true){
+                    for(let i=1;i<numTiles-1;i++){
+                    let findExitLocked = tiles[i].findIndex((tile) => tile instanceof ExitLocked);
+                        if (findExitLocked !== -1){
+                            let tile = getMutateTile(i, findExitLocked);
+                            tile.replace(Exit);
+                            playSound("unlockDoor");
+                            break;
+                        }
+                    }
+
+                }
+
+            }
         }
 
     }
@@ -463,6 +743,63 @@ class EaterMutateBossWall3 extends Tile{
 class Exit extends Tile{
     constructor(x, y){
         super(x, y, 11, true, false, false, true);
+        /*x, y, sprite, passable, hazard, object, exit*/
+        this.exit = true;
+    }
+
+    stepOn(monster){
+        if(monster.isPlayer){
+            readyToExit = true;
+            readyToDrink = false;
+            standingInFire = false;          
+        }
+
+        if (monster.isPlayer && this.tier1Sword){
+            if(numSword === 0){
+            numSword +=1;
+            player.addSword();
+            playSound("pickup_sword");
+            this.tier1Sword = false;
+        }else{
+            score +=1;
+            this.tier1Sword = false;
+            playSound("pickup_sword");
+            return;
+            }
+        }
+
+        if (monster.isPlayer && this.tier1Armor){
+            if(numArmor === 0){
+            numArmor +=1;
+            player.addArmor();
+            playSound("pickup_armor")
+            this.tier1Armor = false;
+        }else{
+            score +=1;
+            this.tier1Armor = false;
+            playSound("pickup_armor");
+            return;
+            }
+
+        }
+
+        if(monster.isPlayer && this.treasure){   
+            score++;
+            if(score % 3 == 0 && numSpells < 6){                         
+                numSpells += 1;                
+                player.addSpell();            
+            }  
+            playTreasureSounds();                        
+            this.treasure = false;
+            spawnMonster();
+        }
+
+    }
+}
+
+class ExitLocked extends Tile{
+    constructor(x, y){
+        super(x, y, 92, true, false, false, true);
         /*x, y, sprite, passable, hazard, object, exit*/
         this.exit = true;
     }
@@ -812,12 +1149,108 @@ class boss2bButtonR extends Tile{
     }
 
     stepOn(monster){
-        if(monster.isPlayer){
+        if(monster.isPlayer && boss2bHP > 0){
             boss2bButtonRPushed = true;
-            this.sprite = 75;   
+            if (reveal2bHelperCounter > 0){
+                this.sprite = 93;
+                animateTile();
+            }else {
+                this.sprite = 75;    
+            }
+                
+             playSound('buttonIn');   
         }
     }
 }
+
+class boss2bButtonR2 extends Tile{
+    constructor(x, y){
+        super(x, y, 93, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
+class boss2bButtonR3 extends Tile{
+    constructor(x, y){
+        super(x, y, 94, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
+class boss2bButtonR4 extends Tile{
+    constructor(x, y){
+        super(x, y, 95, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
+class boss2bButtonR5 extends Tile{
+    constructor(x, y){
+        super(x, y, 96, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
+class boss2bButtonR6 extends Tile{
+    constructor(x, y){
+        super(x, y, 97, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
+class boss2bButtonR7 extends Tile{
+    constructor(x, y){
+        super(x, y, 98, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
+class boss2bButtonR8 extends Tile{
+    constructor(x, y){
+        super(x, y, 99, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
+class boss2bButtonRPushedCosmetic extends Tile{
+    constructor(x, y){
+        super(x, y, 75, true, false, true, false);
+        //x, y, sprite, passable, hazard, object, exit
+        this.boss2bButtonR = true;
+    }
+    stepOn(monster){
+        console.log('teehee, that tickles');
+    }
+}
+
 
 class boss2bButtonL extends Tile{
     constructor(x, y){
@@ -827,9 +1260,12 @@ class boss2bButtonL extends Tile{
     }
 
     stepOn(monster){
-        if(monster.isPlayer){
+        if(monster.isPlayer && boss2bHP > 0){
             boss2bButtonLPushed = true;
             this.sprite = 79;
+            animateActiveCable();
+            playSound('buttonIn');
+            playSound("powderFuseTicking");
 
             reveal2bHelper = true;
             console.log(reveal2bHelper + 'button L pushed');

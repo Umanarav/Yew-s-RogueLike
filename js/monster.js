@@ -7,6 +7,9 @@ let bossLocation = 0;
 let boss2bHP;
 let boss2bHPCorrection = 0;
 
+let monster2aPaused = false;
+let canPause2a = true;
+
 
 class Monster{
 	constructor(tile, sprite, hp){
@@ -40,15 +43,21 @@ class Monster{
     }
 
     doStuff(){
-       let neighbors = this.tile.getAdjacentPassableNeighbors();
-       
-       neighbors = neighbors.filter(t => !t.monster || t.monster.isPlayer);
+        let neighbors = this.tile.getAdjacentPassableNeighbors();
+           
+        neighbors = neighbors.filter(t => !t.monster || t.monster.isPlayer);
 
-       if(neighbors.length){
-           neighbors.sort((a,b) => a.dist(player.tile) - b.dist(player.tile));
-           let newTile = neighbors[0];
-           this.tryMove(newTile.x - this.tile.x, newTile.y - this.tile.y);
-       }
+        if(neighbors.length){
+            neighbors.sort((a,b) => a.dist(player.tile) - b.dist(player.tile));
+            let newTile = neighbors[0];
+            this.tryMove(newTile.x - this.tile.x, newTile.y - this.tile.y);
+        }
+
+        if(this.player != true && level === 20 && boss2bHP <= 0){
+            this.die();
+        }
+
+
     }
 
     doStuffOpposite(){
@@ -293,6 +302,7 @@ class Monster{
             if (boss2bHP <= 0){
                 this.die();
                 tiles[4][4] = new MutateExit(4, 4);
+                playSound('boss2bDeathCry');
             }
              console.log(boss2bHP, 'hp bar boss');
             this.sprite = 86;
@@ -306,6 +316,7 @@ class Monster{
             this.sprite = 1;
             gameState = "dead";
             moonShoes = false;
+            reveal2bHelperCounter = 0;
         }
         if(this.isExplodingMonster){
             this.sprite = 40;
@@ -597,7 +608,11 @@ class Shadow extends Monster{
         this.isShadow = true;
     }
     doStuff(){
-        this.tryMove(pX, pY);
+        if (monster2aPaused === true){
+            return;
+        }else{
+            this.tryMove(pX, pY);    
+        }
     }
 }
 
@@ -607,7 +622,11 @@ class Mirror extends Monster{
         this.isMirror = true;
     }
     doStuff(){
-        this.tryMove(-1 * pX, pY * -1);
+        if (monster2aPaused === true){
+            return;
+        }else{
+            this.tryMove(-pX, -pY);    
+        }
     }
 }
 
@@ -617,7 +636,11 @@ class ShadowOpposite extends Monster{
         this.isShadow = true;
     }
     doStuff(){
-        this.tryMove(pY, pX);
+        if (monster2aPaused === true){
+            return;
+        }else{
+            this.tryMove(pY, pX);    
+        }
     }
 }
 
@@ -627,7 +650,11 @@ class MirrorOpposite extends Monster{
         this.isMirror = true;
     }
     doStuff(){
-        this.tryMove(-1 * pY, pX * -1);
+        if (monster2aPaused === true){
+            return;
+        }else{
+            this.tryMove(-pY, -pX);    
+        }
     }
 }
 
@@ -903,6 +930,7 @@ function turnOffB(){
 }
 
 function turnOnL(){
+    playSound('boss2bWoosh');
     tiles[1][2] = new EaterMutateBossWall3(1, 2);
     tiles[3][2] = new EaterMutateBossWall3(3, 2);
     tiles[2][1] = new EaterMutateBossWall3(2, 1);
@@ -910,6 +938,7 @@ function turnOnL(){
 }
 
 function turnOnR(){
+    playSound('boss2bWoosh2');
     tiles[5][2] = new EaterMutateBossWall3(5, 2);
     tiles[7][2] = new EaterMutateBossWall3(7, 2);
     tiles[6][1] = new EaterMutateBossWall3(6, 1);
@@ -917,6 +946,7 @@ function turnOnR(){
 }
 
 function turnOnB(){
+    playSound('boss2bWoosh3');
     tiles[3][7] = new EaterMutateBossWall3(3, 7);
     tiles[5][7] = new EaterMutateBossWall3(5, 7);
     tiles[4][6] = new EaterMutateBossWall3(4, 6);       

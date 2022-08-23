@@ -199,46 +199,71 @@
             //if(e.key=="g") moonShoes = true;
             
             if(e.key==="Enter" && readyToExit === true){
-                    playSound("newLevel");
                     welldepleted = false  
                 if(level === numLevels){
                     addScore(score, true); 
                     showTitle();
                 }else if(level === 5){
                     showRpSection1();
-                    level++;  
+                    level++;
+                    playSound("newLevel");  
                 }else if (level === 6){
                     animatingMutationSelection1 = true;
                     showRpSection2();
                     level += 1
+                    playSound("newLevel");
                 }else if(level === 7){
                     if(unlockDoor0 === true){
+                        playSound("newLevel");
                         level++;
                         startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);    
                     }else {
+                        playSound("doorLocked");
                         return;
                     }
                 }else if(level === 8 || level === 10 || level === 11 || level === 12){
                     if (unlockDoor0 === true && unlockDoor1 === true){
                         if(level === 12){
+                            playSound("newLevel");
                             level++;
                             showRpSection5();
                         }else{
+                            playSound("newLevel");
                             level++;
                         startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);    
                         }     
                     }else {
+                        playSound("doorLocked");
                         return;
                     }
                 }else if(level === 19){
+                    playSound("newLevel");
                     showRpSection6();    
                 }
                 else {
+                    playSound("newLevel");
                     level++;
                     startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
                 }
             }            
         };
+
+            if(e.key==="Enter" && readyToExit != true && readyToDrink != true){
+                if (level > 6 && level < 13){
+                    if(canPause2a === true){
+                        monster2aPaused = true;
+                        canPause2a = false;
+                        playSound('shadowFreeze');    
+                    }else {
+                        monster2aPaused = false;
+                        canPause2a = true;
+                        playSound('shadowUnfreeze');          
+                    }
+            }
+                
+                
+
+            }
 
             if(e.key==="Enter" && readyToDrink === true){
                 playSound("well");
@@ -313,11 +338,17 @@
                 eaterSoul = true;
             }
 
+            if(animatingLevel2aTooltip === true && level2aAlphaCounter > 0.001){
+                //console.log(gameState);
+                animatingLevel2aTooltip = false;
+                cancelAnimationFrame(myReq);
+            }
+
             if (level === 20 && e.key=="Enter"){
                 tick();
             }
 
-            if(e.key=="Enter" && boss2bButtonRPushed === true && boss2bBombable && boss2bButtonRCooldown === 0 && reveal2bHelper === true){
+            if(e.key=="Enter" && boss2bButtonRPushed === true && boss2bBombable === true && boss2bButtonRCooldown === 0 && reveal2bHelper === true){
                 boss2bHP -= 8;
                 boss2bHPCorrection +=8;
                     shakeAmount = 10;
@@ -326,6 +357,9 @@
                 drawBoss2bDamageAnimation();
 
                 boss2bButtonRCooldown = 144;
+                playSound('boss2bExplosion');
+            }else if (e.key=="Enter" && level === 20 && boss2bButtonRPushed === true && boss2bBombable === false){
+                playSound('doorLocked');
             }
 
     };
