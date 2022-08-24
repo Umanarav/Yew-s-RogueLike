@@ -45,6 +45,7 @@ let animateButtonRCounter = 1;
 
 let level2aInfoX = 0;
 let level2aInfoXCounter = 0;
+let level2aInfoStarCounter = 0;
 
 let spriteModifier2aInfo = 29;
 let spriteModifier2aInfo2 = 0;
@@ -1928,19 +1929,15 @@ function animateTile() {
             //main black box
             ctx.save();
             ctx.fillStyle = `rgba(0,0,0,${1})`;
-
+            ctx.clearRect(144,144 - level2aAlphaCounter * 100,544, 244);
             ctx.fillRect(144,144 - level2aAlphaCounter * 100,544, 244);
             ctx.restore();
 
             //color rectangles
-
-            
-
-            //bottom
             ctx.save();
             ctx.shadowColor = 'black';
             ctx.shadowBlur = 8;
-            ctx.filter = `blur(8px )`;
+            ctx.filter = `blur(8px)`;
             ctx.fillStyle = `hsl(${level2aAlphaCounter * 1059}, 13%,8%)`;
             ctx.fillRect(157,267 - level2aAlphaCounter * 100,518, 58);
 
@@ -1955,9 +1952,33 @@ function animateTile() {
             ctx.shadowColor = 'black';
             ctx.shadowBlur = 3;
             ctx.filter = `blur(5px)`;
-            ctx.fillStyle = `hsl(${level2aAlphaCounter* 1059}, 89%,55%)`;
+            ctx.fillStyle = `hsl(${level2aAlphaCounter * 1059}, 89%,55%)`;
             ctx.fillRect(157,233 - level2aAlphaCounter * 100,518, 55);
             ctx.restore();
+
+            ctx.save();
+            
+            ctx.fillStyle = `hsl(${level2aAlphaCounter * 1059}, 13%,8%)`;
+            //stars in background
+            for(let i=0;i<4;i++){
+                if(level2aInfoStarCounter >= 13){
+                    ctx.fillRect((136 + (level2aInfoStarCounter)),((233 + (i * 21)) - level2aAlphaCounter * 100) + level2aInfoStarCounter,3, 1);
+                    ctx.fillRect((137 + (level2aInfoStarCounter)),((232 + (i * 21)) - level2aAlphaCounter * 100) + level2aInfoStarCounter,1, 3);      
+                }
+                for(let j=0;j<25;j++){
+                    ctx.fillRect(((157 + (level2aInfoStarCounter)) + (j * 21)),((233 + (i * 21)) - level2aAlphaCounter * 100) + level2aInfoStarCounter,3, 1);
+                    ctx.fillRect(((158 + (level2aInfoStarCounter)) + (j * 21)),((232 + (i * 21)) - level2aAlphaCounter * 100) + level2aInfoStarCounter,1, 3);
+
+                    if(level2aInfoStarCounter >= 9){
+                    }else {
+                        ctx.fillRect(((157 + (level2aInfoStarCounter)) + (j * 21)),((233 + (84)) - level2aAlphaCounter * 100) + level2aInfoStarCounter,3, 1);
+                        ctx.fillRect(((158 + (level2aInfoStarCounter)) + (j * 21)),((232 + (84)) - level2aAlphaCounter * 100) + level2aInfoStarCounter,1, 3);
+                    }
+
+                }
+            }
+            ctx.restore(); 
+           
 
             //+3
             ctx.save();
@@ -1969,7 +1990,7 @@ function animateTile() {
             ctx.restore();
 
 
-            //outline
+            //outline of black box
             ctx.save();
             ctx.shadowColor = `hsl(${(level2aAlphaCounter * 1059)},100%,50%)`;
             ctx.shadowBlur = 2;
@@ -2018,6 +2039,7 @@ function animateTile() {
                 tileSize,
                 tileSize
             );
+            ctx.restore();
 
             if(level2aInfoXCounter >= 256){
 
@@ -2037,6 +2059,7 @@ function animateTile() {
             }
             
             //REG Exit
+            ctx.save();
             ctx.drawImage(
                 spritesheet,
                 92*16,
@@ -2048,6 +2071,7 @@ function animateTile() {
                 tileSize,
                 tileSize
             );
+            ctx.restore();
 
             if(level2aInfoXCounter >= 256){
 
@@ -2067,6 +2091,7 @@ function animateTile() {
             }
             ctx.restore();
 
+            //circle animation
             ctx.save();
             ctx.shadowColor = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
             ctx.shadowBlur = level2aAlphaCounter * 100;
@@ -2104,13 +2129,18 @@ function animateTile() {
             ctx.stroke();
             ctx.restore();
 
+
              if(level2aInfoXCounter < 128){
                 spriteModifier2aInfo = 29;
                 spriteModifier2aInfo2 = 11;
                 level2aInfoX += 1;
                 level2aInfoXCounter += 1;
+                level2aInfoStarCounter += 0.0546875;
             }else if (level2aInfoXCounter >= 128 && level2aInfoXCounter < 256){
                 level2aInfoXCounter += 1;
+                level2aInfoStarCounter += 0.0546875;
+
+
                 spriteModifier2aInfo = 91;
                 spriteModifier2aInfo2 = 92;
                 if(level2aInfoXCounter === 128 || level2aInfoXCounter === 129 ){
@@ -2119,6 +2149,7 @@ function animateTile() {
                 }
             }else if (level2aInfoXCounter >= 256 && level2aInfoXCounter < 384){
                 level2aInfoXCounter += 1;
+                level2aInfoStarCounter += 0.0546875;
 
                 spriteModifier2aInfo = 29;
                 spriteModifier2aInfo2 = 11;
@@ -2130,6 +2161,8 @@ function animateTile() {
             }else if (level2aInfoXCounter >= 384){
                 level2aInfoX = 0;
                 level2aInfoXCounter = 0;
+                level2aInfoStarCounter = 0;
+
             }
 
             if (level2aAlphaCounter < .34 && level2aAlphaAscending === true){

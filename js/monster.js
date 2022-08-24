@@ -902,9 +902,15 @@ class EaterBoss extends Monster{
         }
         let startedStunned = this.stunned;
         super.update();
-        if(!startedStunned){
+
+        if (boss2bButtonRCooldown > 0){
+            this.stunned = true;
+        }else {
+            if(!startedStunned){
             this.stunned = true;
         }
+        }
+        
     }
 }
 

@@ -383,10 +383,7 @@ function startGame(){
     }else if (level >= 15 && level < 20){
         playSound("music3");
     }else if(level > 6 && level < 13){
-        if (level === 7){
-            animatingLevel2aTooltip = true;
-            showLevel2aTooltip();
-        }
+        
         pauseSound("rpSection0Music");    
     }else {
         playSound("music"); 
