@@ -658,10 +658,20 @@ class MirrorOpposite extends Monster{
     }
 }
 
+class hostileShadow extends Monster{
+    constructor(tile){
+        super(tile, 109, 3);
+        this.ishostileShadow = true;
+    }
+    doStuff(){
+        super.doStuff();
+    }
+}
+
 class DarkMX extends Monster{
     constructor(tile){
         super(tile, 0, 6);
-        this.isShadow = true;
+        this.isDarkMX = true;
     }
     doStuff(){
         super.doStuff();

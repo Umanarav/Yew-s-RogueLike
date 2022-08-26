@@ -449,6 +449,7 @@ function showRpSection6(){
     gameState = "rpSection6";
 
     animatingCutscene1 = true;
+    boss2bBuffer = -1;
     showPreBoss2bCutscene();
 
     drawText("mutation Y boss fight", 55, false, 377, "white", 144);
@@ -1836,23 +1837,35 @@ function drawBoss2bDamageAnimation(){
 function drawLevel2aPauseIndicator(){
 
         ctx.save();
-        ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},100%,10%)`;
+        ctx.lineWidth = circleRadius2ACounter;
+        ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
+        ctx.shadowColor = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
+        ctx.shadowBlur = 5;
+        
         ctx.beginPath();
         ctx.arc(377 + arc2AX1Counter, 32, 26, 0, 2 * Math.PI);
         ctx.stroke();
-        ctx.fill();
+        //ctx.fill();
         ctx.restore();
 
         ctx.save();
-        ctx.fillStyle = `hsl(${circleRadius2ACounter * 111},00%,50%)`;
+        ctx.shadowColor = `hsl(${circleRadius2ACounter * 111},50%,25%)`;
+        ctx.shadowBlur = 5;
+        ctx.strokeStyle = `hsl(${circleRadius2ACounter * 111},50%,25%)`;
+        ctx.filter = `opacity(${(circleRadius2ACounter * 50) - 0.00000000000042}%)`;
         ctx.beginPath();
-        ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, (2 - circleRadius2ACounter) * Math.PI);
+        ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, (2.0000000000000084 - circleRadius2ACounter) * Math.PI);
         ctx.stroke();
         ctx.fill();
         ctx.restore();
 
+
         ctx.save();
+        ctx.strokeStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
         ctx.fillStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
+        ctx.shadowColor = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
+        ctx.shadowBlur = 5;
+        ctx.filter = `opacity(${100.00000000000042 - (circleRadius2ACounter * 50)}%)`;
         ctx.beginPath();
         ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, circleRadius2ACounter * Math.PI);
         ctx.stroke();
@@ -1877,6 +1890,10 @@ function drawLevel2aPauseIndicator(){
         }else if(arc2AX1Counter >= 0){
             arc2Aascending = false;
         }
+
+        console.log(circleRadius2ACounter);
+
+
 }
 
 function animateTile() {

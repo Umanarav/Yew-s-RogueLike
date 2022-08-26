@@ -315,7 +315,24 @@ function tick(){
 
     spawnCounter--;
     if (level > 6 && level <= 13){
-        return;
+        if (level === 13){
+            return;
+        }
+        if(spawnCounter <= 0){
+            spawnInitialWave();
+        if (level >= 8){
+            spawnInitialWave();
+        }
+        if (level >= 9){
+            spawnInitialWave();
+        }
+        if (level >= 11){
+            spawnInitialWave();
+            spawnInitialWave();
+        }       
+            spawnCounter = spawnRate;
+            spawnRate--;
+        }      
     }else {
         if(spawnCounter <= 0){  
             spawnMonster();
@@ -365,7 +382,7 @@ function tick(){
 
 function startGame(){
     soundStopped = false;                                       
-    level = 7;
+    level = 1;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
@@ -428,6 +445,8 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         console.log("this is where an exit would have been drawn, but level Y Exits are hidden in the walls!");
     }else if(level > 6 && level < 13){
         randomPassableTileNotWell().replace(ExitLocked);
+    }else if(level === 13){
+        console.log("this is where an exit would have been drawn, but level 13/level2aBoss prevents it.");
     }else {
         randomPassableTileNotWell().replace(Exit);    
     }

@@ -186,8 +186,19 @@ class MutateFloor extends Tile{
     constructor(x,y){
         super(x, y, 33, true, false, false, false, false);
         //x, y, sprite, passable, hazard, object, exit//
+        if (level === 13){
+            this.sprite = 112;
+        }
     };
     stepOn(monster){
+        if (level === 13 && this.sprite < 118){
+                //this.sprite = 112;
+                this.sprite += 1;
+                console.log('sprite should increase');
+            }else if(level === 13 && this.sprite === 118){
+                this.sprite = 112;   
+            }
+        
         readyToMutate = false;
         standingInFire = false;
         if(monster.isPlayer && !this.exit){
@@ -701,11 +712,17 @@ class EatableBossWall extends Tile{
 class MutateWall extends Tile{
     constructor(x, y){
         super(x, y, 34, false);
+        if (level === 13){
+            this.sprite = 111;
+        }
     }
 };
 class EatableMutateWall extends Tile{
     constructor(x, y){
         super(x, y, 34, false, false, false, false, false, true);
+        if (level === 13){
+            this.sprite = 111;
+        }
     }
 };
 

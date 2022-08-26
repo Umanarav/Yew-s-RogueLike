@@ -61,6 +61,7 @@ let teleport2bCounterX = 0;
 let teleport2bCounterY = 0;
 
 let boss2bScaling = 0;
+let boss2bBuffer = -1;
 
 
 let cutscene1Req;
@@ -138,17 +139,7 @@ function showPreBoss2bCutscene() {
 				colorCounter40 += 0.2777777777777778;
 				colorCounter60 += 0.4166666666666667;
 				colorCounter120 += 0.8333333333333333;
-
-				//boss2b
-				boss2bCounterX += 3.570861111111111;
-				boss2bCounterY += 2.472138888888889;
-
-				teleport2bCounterX += 2.206916666666667;
-				teleport2bCounterY += 2.472138888888889;
-
-				boss2bScaling += 0.4444444444444444;
-
-				
+	
 	        //console.log(boss2bCutsceneCounter);
 		    }else if (boss2bCutsceneCounter >= 6765){
 		        boss2bCutsceneCounter = 0;
@@ -202,14 +193,6 @@ function showPreBoss2bCutscene() {
 					colorCounter40 = 0;
 					colorCounter60 = 0;
 					colorCounter120 = 0;
-
-					//boss2b
-					boss2bCounterX = 0;
-					boss2bCounterY = 0;
-					teleport2bCounterX = 0;
-					teleport2bCounterY = 0;
-
-					boss2bScaling = 0;
 
 		    }
 
@@ -523,29 +506,64 @@ function showPreBoss2bCutscene() {
 
 		    //boss2b
 
-		    if (boss2bSpriteTracker === 1){
+		    if (boss2bSpriteTracker >= 1 && boss2bSpriteTracker <= 5 ){
 		    	boss2bSprite = boss2b;
 		    	boss2bSpriteTracker += 1
-		    }else if (boss2bSpriteTracker === 2){
+		    }else if (boss2bSpriteTracker >= 6 && boss2bSpriteTracker <= 10 ){
 		    	boss2bSprite = boss2b2;
 		    	boss2bSpriteTracker += 1
-		    }else if (boss2bSpriteTracker === 3){
+		    }else if (boss2bSpriteTracker >= 11 && boss2bSpriteTracker <= 15 ){
 		    	boss2bSprite = boss2b3;
 		    	boss2bSpriteTracker += 1
-		    }else if (boss2bSpriteTracker === 4){
+		    }else if (boss2bSpriteTracker >= 16 && boss2bSpriteTracker <= 20 ){
 		    	boss2bSprite = boss2b4;
 		    	boss2bSpriteTracker += 1
-		    }else if (boss2bSpriteTracker === 5){
+		    }else if (boss2bSpriteTracker >= 21 && boss2bSpriteTracker <= 25 ){
 		    	boss2bSprite = boss2b5;
 		    	boss2bSpriteTracker += 1
-		    }else if (boss2bSpriteTracker === 6){
+		    }else if (boss2bSpriteTracker >= 26 && boss2bSpriteTracker <= 30 ){
 		    	boss2bSprite = boss2b6;
 		    	boss2bSpriteTracker += 1
 		    }
-		    else if (boss2bSpriteTracker === 7){
+		    else if (boss2bSpriteTracker >= 31 && boss2bSpriteTracker <= 35 ){
 		    	boss2bSprite = boss2b7;
+		    	boss2bSpriteTracker += 1
+		    }else if(boss2bSpriteTracker === 36){
 		    	boss2bSpriteTracker = 1
 		    }
+		    //console.log(boss2bSpriteTracker);
+
+		    if (boss2bScaling < 64){
+		    	boss2bScaling += 0.2222222222222222;
+		    	//boss2b
+				boss2bCounterX += 1.785430555555556;
+				boss2bCounterY += 1.236069444444445;
+
+				teleport2bCounterX += 1.103458333333334;
+				teleport2bCounterY += 1.236069444444445;
+			}else if(boss2bScaling >= 64){
+				if(boss2bBuffer <= -1){
+					boss2bBuffer = 128;
+				}
+				if(boss2bBuffer > 0){
+			    	boss2bBuffer -= 1;
+			    	console.log(boss2bBuffer);
+			}else if (boss2bBuffer === 0){
+				boss2bScaling = 0;
+				//boss2b
+				boss2bCounterX = 0;
+				boss2bCounterY = 0;
+
+				teleport2bCounterX = 0;
+				teleport2bCounterY = 0;
+				boss2bBuffer = -1;
+			  }
+			}
+
+
+
+		    	
+		    
 
 
 		    ctx.save();
@@ -558,8 +576,10 @@ function showPreBoss2bCutscene() {
 		    ctx.restore();
 
 		//console.log(arcA13Counter);
-		myReq = window.requestAnimationFrame(showPreBoss2bCutscene);
-
+		
+            myReq = window.requestAnimationFrame(showPreBoss2bCutscene);
+        
+	
 		}else {
 			return;
 		}

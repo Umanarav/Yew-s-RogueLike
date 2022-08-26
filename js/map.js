@@ -117,7 +117,7 @@ function generateMutationTiles(){
     for(let column=0;column<numTiles;column++){
         tiles[column] = [];
         for(let row=0;row<numTiles;row++){
-            if(Math.random() < 0.3){
+            if(Math.random() < 0){
                 tiles[column][row] = new EatableMutateWall(column,row);
             }else if(!inBounds(column,row)){
                 tiles[column][row] = new MutateWall(column,row);    
@@ -502,7 +502,7 @@ function spawnBossMonster2(){
 };
 
 function spawnInitialWave(){
-    let monsterTypeDream = shuffle([Bird, Snake, Tank, Eater, Jester])[0];
+    let monsterTypeDream = shuffle([hostileShadow])[0];
     let monsterDream = new monsterTypeDream(randomPassableTile());
     monsters.push(monsterDream);    
 }
