@@ -48,6 +48,16 @@ function generateMutationLevel(){
     }*/
 }
 
+function generateMutationBossLevel(){
+    tryTo('generate map', function(){
+        return generateMutationBossTiles() == randomPassableTile().getConnectedTiles().length;
+    });
+    generateMonsters();
+    /*for(let i=0;i<3;i++){                                         
+        randomPassableTile().treasure = true;                            
+    }*/
+}
+
 function generateEaterMutationLevel(){
     generateEaterMutationTiles();
     generateMonsters();
@@ -112,6 +122,25 @@ function generateBossTiles2(){
 }
 
 function generateMutationTiles(){
+    let passableTiles=0;
+    tiles = [];
+    for(let column=0;column<numTiles;column++){
+        tiles[column] = [];
+        for(let row=0;row<numTiles;row++){
+            if(Math.random() <= .21){
+                tiles[column][row] = new EatableMutateWall(column,row);
+            }else if(!inBounds(column,row)){
+                tiles[column][row] = new MutateWall(column,row);    
+            }else {
+                tiles[column][row] = new MutateFloor(column,row);
+                passableTiles++;
+            }
+        }
+    }
+    return passableTiles;
+}
+
+function generateMutationBossTiles(){
     let passableTiles=0;
     tiles = [];
     for(let column=0;column<numTiles;column++){

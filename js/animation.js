@@ -54,6 +54,10 @@ let level2aAlphaCounter = 0;
 let level2aAlphaAscending = true;
 let animatingLevel2aTooltip = false;
 
+let showOptions = false;
+let optionsSelector = 1;
+let showGraphics = false;
+let graphicsSelector = 1;
 
 
 //
@@ -361,7 +365,6 @@ function showRpSection1(){
 
 function showRpSection2(){                                          
     ctx.fillStyle = 'rgba(0,0,0,.75)';
-
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     gameState = "rpSection2";
@@ -502,11 +505,16 @@ function showInteractiveSection1(){
 function showInteractiveSection2(){
     if (animatingMutationSelection1 === true){
     //gameState = "interactiveSection2";
-    //ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle = '#D7B8D9';
     //ctx.fillRect(0,0,canvas.width, canvas.height);
-    ctx.shadowColor = "black";
-    ctx.shadowBlur = 21;
+
+    if (graphicsSelector === 0){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.shadowBlur = 0;
+    }else if (graphicsSelector === 1){
+        ctx.shadowColor = "black";
+        ctx.shadowBlur = 21;
+    }
 
     if (gameState === 'rpSection3'){
         showLevel2Preview();
@@ -551,8 +559,13 @@ function showInteractiveSection2(){
 
     //ctx.beginPath();
     //ctx.moveTo(interactiveX2, interactiveY2);
-    ctx.fillStyle = '#F088F2';
+    if (graphicsSelector === 0){
+        console.log('shadows reduced , low graphics');
+    }else if (graphicsSelector === 1){
+        ctx.fillStyle = '#F088F2';
     ctx.shadowBlur = 5;
+    }
+
     //Begin arm 1a
     ctx.beginPath();
     ctx.arc(interactiveX2, interactiveY2, .5, 0, 2 * Math.PI);
@@ -1835,43 +1848,34 @@ function drawBoss2bDamageAnimation(){
 }
 
 function drawLevel2aPauseIndicator(){
-
         ctx.save();
-        ctx.lineWidth = circleRadius2ACounter;
         ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
-        ctx.shadowColor = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
-        ctx.shadowBlur = 5;
         
-        ctx.beginPath();
+        /*ctx.beginPath();
         ctx.arc(377 + arc2AX1Counter, 32, 26, 0, 2 * Math.PI);
         ctx.stroke();
         //ctx.fill();
         ctx.restore();
 
         ctx.save();
-        ctx.shadowColor = `hsl(${circleRadius2ACounter * 111},50%,25%)`;
-        ctx.shadowBlur = 5;
         ctx.strokeStyle = `hsl(${circleRadius2ACounter * 111},50%,25%)`;
+        ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
         ctx.filter = `opacity(${(circleRadius2ACounter * 50) - 0.00000000000042}%)`;
         ctx.beginPath();
         ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, (2.0000000000000084 - circleRadius2ACounter) * Math.PI);
         ctx.stroke();
         ctx.fill();
-        ctx.restore();
-
+        ctx.restore();*/
 
         ctx.save();
         ctx.strokeStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
         ctx.fillStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
-        ctx.shadowColor = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
-        ctx.shadowBlur = 5;
         ctx.filter = `opacity(${100.00000000000042 - (circleRadius2ACounter * 50)}%)`;
         ctx.beginPath();
         ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, circleRadius2ACounter * Math.PI);
         ctx.stroke();
         ctx.fill();
         ctx.restore();
-
 
         if (circleRadius2ACounter < 2){
             circleRadius2ACounter += 0.0055555555555556
@@ -1890,10 +1894,7 @@ function drawLevel2aPauseIndicator(){
         }else if(arc2AX1Counter >= 0){
             arc2Aascending = false;
         }
-
         console.log(circleRadius2ACounter);
-
-
 }
 
 function animateTile() {
@@ -2201,4 +2202,75 @@ function animateTile() {
             return;
         }
           
+    }
+
+    function showOptionsMenu(){
+        if(showOptions === true){
+            ctx.save();
+            ctx.fillStyle = `rgba(0,0,0,${1})`;
+            ctx.clearRect(144,144 - level2aAlphaCounter * 100,544, 244);
+            ctx.fillRect(144,144 - level2aAlphaCounter * 100,544, 244);
+            ctx.restore();
+
+            if(optionsSelector === 1){
+                ctx.save();
+                ctx.fillStyle = `rgba(144,0,0,${.5})`;
+                ctx.clearRect(144,144 - level2aAlphaCounter * 100, 544, 34);
+                ctx.fillRect(144,144 - level2aAlphaCounter * 100, 544, 34);
+                ctx.restore();
+            }else if(optionsSelector === 2){
+                ctx.save();
+                ctx.fillStyle = `rgba(144,0,0,${.5})`;
+                ctx.clearRect(144,188 - level2aAlphaCounter * 100, 544, 34);
+                ctx.fillRect(144,188 - level2aAlphaCounter * 100, 544, 34);
+                ctx.restore();
+            }else if(optionsSelector === 3){
+                ctx.save();
+                ctx.fillStyle = `rgba(144,0,0,${.5})`;
+                ctx.clearRect(144,224 - level2aAlphaCounter * 100, 544, 34);
+                ctx.fillRect(144,224 - level2aAlphaCounter * 100, 544, 34);
+                ctx.restore();
+            }
+
+            drawText("Dev Tools", 34, true, canvas.height/2 - 115, "white"); 
+
+            drawText("Graphics", 34, true, canvas.height/2 - 74.5, "white"); 
+
+            drawText("Exit Menu", 34, true, canvas.height/2 - 34, "white"); 
+
+            myReq = window.requestAnimationFrame(showOptionsMenu);
+        }else {
+            return;
+        }
+    }
+
+    function showGraphicsMenu(){
+        if(showGraphics === true){
+            ctx.save();
+            ctx.fillStyle = `rgba(0,0,0,${1})`;
+            ctx.clearRect(144,144 - level2aAlphaCounter * 100,544, 244);
+            ctx.fillRect(144,144 - level2aAlphaCounter * 100,544, 244);
+            ctx.restore();
+
+            drawText("Regular", 34, false, canvas.height/2, "white", canvas.height/2 + 89); 
+
+            drawText("Low", 34, false, canvas.height/2, "white", canvas.height/2 - 89); 
+
+            if (graphicsSelector === 0){
+                ctx.save();
+                ctx.fillStyle = 'rgba(255,0,0,.75)'; 
+                ctx.beginPath();
+                ctx.arc(canvas.height/2, canvas.height/2, 26, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.restore();
+            }else if (graphicsSelector === 1){
+                ctx.save();
+                ctx.fillStyle = 'rgba(255,0,0,.75)'; 
+                ctx.beginPath();
+                ctx.arc(canvas.height/2 + 244, canvas.height/2, 26, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.restore();
+            }
+        }   
+        myReq = window.requestAnimationFrame(showGraphicsMenu);
     }

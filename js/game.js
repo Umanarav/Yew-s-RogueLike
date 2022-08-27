@@ -415,9 +415,12 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 
     if (level >= 14){
         generateEaterMutationLevel();    
-    }else if (level > 6 && level <= 13){
+    }else if (level > 6 && level < 13){
         console.log(level);
         generateMutationLevel();
+        spawnRate = 30
+    }else if(level === 13){
+        generateMutationBossLevel();
         spawnRate = 30
     }else {
         generateLevel();       
