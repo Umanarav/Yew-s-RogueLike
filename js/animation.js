@@ -54,10 +54,20 @@ let level2aAlphaCounter = 0;
 let level2aAlphaAscending = true;
 let animatingLevel2aTooltip = false;
 
+var fib = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
+
+let level2aCutsceneCounter = 0;
+let level2aCutscenePercent = 34;
+let level2aCutscenePercentAscending = true;
+let animatinglevel2aCutscene = false;
+
 let showOptions = false;
 let optionsSelector = 1;
 let showGraphics = false;
 let graphicsSelector = 1;
+let showDevtools = false;
+let devtoolsSelectorY = 0;
+let devtoolsSelectorX = 0;
 
 
 //
@@ -361,6 +371,7 @@ function showRpSection1(){
 
     pauseSound('music');
     playSound('bossmusic');
+    playSound('bossmusicMenuMuffled');
 }
 
 function showRpSection2(){                                          
@@ -375,6 +386,7 @@ function showRpSection2(){
     showInteractiveSection2();
     pauseSound('music');
     pauseSound('bossmusic');
+    pauseSound('bossmusicMenuMuffled');
     playSound('rpSection0Music');
 
     previewCounter = 0;
@@ -438,7 +450,15 @@ function showRpSection5(){
 
     gameState = "rpSection5";
 
-    drawText("mutation X boss fight", 55, false, 377, "white", 144);
+    pauseSound('music');
+    pauseSound('musicMenuMuffled');
+    playSound('rpSection0Music');
+
+    animatinglevel2aCutscene = true;
+
+    showLevel2aBossCutscene();
+
+    //drawText("mutation X boss fight", 55, false, 377, "white", 144);
 
 }
 
@@ -1724,8 +1744,6 @@ function showLevel2bPreview(){
 }
 
 function drawBoss2bHelper() {
-        //console.log(alienFloaterX, 'X');
-        //console.log(alienFloaterY, 'Y');
 
         if (alienFloaterStatus === 'goingToB'){
             alienFloaterX += 0.8;
@@ -1784,7 +1802,7 @@ function drawBoss2bHelper() {
                 ctx.fillStyle = 'rgba(0,0,0,.75)';
                 ctx.beginPath();
                 ctx.arc(alienFloaterX, alienFloaterY, 34, 0, 2 * Math.PI);
-                ctx.stroke();
+                //ctx.stroke();
                 ctx.fill();
                 ctx.restore();
 
@@ -1792,11 +1810,11 @@ function drawBoss2bHelper() {
                 ctx.fillStyle = 'rgba(5,5,5,.45)';
                 ctx.beginPath();
                 ctx.arc(alienFloaterX, alienFloaterY, reveal2bHelperCounter/7, 0, 2 * Math.PI);
-                ctx.stroke();
+                //ctx.stroke();
                 ctx.fill();
                 ctx.restore();
 
-                if (boss2bButtonLPushed === false){
+                if (boss2bButtonLPushed === false && showOptions === false && showGraphics === false && showDevtools === false){
                     reveal2bHelperCounter -= 1;
                 }
             }else if (reveal2bHelperCounter === 0){
@@ -1815,7 +1833,7 @@ function drawBoss2bHelper() {
                 ctx.fillStyle = 'rgba(255,0,0,.75)';
                 ctx.beginPath();
                 ctx.arc(alienFloaterX, alienFloaterY, (boss2bButtonRCooldown/4.3), 0, 2 * Math.PI);
-                ctx.stroke();
+                //ctx.stroke();
                 ctx.fill();
                 ctx.restore();
         } 
@@ -1829,10 +1847,10 @@ function drawBoss2bHelperHighlight(){
         ctx.fillStyle = `rgba(0,144,0,.89)`;
         ctx.beginPath();
         ctx.arc(alienFloaterX, alienFloaterY, 33, 0, 2 * Math.PI);
-        ctx.stroke();
+        //ctx.stroke();
         ctx.fill();
         ctx.restore();
-    } 
+    }
 }
 
 
@@ -1848,53 +1866,55 @@ function drawBoss2bDamageAnimation(){
 }
 
 function drawLevel2aPauseIndicator(){
-        ctx.save();
-        ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
-        
-        /*ctx.beginPath();
-        ctx.arc(377 + arc2AX1Counter, 32, 26, 0, 2 * Math.PI);
-        ctx.stroke();
-        //ctx.fill();
-        ctx.restore();
+        if(monster2aPaused === true){
+                //ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
+            /*ctx.beginPath();
+            ctx.arc(377 + arc2AX1Counter, 32, 26, 0, 2 * Math.PI);
+            ctx.stroke();
+            //ctx.fill();
+            ctx.restore();
 
-        ctx.save();
-        ctx.strokeStyle = `hsl(${circleRadius2ACounter * 111},50%,25%)`;
-        ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
-        ctx.filter = `opacity(${(circleRadius2ACounter * 50) - 0.00000000000042}%)`;
-        ctx.beginPath();
-        ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, (2.0000000000000084 - circleRadius2ACounter) * Math.PI);
-        ctx.stroke();
-        ctx.fill();
-        ctx.restore();*/
+            ctx.save();
+            ctx.strokeStyle = `hsl(${circleRadius2ACounter * 111},50%,25%)`;
+            ctx.fillStyle = `hsl(${circleRadius2ACounter / 13},25%,12.5%)`;
+            ctx.filter = `opacity(${(circleRadius2ACounter * 50) - 0.00000000000042}%)`;
+            ctx.beginPath();
+            ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, (2.0000000000000084 - circleRadius2ACounter) * Math.PI);
+            ctx.stroke();
+            ctx.fill();
+            ctx.restore();*/
 
-        ctx.save();
-        ctx.strokeStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
-        ctx.fillStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
-        ctx.filter = `opacity(${100.00000000000042 - (circleRadius2ACounter * 50)}%)`;
-        ctx.beginPath();
-        ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0, circleRadius2ACounter * Math.PI);
-        ctx.stroke();
-        ctx.fill();
-        ctx.restore();
+            ctx.save();
+            ctx.strokeStyle = `hsl(${circleRadius2ACounter * 55},100%,50%)`;
+            ctx.fillStyle = `hsl(${circleRadius2ACounter * 55},50%,25%)`;
+            ctx.filter = `opacity(${100.00000000000042 - (circleRadius2ACounter * 50)}%)`;
+            ctx.beginPath();
+            ctx.arc(377 + arc2AX1Counter, 32, circleRadius2ACounter * 13, 0.1 - (circleRadius2ACounter * Math.PI), circleRadius2ACounter * Math.PI);
+            //ctx.stroke();
+            ctx.fill();
+            ctx.restore();
 
-        if (circleRadius2ACounter < 2){
-            circleRadius2ACounter += 0.0055555555555556
-        }else {
-            circleRadius2ACounter = 0;   
-        }
+            if (circleRadius2ACounter < 2){
+                circleRadius2ACounter += 0.0055555555555556
+            }else {
+                circleRadius2ACounter = 0;   
+            }
 
-        if(arc2Aascending === false && arc2AX1Counter > -144){
-            arc2AX1Counter -= 1;
-        }else if(arc2AX1Counter <= -144){
-            arc2Aascending = true;
-        }
+            if(arc2Aascending === false && arc2AX1Counter > -144){
+                arc2AX1Counter -= 1;
+            }else if(arc2AX1Counter <= -144){
+                arc2Aascending = true;
+            }
 
-        if(arc2Aascending === true && arc2AX1Counter < 0){
-            arc2AX1Counter += 1;
-        }else if(arc2AX1Counter >= 0){
-            arc2Aascending = false;
-        }
-        console.log(circleRadius2ACounter);
+            if(arc2Aascending === true && arc2AX1Counter < 0){
+                arc2AX1Counter += 1;
+            }else if(arc2AX1Counter >= 0){
+                arc2Aascending = false;
+            }
+            //console.log(circleRadius2ACounter);
+    }else {
+        return;
+    }
 }
 
 function animateTile() {
@@ -2039,7 +2059,7 @@ function animateTile() {
             ctx.save();
             ctx.shadowColor = 'yellow';
             ctx.shadowBlur = 5;
-            drawText("Press any key to continue", 21 + level2aAlphaCounter, false, 372 - level2aAlphaCounter * 100, "yellow", 370 - level2aAlphaCounter * 610);
+            drawText("Press Enter to continue", 21 + level2aAlphaCounter, false, 372 - level2aAlphaCounter * 100, "yellow", 370 - level2aAlphaCounter * 610);
             ctx.restore();
 
             ctx.save();
@@ -2111,39 +2131,34 @@ function animateTile() {
 
             //circle animation
             ctx.save();
-            ctx.shadowColor = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
-            ctx.shadowBlur = level2aAlphaCounter * 100;
+            ctx.lineWidth = 1;
             ctx.strokeStyle = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
-            ctx.fillStyle = `hsl(${level2aAlphaCounter* 1059},100%,50%)`;
             ctx.beginPath();
-            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 17.6 + level2aAlphaCounter * 10  , 0, ((level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI);
+            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 17.6 + level2aAlphaCounter * 10  , (((level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI) - .13, ((level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI);
             ctx.stroke();
             ctx.restore();
             
             ctx.save();
-            ctx.shadowColor = `hsl(${120 + (level2aAlphaCounter * 1059)},100%,50%)`;
-            ctx.shadowBlur = level2aAlphaCounter * 80;
+            ctx.lineWidth = 1;
             ctx.strokeStyle = `hsl(${120 + (level2aAlphaCounter * 1059)},100%,50%)`;
             ctx.beginPath();
-            ctx.arc(644  - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 9.6 + level2aAlphaCounter * 10  , 0, (2 - (level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI);
+            ctx.arc(644  - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 9.6 + level2aAlphaCounter * 10  , ((2 - (level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI) - .21, (2 - (level2aAlphaCounter * 5.882352941176471) + .1) * Math.PI);
             ctx.stroke();
             ctx.restore();
 
             ctx.save();
-            ctx.shadowColor = `hsl(${240 + (level2aAlphaCounter * 1059)},100%,50%)`;
-            ctx.shadowBlur = level2aAlphaCounter * 50;
+            ctx.lineWidth = 1;
             ctx.strokeStyle = `hsl(${240 + (level2aAlphaCounter * 1059)},100%,50%)`;
             ctx.beginPath();
-            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 4.6 + level2aAlphaCounter * 10  , 0, ((level2aAlphaCounter * 5.882352941176471) - 0.76388888888889) * Math.PI);
+            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 4.6 + level2aAlphaCounter * 10  , (((level2aAlphaCounter * 5.882352941176471) - 0.76388888888889) * Math.PI) - .34, ((level2aAlphaCounter * 5.882352941176471) - 0.76388888888889) * Math.PI);
             ctx.stroke();
             ctx.restore();
 
             ctx.save();
-            ctx.shadowColor = `hsl(${360 + (level2aAlphaCounter * 1059)},100%,50%)`;
-            ctx.shadowBlur = level2aAlphaCounter * 30;
+            ctx.lineWidth = 1;
             ctx.strokeStyle = `hsl(${360 + (level2aAlphaCounter * 1059)},100%,50%)`;
             ctx.beginPath();
-            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 1.6 + level2aAlphaCounter * 10  , 0, (2 - (level2aAlphaCounter * 5.882352941176471) + 0.76388888888889) * Math.PI);
+            ctx.arc(644 - level2aAlphaCounter * 100, 348 - level2aAlphaCounter * 100, 1.6 + level2aAlphaCounter * 10  , ((2 - (level2aAlphaCounter * 5.882352941176471) + 0.76388888888889) * Math.PI) - .55, (2 - (level2aAlphaCounter * 5.882352941176471) + 0.76388888888889) * Math.PI);
             ctx.stroke();
             ctx.restore();
 
@@ -2199,47 +2214,1135 @@ function animateTile() {
             myReq = window.requestAnimationFrame(showLevel2aTooltip); 
 
         }else{
+
             return;
         }
           
     }
 
+    function showLevel2aBossCutscene(){
+        if (animatinglevel2aCutscene === true){
+            ctx.save();
+            ctx.fillStyle = `hsl(${level2aCutsceneCounter * 1.545064377682403},${level2aCutscenePercent}%,${level2aCutscenePercent}%)`;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.restore();
+
+            if (level2aCutscenePercent < 89 && level2aCutscenePercentAscending === true){
+                level2aCutscenePercent += .25;
+            }else if (level2aCutscenePercent === 89){
+                level2aCutscenePercentAscending = false;
+            }
+
+            if (level2aCutscenePercentAscending === false){
+                level2aCutscenePercent -= .25;
+                if (level2aCutscenePercent === 34){
+                    level2aCutscenePercentAscending = true;
+                }
+            }
+            
+            /*for(let i = 13;i > 0;i -= 1){
+                //top left corner 
+                ctx.save();
+                ctx.fillStyle = `hsl(${i - fib[i]},${fib[i] / 3.77}%,${fib[i] / 3.77}%)`;
+                ctx.fillRect(fib[i] + (level2aCutsceneCounter / (fib[i] / fib[i - 1]),fib[i] + (level2aCutsceneCounter / (fib[i] / fib[i - 1]),fib[i] + (level2aCutsceneCounter / (fib[i] / fib[i - 1]),fib[i] + (level2aCutsceneCounter / (fib[i] / fib[i - 1]));
+                ctx.restore();
+                
+                //top right corner 
+                ctx.save();
+                ctx.fillStyle = `hsl(${i - fib[i]},${fib[i] / 3.77}%,${fib[i] / 3.77}%)`;
+                ctx.fillRect(832 - fib[i],fib[i],-1 * fib[i],fib[i]);
+                ctx.restore();    
+
+                //bottom right corner 
+                ctx.save();
+                ctx.fillStyle = `hsl(${i - fib[i]},${fib[i] / 3.77}%,${fib[i] / 3.77}%)`;
+                ctx.fillRect(832 - fib[i],576 - fib[i],-1 * fib[i],-1 * fib[i]);
+                ctx.restore();
+
+                //bottom left corner 
+                ctx.save();
+                ctx.fillStyle = `hsl(${i - fib[i]},${fib[i] / 3.77}%,${fib[i] / 3.77}%)`;
+                ctx.fillRect(fib[i],576 - fib[i],fib[i],-1 * fib[i]);
+                ctx.restore();
+
+                //circles
+
+                //top left corner
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = fib[i] / 34;
+                ctx.arc(fib[i], fib[i], fib[i],0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+                //top right corner
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = fib[i] / 34;
+                ctx.arc(832 - fib[i], fib[i], fib[i],0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+                //bottom right corner
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = fib[i] / 34;
+                ctx.arc(832 - fib[i], 576 - fib[i], fib[i],0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+                //bottom left corner
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = fib[i] / 34;
+                ctx.arc(fib[i], 576 - fib[i], fib[i],0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+            }*/
+
+                //top left squares
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(0 + (level2aCutsceneCounter / (233 / 0)),0 + (level2aCutsceneCounter / (233 / 0)),0 + (level2aCutsceneCounter / (233 / 0)),0 + (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(1 + (level2aCutsceneCounter / (233 / 0)),1 + (level2aCutsceneCounter / (233 / 0)),1 + (level2aCutsceneCounter / (233 / 0)),1 + (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(2 + (level2aCutsceneCounter / (233 / 1)),2 + (level2aCutsceneCounter / (233 / 1)),2 + (level2aCutsceneCounter / (233 / 1)),2 + (level2aCutsceneCounter / (233 / 1)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(3 + (level2aCutsceneCounter / (233 / 2)),3 + (level2aCutsceneCounter / (233 / 2)),3 + (level2aCutsceneCounter / (233 / 2)),3 + (level2aCutsceneCounter / (233 / 2)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(5 + (level2aCutsceneCounter / (233 / 3)),5 + (level2aCutsceneCounter / (233 / 3)),5 + (level2aCutsceneCounter / (233 / 3)),5 + (level2aCutsceneCounter / (233 / 3)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(8 + (level2aCutsceneCounter / (233 / 5)),8 + (level2aCutsceneCounter / (233 / 5)),8 + (level2aCutsceneCounter / (233 / 5)),8 + (level2aCutsceneCounter / (233 / 5)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(13 + (level2aCutsceneCounter / (233 / 8)),13 + (level2aCutsceneCounter / (233 / 8)),13 + (level2aCutsceneCounter / (233 / 8)),13 + (level2aCutsceneCounter / (233 / 8)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(21 + (level2aCutsceneCounter / (233 / 13)),21 + (level2aCutsceneCounter / (233 / 13)),21 + (level2aCutsceneCounter / (233 / 13)),21 + (level2aCutsceneCounter / (233 / 13)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(34 + (level2aCutsceneCounter / (233 / 21)),34 + (level2aCutsceneCounter / (233 / 21)),34 + (level2aCutsceneCounter / (233 / 21)),34 + (level2aCutsceneCounter / (233 / 21)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(55 + (level2aCutsceneCounter / (233 / 34)),55 + (level2aCutsceneCounter / (233 / 34)),55 + (level2aCutsceneCounter / (233 / 34)),55 + (level2aCutsceneCounter / (233 / 34)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(89 + (level2aCutsceneCounter / (233 / 55)),89 + (level2aCutsceneCounter / (233 / 55)),89 + (level2aCutsceneCounter / (233 / 55)),89 + (level2aCutsceneCounter / (233 / 55)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(144 + (level2aCutsceneCounter / (233 / 89)),144 + (level2aCutsceneCounter / (233 / 89)),144 + (level2aCutsceneCounter / (233 / 89)),144 + (level2aCutsceneCounter / (233 / 89)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(233 + (level2aCutsceneCounter / (233 / 144)),233 + (level2aCutsceneCounter / (233 / 144)),233 + (level2aCutsceneCounter / (233 / 144)),233 + (level2aCutsceneCounter / (233 / 144)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(377 + level2aCutsceneCounter,377 + level2aCutsceneCounter,377 + level2aCutsceneCounter,377 + level2aCutsceneCounter);
+                ctx.restore();
+
+            //top right squares
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(833 - (level2aCutsceneCounter / (233 / 0)),0 + (level2aCutsceneCounter / (233 / 0)),-0 - (level2aCutsceneCounter / (233 / 0)),0 + (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(832 - (level2aCutsceneCounter / (233 / 0)),1 + (level2aCutsceneCounter / (233 / 0)),-1 - (level2aCutsceneCounter / (233 / 0)),1 + (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(831 - (level2aCutsceneCounter / (233 / 1)),2 + (level2aCutsceneCounter / (233 / 1)),-2 - (level2aCutsceneCounter / (233 / 1)),2 + (level2aCutsceneCounter / (233 / 1)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(830 - (level2aCutsceneCounter / (233 / 2)),3 + (level2aCutsceneCounter / (233 / 2)),-3 - (level2aCutsceneCounter / (233 / 2)),3 + (level2aCutsceneCounter / (233 / 2)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(828 - (level2aCutsceneCounter / (233 / 3)),5 + (level2aCutsceneCounter / (233 / 3)),-5 - (level2aCutsceneCounter / (233 / 3)),5 + (level2aCutsceneCounter / (233 / 3)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(825 - (level2aCutsceneCounter / (233 / 5)),8 + (level2aCutsceneCounter / (233 / 5)),-8 - (level2aCutsceneCounter / (233 / 5)),8 + (level2aCutsceneCounter / (233 / 5)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(820 - (level2aCutsceneCounter / (233 / 8)),13 + (level2aCutsceneCounter / (233 / 8)),-13 - (level2aCutsceneCounter / (233 / 8)),13 + (level2aCutsceneCounter / (233 / 8)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(812 - (level2aCutsceneCounter / (233 / 13)),21 + (level2aCutsceneCounter / (233 / 13)),-21 - (level2aCutsceneCounter / (233 / 13)),21 + (level2aCutsceneCounter / (233 / 13)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(799 - (level2aCutsceneCounter / (233 / 21)),34 + (level2aCutsceneCounter / (233 / 21)),-34 - (level2aCutsceneCounter / (233 / 21)),34 + (level2aCutsceneCounter / (233 / 21)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(778 - (level2aCutsceneCounter / (233 / 34)),55 + (level2aCutsceneCounter / (233 / 34)),-55 - (level2aCutsceneCounter / (233 / 34)),55 + (level2aCutsceneCounter / (233 / 34)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(744 - (level2aCutsceneCounter / (233 / 55)),89 + (level2aCutsceneCounter / (233 / 55)),-89 - (level2aCutsceneCounter / (233 / 55)),89 + (level2aCutsceneCounter / (233 / 55)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(689 - (level2aCutsceneCounter / (233 / 89)),144 + (level2aCutsceneCounter / (233 / 89)),-144 - (level2aCutsceneCounter / (233 / 89)),144 + (level2aCutsceneCounter / (233 / 89)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(600 - (level2aCutsceneCounter / (233 / 144)),233 + (level2aCutsceneCounter / (233 / 144)),-233 - (level2aCutsceneCounter / (233 / 144)),233 + (level2aCutsceneCounter / (233 / 144)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(456 - level2aCutsceneCounter,377 + level2aCutsceneCounter,-377 - level2aCutsceneCounter,377 + level2aCutsceneCounter);
+                ctx.restore();
+
+            //bottom right squares
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(833 - (level2aCutsceneCounter / (233 / 0)),577 - (level2aCutsceneCounter / (233 / 0)),-0 - (level2aCutsceneCounter / (233 / 0)),0 - (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(832 - (level2aCutsceneCounter / (233 / 0)),577 - 1 - (level2aCutsceneCounter / (233 / 0)),-1 - (level2aCutsceneCounter / (233 / 0)),-1 - (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(831 - (level2aCutsceneCounter / (233 / 1)),577 - 2 - (level2aCutsceneCounter / (233 / 1)),-2 - (level2aCutsceneCounter / (233 / 1)),-2 - (level2aCutsceneCounter / (233 / 1)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(830 - (level2aCutsceneCounter / (233 / 2)),577 - 3 - (level2aCutsceneCounter / (233 / 2)),-3 - (level2aCutsceneCounter / (233 / 2)),-3 - (level2aCutsceneCounter / (233 / 2)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(828 - (level2aCutsceneCounter / (233 / 3)),577 - 5 - (level2aCutsceneCounter / (233 / 3)),-5 - (level2aCutsceneCounter / (233 / 3)),-5 - (level2aCutsceneCounter / (233 / 3)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(825 - (level2aCutsceneCounter / (233 / 5)),577 - 8 - (level2aCutsceneCounter / (233 / 5)),-8 - (level2aCutsceneCounter / (233 / 5)),-8 - (level2aCutsceneCounter / (233 / 5)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(820 - (level2aCutsceneCounter / (233 / 8)),577 - 13 - (level2aCutsceneCounter / (233 / 8)),-13 - (level2aCutsceneCounter / (233 / 8)),-13 - (level2aCutsceneCounter / (233 / 8)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(812 - (level2aCutsceneCounter / (233 / 13)),577 - 21 - (level2aCutsceneCounter / (233 / 13)),-21 - (level2aCutsceneCounter / (233 / 13)),-21 - (level2aCutsceneCounter / (233 / 13)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(799 - (level2aCutsceneCounter / (233 / 21)),577 - 34 - (level2aCutsceneCounter / (233 / 21)),-34 - (level2aCutsceneCounter / (233 / 21)),-34 - (level2aCutsceneCounter / (233 / 21)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(778 - (level2aCutsceneCounter / (233 / 34)),577 - 55 - (level2aCutsceneCounter / (233 / 34)),-55 - (level2aCutsceneCounter / (233 / 34)),-55 - (level2aCutsceneCounter / (233 / 34)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(744 - (level2aCutsceneCounter / (233 / 55)),577 - 89 - (level2aCutsceneCounter / (233 / 55)),-89 - (level2aCutsceneCounter / (233 / 55)),-89 - (level2aCutsceneCounter / (233 / 55)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(689 - (level2aCutsceneCounter / (233 / 89)),577 - 144 - (level2aCutsceneCounter / (233 / 89)),-144 - (level2aCutsceneCounter / (233 / 89)),-144 - (level2aCutsceneCounter / (233 / 89)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(600 - (level2aCutsceneCounter / (233 / 144)),577 - 233 - (level2aCutsceneCounter / (233 / 144)),-233 - (level2aCutsceneCounter / (233 / 144)),-233 - (level2aCutsceneCounter / (233 / 144)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(456 - level2aCutsceneCounter,577 - 377 - level2aCutsceneCounter,-377 - level2aCutsceneCounter,-377 - level2aCutsceneCounter);
+                ctx.restore();
+
+                //bottom left squares
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(0 + (level2aCutsceneCounter / (233 / 0)),577 - (level2aCutsceneCounter / (233 / 0)),0 + (level2aCutsceneCounter / (233 / 0)),0 - (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(1 + (level2aCutsceneCounter / (233 / 0)),577 - 1 - (level2aCutsceneCounter / (233 / 0)),1 + (level2aCutsceneCounter / (233 / 0)),-1 - (level2aCutsceneCounter / (233 / 0)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(2 + (level2aCutsceneCounter / (233 / 1)),577 - 2 - (level2aCutsceneCounter / (233 / 1)),2 + (level2aCutsceneCounter / (233 / 1)),-2 - (level2aCutsceneCounter / (233 / 1)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(3 + (level2aCutsceneCounter / (233 / 2)),577 - 3 - (level2aCutsceneCounter / (233 / 2)),3 + (level2aCutsceneCounter / (233 / 2)),-3 - (level2aCutsceneCounter / (233 / 2)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(5 + (level2aCutsceneCounter / (233 / 3)),577 - 5 - (level2aCutsceneCounter / (233 / 3)),5 + (level2aCutsceneCounter / (233 / 3)),-5 - (level2aCutsceneCounter / (233 / 3)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(8 + (level2aCutsceneCounter / (233 / 5)),577 - 8 - (level2aCutsceneCounter / (233 / 5)),8 + (level2aCutsceneCounter / (233 / 5)),-8 - (level2aCutsceneCounter / (233 / 5)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(13 + (level2aCutsceneCounter / (233 / 8)),577 - 13 - (level2aCutsceneCounter / (233 / 8)),13 + (level2aCutsceneCounter / (233 / 8)),-13 - (level2aCutsceneCounter / (233 / 8)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(21 + (level2aCutsceneCounter / (233 / 13)),577 - 21 - (level2aCutsceneCounter / (233 / 13)),21 + (level2aCutsceneCounter / (233 / 13)),-21 - (level2aCutsceneCounter / (233 / 13)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(34 + (level2aCutsceneCounter / (233 / 21)),577 - 34 - (level2aCutsceneCounter / (233 / 21)),34 + (level2aCutsceneCounter / (233 / 21)),-34 - (level2aCutsceneCounter / (233 / 21)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(55 + (level2aCutsceneCounter / (233 / 34)),577 - 55 - (level2aCutsceneCounter / (233 / 34)),55 + (level2aCutsceneCounter / (233 / 34)),-55 - (level2aCutsceneCounter / (233 / 34)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(89 + (level2aCutsceneCounter / (233 / 55)),577 - 89 - (level2aCutsceneCounter / (233 / 55)),89 + (level2aCutsceneCounter / (233 / 55)),-89 - (level2aCutsceneCounter / (233 / 55)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(144 + (level2aCutsceneCounter / (233 / 89)),577 - 144 - (level2aCutsceneCounter / (233 / 89)),144 + (level2aCutsceneCounter / (233 / 89)),-144 - (level2aCutsceneCounter / (233 / 89)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(233 + (level2aCutsceneCounter / (233 / 144)),577 - 233 - (level2aCutsceneCounter / (233 / 144)),233 + (level2aCutsceneCounter / (233 / 144)),-233 - (level2aCutsceneCounter / (233 / 144)));
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = `rgba(0,0,0,.13)`;
+                ctx.fillRect(377 + level2aCutsceneCounter,577 - 377 - level2aCutsceneCounter,377 + level2aCutsceneCounter,-377 - level2aCutsceneCounter);
+                ctx.restore();
+
+
+                //top left circles 
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (0 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(0 + (level2aCutsceneCounter / (233 / -1)), 0 + (level2aCutsceneCounter / (233 / -1)), (0 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.fill();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (1 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(1 + (level2aCutsceneCounter / (233 / 0)), 1 + (level2aCutsceneCounter / (233 / 0)), (1 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (2 + (level2aCutsceneCounter / (233 / 1))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(2 + (level2aCutsceneCounter / (233 / 1)), 2 + (level2aCutsceneCounter / (233 / 1)), (2 + (level2aCutsceneCounter / (233 / 1))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (3 + (level2aCutsceneCounter / (233 / 2))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(3 + (level2aCutsceneCounter / (233 / 2)), 3 + (level2aCutsceneCounter / (233 / 2)), (3 + (level2aCutsceneCounter / (233 / 2))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (5 + (level2aCutsceneCounter / (233 / 3))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(5 + (level2aCutsceneCounter / (233 / 3)), 5 + (level2aCutsceneCounter / (233 / 3)), (5 + (level2aCutsceneCounter / (233 / 3))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (8 + (level2aCutsceneCounter / (233 / 5))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(8 + (level2aCutsceneCounter / (233 / 5)), 8 + (level2aCutsceneCounter / (233 / 5)), (8 + (level2aCutsceneCounter / (233 / 5))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (13 + (level2aCutsceneCounter / (233 / 8))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(13 + (level2aCutsceneCounter / (233 / 8)), 13 + (level2aCutsceneCounter / (233 / 8)), (13 + (level2aCutsceneCounter / (233 / 8))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (21 + (level2aCutsceneCounter / (233 / 13))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(21 + (level2aCutsceneCounter / (233 / 13)), 21 + (level2aCutsceneCounter / (233 / 13)), (21 + (level2aCutsceneCounter / (233 / 13))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (34 + (level2aCutsceneCounter / (233 / 21))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(34 + (level2aCutsceneCounter / (233 / 21)), 34 + (level2aCutsceneCounter / (233 / 21)), (34 + (level2aCutsceneCounter / (233 / 21))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (55 + (level2aCutsceneCounter / (233 / 34))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(55 + (level2aCutsceneCounter / (233 / 34)), 55 + (level2aCutsceneCounter / (233 / 34)), (55 + (level2aCutsceneCounter / (233 / 34))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (89 + (level2aCutsceneCounter / (233 / 55))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(89 + (level2aCutsceneCounter / (233 / 55)), 89 + (level2aCutsceneCounter / (233 / 55)), (89 + (level2aCutsceneCounter / (233 / 55))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (144 + (level2aCutsceneCounter / (233 / 89))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(144 + (level2aCutsceneCounter / (233 / 89)), 144 + (level2aCutsceneCounter / (233 / 89)), (144 + (level2aCutsceneCounter / (233 / 89))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (233 + (level2aCutsceneCounter / (233 / 144))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(233 + (level2aCutsceneCounter / (233 / 144)), 233 + (level2aCutsceneCounter / (233 / 144)), (233 + (level2aCutsceneCounter / (233 / 144))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (377 + (level2aCutsceneCounter / (233 / 233))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(377 + level2aCutsceneCounter, 377 + level2aCutsceneCounter, (377 + level2aCutsceneCounter) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (610 + (level2aCutsceneCounter / (233 / 377))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(610 + (level2aCutsceneCounter / (233 / 377)), 610 + (level2aCutsceneCounter / (233 / 377)), (610 + (level2aCutsceneCounter / (233 / 377))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (987 + (level2aCutsceneCounter / (233 / 610))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(987 + (level2aCutsceneCounter / (233 / 610)), 987 + (level2aCutsceneCounter / (233 / 610)), (987 + (level2aCutsceneCounter / (233 / 610))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+            //op right circles
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (0 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(833 - (level2aCutsceneCounter / (233 / -1)), 0 + (level2aCutsceneCounter / (233 / -1)), (0 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (1 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(832- (level2aCutsceneCounter / (233 / 0)), 1 + (level2aCutsceneCounter / (233 / 0)), (1 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (2 + (level2aCutsceneCounter / (233 / 1))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(831 - (level2aCutsceneCounter / (233 / 1)), 2 + (level2aCutsceneCounter / (233 / 1)), (2 + (level2aCutsceneCounter / (233 / 1))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (3 + (level2aCutsceneCounter / (233 / 2))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(830 - (level2aCutsceneCounter / (233 / 2)), 3 + (level2aCutsceneCounter / (233 / 2)), (3 + (level2aCutsceneCounter / (233 / 2))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (5 + (level2aCutsceneCounter / (233 / 3))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(828 - (level2aCutsceneCounter / (233 / 3)), 5 + (level2aCutsceneCounter / (233 / 3)), (5 + (level2aCutsceneCounter / (233 / 3))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (8 + (level2aCutsceneCounter / (233 / 5))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(825 - (level2aCutsceneCounter / (233 / 5)), 8 + (level2aCutsceneCounter / (233 / 5)), (8 + (level2aCutsceneCounter / (233 / 5))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (13 + (level2aCutsceneCounter / (233 / 8))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(820 - (level2aCutsceneCounter / (233 / 8)), 13 + (level2aCutsceneCounter / (233 / 8)), (13 + (level2aCutsceneCounter / (233 / 8))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (21 + (level2aCutsceneCounter / (233 / 13))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(812 - (level2aCutsceneCounter / (233 / 13)), 21 + (level2aCutsceneCounter / (233 / 13)), (21 + (level2aCutsceneCounter / (233 / 13))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (34 + (level2aCutsceneCounter / (233 / 21))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(799 - (level2aCutsceneCounter / (233 / 21)), 34 + (level2aCutsceneCounter / (233 / 21)), (34 + (level2aCutsceneCounter / (233 / 21))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (55 + (level2aCutsceneCounter / (233 / 34))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(778 - (level2aCutsceneCounter / (233 / 34)), 55 + (level2aCutsceneCounter / (233 / 34)), (55 + (level2aCutsceneCounter / (233 / 34))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (89 + (level2aCutsceneCounter / (233 / 55))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(744 - (level2aCutsceneCounter / (233 / 55)), 89 + (level2aCutsceneCounter / (233 / 55)), (89 + (level2aCutsceneCounter / (233 / 55))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (144 + (level2aCutsceneCounter / (233 / 89))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(689 - (level2aCutsceneCounter / (233 / 89)), 144 + (level2aCutsceneCounter / (233 / 89)), (144 + (level2aCutsceneCounter / (233 / 89))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (233 + (level2aCutsceneCounter / (233 / 144))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(600 - (level2aCutsceneCounter / (233 / 144)), 233 + (level2aCutsceneCounter / (233 / 144)), (233 + (level2aCutsceneCounter / (233 / 144))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (377 + (level2aCutsceneCounter / (233 / 233))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(456 - level2aCutsceneCounter, 377 + level2aCutsceneCounter, (377 + level2aCutsceneCounter) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (610 + (level2aCutsceneCounter / (233 / 377))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(223 - (level2aCutsceneCounter / (233 / 377)), 610 + (level2aCutsceneCounter / (233 / 377)), (610 + (level2aCutsceneCounter / (233 / 377))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (987 + (level2aCutsceneCounter / (233 / 610))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(-154 - (level2aCutsceneCounter / (233 / 610)), 987 + (level2aCutsceneCounter / (233 / 610)), (987 + (level2aCutsceneCounter / (233 / 610))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                //bottom right circles
+                ctx.save();
+                ctx.beginPath();
+                ctx.fillStyle = ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (0 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(833 - (level2aCutsceneCounter / (233 / -1)),577 - 0 - (level2aCutsceneCounter / (233 / -1)), (0 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (1 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(832- (level2aCutsceneCounter / (233 / 0)), 577 - 1 - (level2aCutsceneCounter / (233 / 0)), (1 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (2 + (level2aCutsceneCounter / (233 / 1))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(831 - (level2aCutsceneCounter / (233 / 1)), 577 - 2 - (level2aCutsceneCounter / (233 / 1)), (2 + (level2aCutsceneCounter / (233 / 1))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (3 + (level2aCutsceneCounter / (233 / 2))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(830 - (level2aCutsceneCounter / (233 / 2)), 577 - 3 - (level2aCutsceneCounter / (233 / 2)), (3 + (level2aCutsceneCounter / (233 / 2))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (5 + (level2aCutsceneCounter / (233 / 3))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(828 - (level2aCutsceneCounter / (233 / 3)), 577 - 5 - (level2aCutsceneCounter / (233 / 3)), (5 + (level2aCutsceneCounter / (233 / 3))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (8 + (level2aCutsceneCounter / (233 / 5))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(825 - (level2aCutsceneCounter / (233 / 5)), 577 - 8 - (level2aCutsceneCounter / (233 / 5)), (8 + (level2aCutsceneCounter / (233 / 5))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (13 + (level2aCutsceneCounter / (233 / 8))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(820 - (level2aCutsceneCounter / (233 / 8)), 577 - 13 - (level2aCutsceneCounter / (233 / 8)), (13 + (level2aCutsceneCounter / (233 / 8))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (21 + (level2aCutsceneCounter / (233 / 13))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(812 - (level2aCutsceneCounter / (233 / 13)), 577 - 21 - (level2aCutsceneCounter / (233 / 13)), (21 + (level2aCutsceneCounter / (233 / 13))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (34 + (level2aCutsceneCounter / (233 / 21))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(799 - (level2aCutsceneCounter / (233 / 21)), 577 - 34 - (level2aCutsceneCounter / (233 / 21)), (34 + (level2aCutsceneCounter / (233 / 21))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (55 + (level2aCutsceneCounter / (233 / 34))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(778 - (level2aCutsceneCounter / (233 / 34)), 577 - 55 - (level2aCutsceneCounter / (233 / 34)), (55 + (level2aCutsceneCounter / (233 / 34))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (89 + (level2aCutsceneCounter / (233 / 55))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(744 - (level2aCutsceneCounter / (233 / 55)), 577 - 89 - (level2aCutsceneCounter / (233 / 55)), (89 + (level2aCutsceneCounter / (233 / 55))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (144 + (level2aCutsceneCounter / (233 / 89))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(689 - (level2aCutsceneCounter / (233 / 89)), 577 - 144 - (level2aCutsceneCounter / (233 / 89)), (144 + (level2aCutsceneCounter / (233 / 89))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (233 + (level2aCutsceneCounter / (233 / 144))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(600 - (level2aCutsceneCounter / (233 / 144)), 577 - 233 - (level2aCutsceneCounter / (233 / 144)), (233 + (level2aCutsceneCounter / (233 / 144))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (377 + (level2aCutsceneCounter / (233 / 233))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(456 - level2aCutsceneCounter, 577 - 377 - level2aCutsceneCounter, (377 + level2aCutsceneCounter) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (610 + (level2aCutsceneCounter / (233 / 377))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(223 - (level2aCutsceneCounter / (233 / 377)), 577 - 610 - (level2aCutsceneCounter / (233 / 377)), (610 + (level2aCutsceneCounter / (233 / 377))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (987 + (level2aCutsceneCounter / (233 / 610))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(-154 - (level2aCutsceneCounter / (233 / 610)), 577 - 987 - (level2aCutsceneCounter / (233 / 610)), (987 + (level2aCutsceneCounter / (233 / 610))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                //bottom left circles
+                ctx.save();
+                ctx.beginPath();
+                ctx.fillStyle = ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (0 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(0 + (level2aCutsceneCounter / (233 / -1)),577 - 0 - (level2aCutsceneCounter / (233 / -1)), (0 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (1 + (level2aCutsceneCounter / (233 / 0))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(1 + (level2aCutsceneCounter / (233 / 0)), 577 - 1 - (level2aCutsceneCounter / (233 / 0)), (1 + (level2aCutsceneCounter / (233 / 0))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (2 + (level2aCutsceneCounter / (233 / 1))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(2 + (level2aCutsceneCounter / (233 / 1)), 577 - 2 - (level2aCutsceneCounter / (233 / 1)), (2 + (level2aCutsceneCounter / (233 / 1))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (3 + (level2aCutsceneCounter / (233 / 2))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(3 + (level2aCutsceneCounter / (233 / 2)), 577 - 3 - (level2aCutsceneCounter / (233 / 2)), (3 + (level2aCutsceneCounter / (233 / 2))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (5 + (level2aCutsceneCounter / (233 / 3))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(5 + (level2aCutsceneCounter / (233 / 3)), 577 - 5 - (level2aCutsceneCounter / (233 / 3)), (5 + (level2aCutsceneCounter / (233 / 3))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (8 + (level2aCutsceneCounter / (233 / 5))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(8 + (level2aCutsceneCounter / (233 / 5)), 577 - 8 - (level2aCutsceneCounter / (233 / 5)), (8 + (level2aCutsceneCounter / (233 / 5))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (13 + (level2aCutsceneCounter / (233 / 8))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(13 + (level2aCutsceneCounter / (233 / 8)), 577 - 13 - (level2aCutsceneCounter / (233 / 8)), (13 + (level2aCutsceneCounter / (233 / 8))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (21 + (level2aCutsceneCounter / (233 / 13))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(21 + (level2aCutsceneCounter / (233 / 13)), 577 - 21 - (level2aCutsceneCounter / (233 / 13)), (21 + (level2aCutsceneCounter / (233 / 13))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (34 + (level2aCutsceneCounter / (233 / 21))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(34 + (level2aCutsceneCounter / (233 / 21)), 577 - 34 - (level2aCutsceneCounter / (233 / 21)), (34 + (level2aCutsceneCounter / (233 / 21))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (55 + (level2aCutsceneCounter / (233 / 34))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(55 + (level2aCutsceneCounter / (233 / 34)), 577 - 55 - (level2aCutsceneCounter / (233 / 34)), (55 + (level2aCutsceneCounter / (233 / 34))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (89 + (level2aCutsceneCounter / (233 / 55))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(89 + (level2aCutsceneCounter / (233 / 55)), 577 - 89 - (level2aCutsceneCounter / (233 / 55)), (89 + (level2aCutsceneCounter / (233 / 55))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (144 + (level2aCutsceneCounter / (233 / 89))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(144 + (level2aCutsceneCounter / (233 / 89)), 577 - 144 - (level2aCutsceneCounter / (233 / 89)), (144 + (level2aCutsceneCounter / (233 / 89))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (233 + (level2aCutsceneCounter / (233 / 144))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(233 + (level2aCutsceneCounter / (233 / 144)), 577 - 233 - (level2aCutsceneCounter / (233 / 144)), (233 + (level2aCutsceneCounter / (233 / 144))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (377 + (level2aCutsceneCounter / (233 / 233))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(377 + level2aCutsceneCounter, 577 - 377 - level2aCutsceneCounter, (377 + level2aCutsceneCounter) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (610 + (level2aCutsceneCounter / (233 / 377))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(610 + (level2aCutsceneCounter / (233 / 377)), 577 - 610 - (level2aCutsceneCounter / (233 / 377)), (610 + (level2aCutsceneCounter / (233 / 377))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0,0,0,.13)`;
+                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = (987 + (level2aCutsceneCounter / (233 / 610))) / Math.PI;
+                ctx.shadowBlur = ctx.lineWidth;
+                ctx.arc(987 + (level2aCutsceneCounter / (233 / 610)), 577 - 987 - (level2aCutsceneCounter / (233 / 610)), (987 + (level2aCutsceneCounter / (233 / 610))) / 2,0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+
+
+                /*
+                //top right corner
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = fib[i] / 34;
+                ctx.arc(832 - fib[i], fib[i], fib[i],0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+                //bottom right corner
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = fib[i] / 34;
+                ctx.arc(832 - fib[i], 576 - fib[i], fib[i],0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();
+                //bottom left corner
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = fib[i] / 34;
+                ctx.arc(fib[i], 576 - fib[i], fib[i],0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.restore();*/
+
+
+                
+                /*//top right corner 
+                ctx.save();
+                ctx.fillStyle = `hsl(${i - fib[i]},${fib[i] / 3.77}%,${fib[i] / 3.77}%)`;
+                ctx.fillRect(832 - fib[i],fib[i],-1 * fib[i],fib[i]);
+                ctx.restore();    
+
+                //bottom right corner 
+                ctx.save();
+                ctx.fillStyle = `hsl(${i - fib[i]},${fib[i] / 3.77}%,${fib[i] / 3.77}%)`;
+                ctx.fillRect(832 - fib[i],577 - fib[i],-1 * fib[i],-1 * fib[i]);
+                ctx.restore();
+
+                //bottom left corner 
+                ctx.save();
+                ctx.fillStyle = `hsl(${i - fib[i]},${fib[i] / 3.77}%,${fib[i] / 3.77}%)`;
+                ctx.fillRect(fib[i],576 - fib[i],fib[i],-1 * fib[i]);
+                ctx.restore();*/
+
+                level2aCutsceneCounter += 1;
+
+                if (level2aCutsceneCounter === 233) {
+                    level2aCutsceneCounter = 0;  
+                }
+
+
+            myReq = window.requestAnimationFrame(showLevel2aBossCutscene);
+        }else {
+            return;
+        }
+    }
+
     function showOptionsMenu(){
         if(showOptions === true){
             ctx.save();
-            ctx.fillStyle = `rgba(0,0,0,${1})`;
-            ctx.clearRect(144,144 - level2aAlphaCounter * 100,544, 244);
-            ctx.fillRect(144,144 - level2aAlphaCounter * 100,544, 244);
+            ctx.fillStyle = `rgba(0,0,0,1)`;
+            ctx.clearRect(144,144,544, 244);
+            ctx.fillRect(144,144,544, 244);
             ctx.restore();
 
             if(optionsSelector === 1){
                 ctx.save();
                 ctx.fillStyle = `rgba(144,0,0,${.5})`;
-                ctx.clearRect(144,144 - level2aAlphaCounter * 100, 544, 34);
-                ctx.fillRect(144,144 - level2aAlphaCounter * 100, 544, 34);
+                ctx.clearRect(144,144, 544, 34);
+                ctx.fillRect(144,144, 544, 34);
                 ctx.restore();
             }else if(optionsSelector === 2){
                 ctx.save();
                 ctx.fillStyle = `rgba(144,0,0,${.5})`;
-                ctx.clearRect(144,188 - level2aAlphaCounter * 100, 544, 34);
-                ctx.fillRect(144,188 - level2aAlphaCounter * 100, 544, 34);
+                ctx.clearRect(144,188, 544, 34);
+                ctx.fillRect(144,188, 544, 34);
                 ctx.restore();
             }else if(optionsSelector === 3){
                 ctx.save();
                 ctx.fillStyle = `rgba(144,0,0,${.5})`;
-                ctx.clearRect(144,224 - level2aAlphaCounter * 100, 544, 34);
-                ctx.fillRect(144,224 - level2aAlphaCounter * 100, 544, 34);
+                ctx.clearRect(144,224, 544, 34);
+                ctx.fillRect(144,224, 544, 34);
                 ctx.restore();
             }
+
+            ctx.save();
+            ctx.strokeStyle = `rgba(233,144,89,1)`;
+            ctx.lineWidth = 2;
+            ctx.moveTo(149, 149);
+            ctx.lineTo(683,149);
+            ctx.lineTo(683,383);
+            ctx.lineTo(149,383);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.restore();
+
+            fixExtraPixel();
 
             drawText("Dev Tools", 34, true, canvas.height/2 - 115, "white"); 
 
             drawText("Graphics", 34, true, canvas.height/2 - 74.5, "white"); 
 
-            drawText("Exit Menu", 34, true, canvas.height/2 - 34, "white"); 
+            drawText("Exit Menu", 34, true, canvas.height/2 - 32, "white"); 
+
+            if(optionsSelector === 1){
+                drawText("Dev Tools", 34, true, canvas.height/2 - 115, "yellow");        
+            }else if(optionsSelector === 2){
+                drawText("Graphics", 34, true, canvas.height/2 - 74.5, "yellow");    
+            }else if(optionsSelector === 3){
+                drawText("Exit Menu", 34, true, canvas.height/2 - 32, "yellow");    
+            }
 
             myReq = window.requestAnimationFrame(showOptionsMenu);
         }else {
+            ctx.strokeStyle = `rgba(0,0,0,0)`;
             return;
         }
     }
@@ -2248,29 +3351,85 @@ function animateTile() {
         if(showGraphics === true){
             ctx.save();
             ctx.fillStyle = `rgba(0,0,0,${1})`;
-            ctx.clearRect(144,144 - level2aAlphaCounter * 100,544, 244);
-            ctx.fillRect(144,144 - level2aAlphaCounter * 100,544, 244);
+            ctx.clearRect(144,144,544, 244);
+            ctx.fillRect(144,144,544, 244);
             ctx.restore();
 
-            drawText("Regular", 34, false, canvas.height/2, "white", canvas.height/2 + 89); 
+            drawText("Graphics", 34, true, canvas.height/2 - 89, "white"); 
 
-            drawText("Low", 34, false, canvas.height/2, "white", canvas.height/2 - 89); 
+            drawText("Low", 34, true, canvas.height/2 - 34, "white"); 
+
+            drawText("Regular", 34, true, canvas.height/2, "white"); 
+
+            ctx.save();
+            ctx.strokeStyle = `rgba(233,144,89,1)`;
+            ctx.lineWidth = 2;
+            ctx.moveTo(149, 149);
+            ctx.lineTo(683,149);
+            ctx.lineTo(683,383);
+            ctx.lineTo(149,383);
+            ctx.lineTo(149,149);
+            ctx.stroke();
+            ctx.restore();
+
+            fixExtraPixel();
 
             if (graphicsSelector === 0){
-                ctx.save();
-                ctx.fillStyle = 'rgba(255,0,0,.75)'; 
-                ctx.beginPath();
-                ctx.arc(canvas.height/2, canvas.height/2, 26, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.restore();
+                drawText("Low", 34, true, canvas.height/2 - 34, "yellow"); 
+                
             }else if (graphicsSelector === 1){
-                ctx.save();
-                ctx.fillStyle = 'rgba(255,0,0,.75)'; 
-                ctx.beginPath();
-                ctx.arc(canvas.height/2 + 244, canvas.height/2, 26, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.restore();
+                drawText("Regular", 34, true, canvas.height/2, "yellow");                  
             }
+        }else {
+            return;
         }   
         myReq = window.requestAnimationFrame(showGraphicsMenu);
+    }
+
+    function showDevtoolsMenu(){
+        if(showDevtools === true){
+            ctx.save();
+            ctx.fillStyle = `rgba(0,0,0,${1})`;
+            ctx.clearRect(144,144,544, 244);
+            ctx.fillRect(144,144,544, 244);
+            ctx.restore();
+
+            drawText("Devtools", 34, true, canvas.height/2 - 111, "white"); 
+
+            drawText(`level = <${level}>`, 21, false, canvas.height/2 - 55, "white", canvas.height/2 - 89); 
+            drawText(`function startLevel();`, 21, false, canvas.height/2 - 21, "white", canvas.height/2 - 89);
+
+            ctx.save();
+            ctx.strokeStyle = `rgba(233,144,89,1)`;
+            ctx.lineWidth = 2;
+            ctx.moveTo(149, 149);
+            ctx.lineTo(683,149);
+            ctx.lineTo(683,383);
+            ctx.lineTo(149,383);
+            ctx.lineTo(149,149);
+            ctx.stroke();
+            ctx.restore();
+
+            fixExtraPixel();
+
+            if (devtoolsSelectorY === 0){
+                drawText(`level = <${level}>`, 21, false, canvas.height/2 - 55, "yellow", canvas.height/2 - 89); 
+                
+            }else if (devtoolsSelectorY === 1){
+                drawText(`function startLevel();`, 21, false, canvas.height/2 - 21, "yellow", canvas.height/2 - 89);                     
+            }
+
+        }else {
+            return;
+        }   
+        myReq = window.requestAnimationFrame(showDevtoolsMenu);
+         
+    }
+
+    function fixExtraPixel(){
+        //fixing extra pixel on level > 7
+            ctx.save();
+            ctx.fillStyle = `rgba(0,0,0,1)`;
+            ctx.fillRect(555,288,121, 89);
+            ctx.restore();
     }

@@ -12,6 +12,8 @@ boss2bButtonLPushed = false;
 
 reveal2bHelper = false;
 
+readyToDamage2aBoss = false;
+
 class Tile{
 	constructor(x, y, sprite, passable, hazard, object, exit, button, eatable, pylon, hp){
         this.x = x;
@@ -103,6 +105,9 @@ class Floor extends Tile{
     constructor(x,y){
         super(x, y, 2, true, false, false, false);
         //x, y, sprite, passable, hazard, object, exit//
+        if (level >= 21 && level <= 26){
+            this.sprite = 120;
+        }
     };
 
     stepOn(monster){
@@ -194,10 +199,37 @@ class MutateFloor extends Tile{
         if (level === 13 && this.sprite < 118){
                 //this.sprite = 112;
                 this.sprite += 1;
-                console.log('sprite should increase');
+                //console.log('sprite should increase');
             }else if(level === 13 && this.sprite === 118){
-                this.sprite = 112;   
+                this.sprite = 112;
+
+                let random2aAddSpawnLocation = Math.random();
+
+                if(random2aAddSpawnLocation >= .55){
+                    if (random2aAddSpawnLocation <= .25){
+                        monsters.push(new hostileShadow(tiles[1][5]));
+                    }else if(random2aAddSpawnLocation >= .25 && random2aAddSpawnLocation <= .5){
+                        monsters.push(new hostileShadow(tiles[3][5]));
+                    }else if(random2aAddSpawnLocation >= .5 && random2aAddSpawnLocation <= .75){
+                        monsters.push(new hostileShadow(tiles[5][5]));
+                    }else if(random2aAddSpawnLocation >= .75 && random2aAddSpawnLocation <= 1){
+                        monsters.push(new hostileShadow(tiles[7][5]));
+                    }
+                }else if (random2aAddSpawnLocation < .34) {
+                    if (random2aAddSpawnLocation < .55){
+                        monsters.push(new hostileShadow(tiles[2][3]));
+                    }else if(random2aAddSpawnLocation >= .25 && random2aAddSpawnLocation <= .5){
+                        monsters.push(new hostileShadow(tiles[4][3]));
+                    }else if(random2aAddSpawnLocation <= .25){
+                        monsters.push(new hostileShadow(tiles[6][3]));
+                    }
+                }
+                        
             }
+
+        if (monster.isPlayer && level === 13 && readyToDamage2aBoss === true){
+            readyToDamage2aBoss = false; 
+        }
         
         readyToMutate = false;
         standingInFire = false;
@@ -312,6 +344,97 @@ class MutateFloor extends Tile{
 
         }
     }
+};
+
+class MutateBossSpecialFloor extends Tile{
+    constructor(x,y){
+        super(x, y, 108, true, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+
+    stepOn(monster){
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+            standingInFire = false;
+        }
+        if(monster.isPlayer && !this.well){
+            readyToDrink = false;
+            standingInFire = false;
+        }
+
+        
+
+    };
+};
+
+class MutateBossSpecialFloorDamageButton extends Tile{
+    constructor(x,y){
+        super(x, y, 124, true, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+
+    stepOn(monster){
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+            standingInFire = false;
+        }
+        if(monster.isPlayer && !this.well){
+            readyToDrink = false;
+            standingInFire = false;
+        }
+
+        if(monster.isPlayer)
+            readyToDamage2aBoss = true;
+            this.sprite = 125;
+    };
+};
+
+class MutateBossSpecialFloorActivator extends Tile{
+    constructor(x,y){
+        super(x, y, 123, true, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+
+    stepOn(monster){
+        if(monster.isPlayer && !this.exit){
+            readyToExit = false;
+            standingInFire = false;
+        }
+        if(monster.isPlayer && !this.well){
+            readyToDrink = false;
+            standingInFire = false;
+        }
+
+        if (this.sprite === 123){
+            this.sprite = 124;
+            //top row buttons
+            tiles[2][3] = new MutateBossSpecialFloor(2, 3);
+            tiles[6][3] = new MutateBossSpecialFloor(6, 3);
+
+            //bottom row buttons
+            tiles[1][5] = new MutateBossSpecialFloor(1, 5);
+            tiles[3][5] = new MutateBossSpecialFloor(3, 5);
+            tiles[5][5] = new MutateBossSpecialFloor(5, 5);
+            tiles[7][5] = new MutateBossSpecialFloor(7, 5);
+
+            random2aBossButton();
+
+        }else {
+            this.sprite = 123 
+            //top row buttons
+            tiles[2][3] = new MutateFloor(2, 3);
+            tiles[6][3] = new MutateFloor(6, 3);
+
+            //bottom row buttons
+            tiles[1][5] = new MutateFloor(1, 5);
+            tiles[3][5] = new MutateFloor(3, 5);
+            tiles[5][5] = new MutateFloor(5, 5);
+            tiles[7][5] = new MutateFloor(7, 5); 
+        }
+        
+        
+
+    };
 };
 
 class EaterMutateFloor extends Tile{
@@ -687,6 +810,9 @@ class Wall extends Tile{
     constructor(x, y){
         super(x, y, 3, false, false, false, false);
         //x, y, sprite, passable, hazard, object, exit
+        if (level >= 21 && level <= 26){
+            this.sprite = 119;
+        }
     }
 };
 
@@ -695,6 +821,9 @@ class EatableWall extends Tile{
         super(x, y, 3, false, false, false, false, false, true);
         //x, y, sprite, passable, hazard, object, exit, button, uneatable
         this.uneatable = true;
+        if (level >= 21 && level <= 26){
+            this.sprite = 119;
+        }
     }
 };
 
@@ -1289,4 +1418,23 @@ class boss2bButtonL extends Tile{
             reveal2bHelperCounter = 1;   
         }
     }
+}
+
+function random2aBossButton(){
+    let randomButtonDecider = Math.floor(Math.random() * 6);
+
+    //top row buttons
+    if(randomButtonDecider <= 1){
+        tiles[3][5] = new MutateBossSpecialFloorDamageButton(3, 5)
+    }else if(randomButtonDecider === 2){
+        tiles[7][5] = new MutateBossSpecialFloorDamageButton(7, 5)
+    }else if(randomButtonDecider === 3){
+        tiles[3][5] = new MutateBossSpecialFloorDamageButton(3, 5)
+    }else if(randomButtonDecider === 4){
+        tiles[5][5] = new MutateBossSpecialFloorDamageButton(5, 5)
+    }else if(randomButtonDecider === 5){
+        tiles[7][5] = new MutateBossSpecialFloorDamageButton(7, 5)
+    }else if(randomButtonDecider === 6){
+        tiles[5][5] = new MutateBossSpecialFloorDamageButton(5, 5)
+    }       
 }

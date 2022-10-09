@@ -117,7 +117,7 @@ class Monster{
             if(!newTile.monster && !newTile.player){
                 this.move(newTile);
             }else{
-              	if(this.isPlayer != newTile.monster.isPlayer || this.isShadow || this.isMirror){
+              	if(this.isPlayer != newTile.monster.isPlayer || this.isShadow || this.isMirror || this.isDarkMX || this.ishostileShadow){
                     this.attackedThisTurn = true;
                     newTile.monster.stunned = true;
 
@@ -159,7 +159,10 @@ class Monster{
             if(eatsWalls === true && newTile.eatable){
                 console.log(eatsWalls, "should eat this")
 
-                if (level === 20){
+                if(level >= 21 && level <= 26){
+                    newTile.replace(Floor);
+                    player.hp += .25;  
+                }else if (level === 20){
                     if (newTile.pylon){
                         console.log('where boss takes damge');
                         boss2bHP -= 1;
@@ -187,7 +190,7 @@ class Monster{
                         newTile.replace(EaterMutateBossFloor);
                         playSound('dig2');    
                     };
-                }else if (level >= 14 && level != 20){
+                }else if (level >= 14 && level <= 19){
                     player.hp += 0.5;
                     if (Math.random() >= .89 - (level * 4 / 100) ){
                         newTile.replace(EaterMutateFloor);
@@ -275,8 +278,16 @@ class Monster{
             if(this.isBoss){
                 randomPassableTile().replace(MutateExit);
             }
+
+
+
+
             if(this.isShadow === true || this.isMirror === true){
                 spawnAdditionalPaperweight();
+            }
+
+            if(this.isDarkMX){
+                randomPassableTile().replace(Exit);
             }
 
             if(this.isExplodingMonster || this.isLargeExplodingMonster){
@@ -316,7 +327,11 @@ class Monster{
             this.sprite = 1;
             gameState = "dead";
             moonShoes = false;
+            eatsWalls = false;
+            eaterSoul = false;
+
             reveal2bHelperCounter = 0;
+
         }
         if(this.isExplodingMonster){
             this.sprite = 40;
@@ -670,13 +685,40 @@ class hostileShadow extends Monster{
 
 class DarkMX extends Monster{
     constructor(tile){
-        super(tile, 0, 6);
+        super(tile, 0, 26);
         this.isDarkMX = true;
     }
     doStuff(){
-        super.doStuff();
-        this.tryMove(-1 * pX, pY);
+        if (monster2aPaused === true){
+            return;
+        }else{
+            this.tryMove(-1 * pX, pY);   
+        }  
+        
     }
+
+    update(){
+        if (this.stunned === true){
+            this.stunned = false;
+        }
+
+        this.teleportCounter--;
+        if(this.stunned || this.teleportCounter > 0){ 
+            this.stunned = false;
+                if(this.isBoss && Math.random() > .5){
+                    this.doStuff();
+                }else{
+                return;
+            }
+        }
+
+        if (monster2aPaused === true){
+            return;
+        }else{
+            this.doStuff();   
+        }  
+    }
+
 }
 
 class ExplodingMonster extends Monster{

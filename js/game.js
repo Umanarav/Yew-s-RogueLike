@@ -97,25 +97,27 @@ function draw(){
 
         drawText("HP: "+player.hp, 30, false, 100, "violet");
 
-        if (level > 6 && level < 13 && monster2aPaused === true){
+        /*if (level > 6 && level < 13 && monster2aPaused === true){
             ctx.save();
             ctx.shadowBlur = 5;
             drawText("Shadows Frozen ", 21, false, 38, "white", 144 + arc2AX1Counter);
-
             ctx.restore();
-            drawLevel2aPauseIndicator();    
+
+            //drawLevel2aPauseIndicator();    
         }else if (level > 6 && level < 13 && monster2aPaused === false && readyToExit != true && readyToDrink != true && animatingLevel2aTooltip === false){
             ctx.save();
             ctx.shadowBlur = 5;
             drawText("Press Enter to freeze Shadows ", 21, false, 38, "white", 34);
             ctx.restore();    
-        }
+        }*/
 
         if (level === 20 && boss2bHP > 0){
 
             //background
+            ctx.save();
             ctx.fillStyle = `rgb(0,0,0,${.84})`;
             ctx.fillRect(13, 13, 525, 38)
+            ctx.restore();
 
 
             //health bar
@@ -127,11 +129,8 @@ function draw(){
             ctx.fillRect(214, 27, boss2bHP * 9, 10)
             ctx.restore();
 
-            //alien floater
-            drawBoss2bHelper();
-
-
-
+            //alien floater  
+            drawBoss2bHelper();     
         }
 
         if(gamepadConnected === false){
@@ -156,9 +155,9 @@ function draw(){
                     drawText("ENTER) useWell(); ", 16, false, 345 , "aqua");
                 }else if(level === 20 && boss2bButtonRPushed === true){
                     drawText("ENTER) fireWeapon(); ", 16, false, 345 , "aqua");
-                }else if(level > 6 && level < 13 && monster2aPaused === false && readyToExit != true && readyToDrink != true){
+                }else if(level > 6 && level <= 13 && monster2aPaused === false && readyToExit != true && readyToDrink != true){
                     drawText("ENTER) freezeShadows(); ", 16, false, 345 , "aqua");    
-                }else if(level > 6 && level < 13 && monster2aPaused === true && readyToExit != true && readyToDrink != true){
+                }else if(level > 6 && level <= 13 && monster2aPaused === true && readyToExit != true && readyToDrink != true){
                     drawText("ENTER) unFreezeShadows(); ", 16, false, 345 , "aqua");    
                 }else {
                     drawText("ENTER) use(); ", 16, false, 345 , "aqua");
@@ -259,7 +258,7 @@ function tick(){
         //console.log(bossDamageReduction);
     }
 
-    if (level >= 14 && level != 20){
+    if (level >= 14 && level <= 19){
         if(Math.random() <= 0.34){
             randomPassableTile().replace(EatableEaterMutateWall);
         }    
@@ -382,7 +381,7 @@ function tick(){
 
 function startGame(){
     soundStopped = false;                                       
-    level = 1;
+    level = 5;
     score = 0;
     numSpells = 1;
     numBossSpells = 1;
@@ -399,11 +398,17 @@ function startGame(){
         //
     }else if (level >= 15 && level < 20){
         playSound("music3");
+        playSound('music3MenuMuffled');
     }else if(level > 6 && level < 13){
-        
+        playSound('music2');
+        playSound('music2MenuMuffled');
         pauseSound("rpSection0Music");    
+    }else if (level === 13){
+        playSound('bossmusic');
+        playSound('bossmusicMenuMuffled');
     }else {
-        playSound("music"); 
+        playSound("music");
+        playSound("musicMenuMuffled");  
     }
 
 }
@@ -413,7 +418,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     spawnRate = 15;              
     spawnCounter = spawnRate;
 
-    if (level >= 14){
+    if (level >= 14 && level <= 20){
         generateEaterMutationLevel();    
     }else if (level > 6 && level < 13){
         console.log(level);
@@ -428,6 +433,8 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 
     if (level === 20){
         player = new Player(certainPassableTile());
+    }else if (level === 13){
+        player = new Player(certainPassableTile());
     }else{
         player = new Player(randomPassableTile());    
     }
@@ -440,7 +447,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         player.spells = playerSpells;
     } 
 
-    if((Math.random() * 10 < 5) && level != 20){
+    if((Math.random() * 10 < 5) && level != 20 && level != 13){
         randomPassableTile().replace(Well);
     }
     
@@ -464,19 +471,53 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 
     gameState = "running";
 
-    if (level === 7){
+    if (level <= 5){
+        pauseSound('music2');
+        pauseSound('music2MenuMuffled');
         pauseSound('bossmusic');
+        pauseSound('bossmusicMenuMuffled');
+        pauseSound('music3');
+        pauseSound('music3MenuMuffled');
+    }
+
+    if (level === 7){
+        pauseSound('music');
+        pauseSound("musicMenuMuffled");
+        pauseSound('bossmusic');
+        pauseSound('bossmusicMenuMuffled');
         pauseSound("rpSection0Music");
+        pauseSound('music3');
+        pauseSound('music3MenuMuffled');
         playSound('music2');
+        playSound('music2MenuMuffled');
 
         animatingLevel2aTooltip = true;
         showLevel2aTooltip();
         
     }
-    if (level === 14){
-        pauseSound('music2');
-        playSound('music3');
+
+    if (level >= 7 && level <= 13){
+        pauseSound('music3');
+        pauseSound('music3MenuMuffled');
     }
+
+    if (level === 13){
+        pauseSound("rpSection0Music");   
+    }
+
+    if (level === 14){
+        playSound('music3');
+        playSound('music3MenuMuffled');
+    }
+    if (level >= 14 && level < 20){
+        pauseSound('music');
+        pauseSound('musicMenuMuffled');
+        pauseSound('music2');
+        pauseSound('music2MenuMuffled');
+        pauseSound('bossmusic');
+        pauseSound('bossmusicMenuMuffled');
+    }
+
     /*if (level === 14){
         pauseSound('music2');
         playSound('music3');
@@ -485,6 +526,10 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     if (level === 20){
         //play level 20 music
         pauseSound('music');
+        pauseSound('musicMenuMuffled');
+        pauseSound('music2');
+        pauseSound('music2MenuMuffled');
+
         playSound('boss2bMusic')
         num2bMonsters = 0;
     }
@@ -513,7 +558,22 @@ function startBossLevel(playerHp, playerSpells, playerBaseAttack = 1){
     if(playerSpells){
         player.spells = playerSpells;
     } 
+
+    if (gameState != "rpSection2"){
+        playSound('bossmusic');
+        playSound('bossmusicMenuMuffled');
+        sounds.bossmusicMenuMuffled.muted = true;
+        sounds.bossmusic.muted = false;
+
+    }
+
     gameState = "running";
+
+
+    pauseSound('music');
+    pauseSound('musicMenuMuffled');
+    pauseSound('music2');
+    pauseSound('music2MenuMuffled');
 }
 
 function drawText(text, size, centered, textY, color, textX){
@@ -598,6 +658,7 @@ function initSounds(){
     sounds = {
         boss2bExplosion: new Audio('sounds/boss2bExplosion.wav'),
         boss2bMusic: new Audio('sounds/5)m.wav'),
+        boss2bMusicMenuMuffled: new Audio('sounds/boss2bMusicMenuMuffled.wav'),
         buttonIn: new Audio('sounds/buttonIn.wav'),
         buttonOut: new Audio('sounds/buttonOut.ogg'),
         shadowFreeze: new Audio('sounds/shadowFreeze.wav'),
@@ -622,9 +683,13 @@ function initSounds(){
         equip_armor: new Audio('sounds/equip_armor.wav'),
         equip_sword: new Audio('sounds/equip_sword.wav'),
         music: new Audio('sounds/music.wav'),
+        musicMenuMuffled: new Audio('sounds/musicMenuMuffled.wav'),
         music2: new Audio('sounds/music2.wav'),
+        music2MenuMuffled: new Audio('sounds/music2MenuMuffled.wav'),
         music3: new Audio('sounds/music3.wav'),
+        music3MenuMuffled: new Audio('sounds/music3MenuMuffled.wav'),
         bossmusic: new Audio('sounds/bossmusic.wav'),
+        bossmusicMenuMuffled: new Audio('sounds/bossmusicMenuMuffled.wav'),
         rpSection0Music: new Audio('sounds/rpSection0Music.wav'),
         transitionMusic2b: new Audio('sounds/transition1.wav'),
         transitionMusic2a: new Audio('sounds/transition2.wav'),
@@ -634,11 +699,34 @@ function initSounds(){
         boss2bWoosh3: new Audio('sounds/boss2bWoosh3.flac'),
         boss2bDeathCry: new Audio('sounds/boss2bDeathCry.wav'),
 
+        menuSelect: new Audio('sounds/menuSelect.wav'),
+        menuScrollUp: new Audio('sounds/menuScrollUp.wav'),
+        menuScrollDown: new Audio('sounds/menuScrollDown.wav'),
+        menuOpen: new Audio('sounds/menuOpen.wav'),
+        menuClose: new Audio('sounds/menuClose.wav'),
+
     };
         sounds.music.loop = true;
+        sounds.musicMenuMuffled.loop = true;
+        sounds.musicMenuMuffled.muted = true;
+        
         sounds.bossmusic.loop = true;
+        sounds.bossmusicMenuMuffled.loop = true;
+        sounds.bossmusicMenuMuffled.muted = true;
+
         sounds.music2.loop = true;
+        sounds.music2MenuMuffled.loop = true;
+        sounds.music2MenuMuffled.muted = true;
+
         sounds.music3.loop = true;
+        sounds.music3MenuMuffled.loop = true;
+        sounds.music3MenuMuffled.muted = true;
+
+        sounds.boss2bMusic.loop = true;
+        sounds.boss2bMusicMenuMuffled.loop = true;
+        sounds.boss2bMusicMenuMuffled.muted = true;
+
+
         sounds.rpSection0Music.loop = true;
 
         sounds.powderFuseTicking.loop = true;
@@ -662,6 +750,85 @@ function playTreasureSounds(){
         playSound("treasure2");
     }
 };
+
+function menuMuffledSound(){
+        sounds.musicMenuMuffled.muted = false;
+        sounds.music.muted = true;
+
+        sounds.bossmusicMenuMuffled.muted = false;
+        sounds.bossmusic.muted = true;
+
+        sounds.music2MenuMuffled.muted = false;
+        sounds.music2.muted = true;
+   
+        /*sounds.music3MenuMuffled.muted = false;
+        sounds.music3.muted = true;*/
+   
+    
+}
+
+function menuUnMuffledSound(){
+    
+        sounds.musicMenuMuffled.muted = true;
+        sounds.music.muted = false;
+    
+        sounds.bossmusicMenuMuffled.muted = true;
+        sounds.bossmusic.muted = false;
+    
+        sounds.music2MenuMuffled.muted = true;
+        sounds.music2.muted = false;
+    
+        /*sounds.music3MenuMuffled.muted = false;
+        sounds.music3.muted = true;*/
+}
+
+function pauseLevelAppropriateMusic(){
+    if(level <= 5){
+        pauseSound('music');
+        pauseSound('musicMenuMuffled');
+    }else if(level === 6){
+        pauseSound('bossmusic');
+        pauseSound('bossmusicMuffled');
+    }else if(level >= 7 && level <= 12){
+        pauseSound('music2');
+        pauseSound('music2MenuMuffled');
+    }else if(level >= 13 && level <= 20){
+        pauseSound('music3');
+        //pauseSound('music3MenuMuffled');
+    }
+ 
+}
+
+function pauseAllMusic(){
+        pauseSound('music');
+        pauseSound('musicMenuMuffled');
+    
+        pauseSound('bossmusic');
+        pauseSound('bossmusicMuffled');
+
+        pauseSound('music2');
+        pauseSound('music2MenuMuffled');
+
+        pauseSound('music3');
+        //pauseSound('music3MenuMuffled');
+}
+
+function playLevelAppropriateMusic(){
+    if(level <= 5){
+        playSound('music');
+        playSound('musicMenuMuffled');
+    }else if(level === 6){
+        playSound('bossmusic');
+        playSound('bossmusicMuffled');
+    }else if(level >= 7 && level <= 12){
+        playSound('music2');
+        playSound('music2MenuMuffled');
+    }else if(level >= 13 && level <= 20){
+        playSound('music3');
+        //playSound('music3MenuMuffled');
+    }
+ 
+}
 
 init();
 

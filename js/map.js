@@ -52,6 +52,27 @@ function generateMutationBossLevel(){
     tryTo('generate map', function(){
         return generateMutationBossTiles() == randomPassableTile().getConnectedTiles().length;
     });
+    //top of wall
+    tiles[1][3] = new MutateWall(1, 3);
+    tiles[3][3] = new MutateWall(3, 3);
+    tiles[5][3] = new MutateWall(5, 3);
+    tiles[7][3] = new MutateWall(7, 3);
+    //middle of wall
+    tiles[1][4] = new MutateWall(1, 4);
+    tiles[2][4] = new MutateWall(2, 4);
+    tiles[3][4] = new MutateWall(3, 4);
+    tiles[4][4] = new MutateWall(4, 4);
+    tiles[5][4] = new MutateWall(5, 4);
+    tiles[6][4] = new MutateWall(6, 4);
+    tiles[7][4] = new MutateWall(7, 4);
+    //botoom of wall
+    tiles[2][5] = new MutateWall(2, 5);
+    tiles[4][5] = new MutateWall(4, 5);
+    tiles[6][5] = new MutateWall(6, 5);
+
+    //top row buttons
+    tiles[4][3] = new MutateBossSpecialFloorActivator(4, 3);
+   
     generateMonsters();
     /*for(let i=0;i<3;i++){                                         
         randomPassableTile().treasure = true;                            
@@ -124,19 +145,19 @@ function generateBossTiles2(){
 function generateMutationTiles(){
     let passableTiles=0;
     tiles = [];
-    for(let column=0;column<numTiles;column++){
-        tiles[column] = [];
-        for(let row=0;row<numTiles;row++){
-            if(Math.random() <= .21){
-                tiles[column][row] = new EatableMutateWall(column,row);
-            }else if(!inBounds(column,row)){
-                tiles[column][row] = new MutateWall(column,row);    
-            }else {
-                tiles[column][row] = new MutateFloor(column,row);
-                passableTiles++;
+        for(let column=0;column<numTiles;column++){
+            tiles[column] = [];
+            for(let row=0;row<numTiles;row++){
+                if(Math.random() <= .21){
+                    tiles[column][row] = new EatableMutateWall(column,row);
+                }else if(!inBounds(column,row)){
+                    tiles[column][row] = new MutateWall(column,row);    
+                }else {
+                    tiles[column][row] = new MutateFloor(column,row);
+                    passableTiles++;
+                }
             }
         }
-    }
     return passableTiles;
 }
 
@@ -156,6 +177,7 @@ function generateMutationBossTiles(){
             }
         }
     }
+
     return passableTiles;
 }
 
@@ -210,10 +232,6 @@ function generateEaterMutationTiles(){
             tiles[3][5] = new EaterMutateBossFloorCableDormant1(3, 5);
             tiles[4][5] = new EaterMutateBossFloorCableDormant2(4, 5); 
             tiles[5][5] = new EaterMutateBossFloorCableDormant3(5, 5); 
-
-
-
-
 
     }else {
         for(let column=0;column<numTiles;column++){
@@ -270,6 +288,16 @@ function getEaterMutateTile(x, y){
     }
 }
 
+function getEaterMutateTile(x, y){
+    if(inBounds(x,y)){
+        return tiles[x][y];
+    }else if(level === 20){
+        return new EaterMutateBossWall(x,y);
+    }else {
+        return new EaterMutateWall(x,y);    
+    }
+}
+
 function randomPassableTile(){
     let tile;
     tryTo('get random passable tile', function(){
@@ -279,7 +307,7 @@ function randomPassableTile(){
             tile = getBossTile(x, y);
         }else if(level > 6 && level <= 13){
             tile = getMutateTile(x, y);
-        }else if(level >= 14){
+        }else if(level >= 14 && level <= 20){
             tile = getEaterMutateTile(x, y);
         }else {
             tile = getTile(x, y);  
@@ -297,6 +325,8 @@ function certainPassableTile(){
         let y = 4;
         if(level === 20){
             tile = getEaterMutateTile(4, 4);
+        }else if (level === 13){
+            tile = getMutateTile(4, 6);
         }
 
         return tile.passable && !tile.monster && !tile.treasure && !tile.player && !tile.exit;
@@ -409,10 +439,13 @@ function generateMonsters(){
             spawnMonster();         
         }    
     }else if (level === 13){
-            numMonsters = 1;
-            for(let i=0;i<numMonsters;i++){
+            //numMonsters = 1;
+            monsters.push(new DarkMX(tiles[4][2]));
+            monsters.push(new hostileShadow(tiles[7][1]));
+            /*for(let i=0;i<numMonsters;i++){
                 spawnMonster();
-            }         
+            }*/   
+
     }else {
         for(let i=0;i<numMonsters;i++){
             spawnMonster();
@@ -464,9 +497,9 @@ function spawnMonster(){
         monsters.push(monster);    
     }
     if (level === 13){
-        let monsterType = shuffle([DarkMX])[0];
+        /*let monsterType = shuffle([DarkMX])[0];
         let monster = new monsterType(randomPassableTile());
-        monsters.push(monster);    
+        monsters.push(monster);*/  
     }
     if (level === 12){
         let monsterType = shuffle([ShadowOpposite, MirrorOpposite])[0];

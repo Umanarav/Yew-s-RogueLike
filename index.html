@@ -15,6 +15,12 @@
        src="images/spritesheet.png"
        width="512" height="16">
 </div>
+
+<label for="tentacles">Number of tentacles (10-100):</label>
+
+<input type="number" id="tentacles" name="tentacles"
+       min="10" max="100">
+
 <script src="js/animation.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/cutscene.js"></script>
@@ -46,7 +52,7 @@
     gameState = "loading";  
 
     startingHp = 3; 
-    numLevels = 20;    
+    numLevels = 26;    
 
     shakeAmount = 0;       
     shakeX = 0;                 
@@ -80,6 +86,7 @@
                 gameState = "rpSection3";
                 showRpSection3();
                 pauseSound('music');
+                pauseSound('musicMenuMuffled'); 
                 pauseSound('bossmusic');
             }
             if(e.key=="2"){
@@ -88,6 +95,7 @@
                 gameState = "rpSection4"
                 showRpSection4();
                 pauseSound('music');
+                pauseSound('musicMenuMuffled'); 
                 pauseSound('bossmusic');
             } 
         }else if(gameState === "rpSection3"){
@@ -103,10 +111,13 @@
             cancelAnimationFrame(myReq);
             pauseSound('transitionMusic2b');
             playSound('music3');
+            playSound('music3MenuMuffled');
             level = 14;
             ctx.restore();
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "rpSection5"){
+            animatinglevel2aCutscene = false;
+            cancelAnimationFrame(myReq);
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
         }else if(gameState === "rpSection6"){
             animatingCutscene1 = false;
@@ -141,36 +152,45 @@
 
         }else if(gameState == "dead"){             
             showTitle();
-            pauseSound('music');
-            pauseSound('music2');
-            pauseSound('music3');
-            pauseSound('bossmusic');                                        
+            pauseAllMusic();                                      
         }else if(gameState == "running"){
             if(animatingLevel2aTooltip === true){
-                //console.log(gameState);
-                animatingLevel2aTooltip = false;
-                cancelAnimationFrame(myReq);
-                return;                
+                    animatingLevel2aTooltip = false;
+                    cancelAnimationFrame(myReq);
+                    sounds.music2.muted = false;
+                    return;                
             }
 
             if (showOptions === true){
                 if (e.key=="s"){
+                    playSound('menuScrollDown');
                     optionsSelector += 1;
                     console.log(optionsSelector);
                 }else if(e.key=="w"){
+                    playSound('menuScrollUp');
                     optionsSelector -= 1;
                     console.log(optionsSelector);
                 }
 
                 if(e.key=="Enter" && optionsSelector === 1){
-                    console.log("Dev tools not implemented yet");
+                    playSound('menuSelect');
+                    showOptions = false;
+                    showDevtools = true;
+                    devtoolsSelectorY = 0;
+                    showDevtoolsMenu();
+
                 }else if(e.key=="Enter" && optionsSelector === 2){
-                    console.log("Where Graphics Menu should be");
+                    playSound('menuSelect');
                     showOptions = false;
                     showGraphics = true;
                     showGraphicsMenu();
                 }else if(e.key=="Enter" && optionsSelector === 3){
+                    playSound('menuClose');
+                    sounds.musicMenuMuffled.muted = true;
+                    sounds.music.muted = false;
+
                     showOptions = false;
+
                     cancelAnimationFrame(myReq);
                 }
 
@@ -182,21 +202,135 @@
                 }
 
                 return;    
+            }
+
+            if (showDevtools === true){
+
+                if (event.key === "Enter" && devtoolsSelectorY === 1){
+
+                    if (level <= 5){
+                        playSound('menuSelect');
+                        showDevtools = false;
+                        cancelAnimationFrame(myReq);
+                        sounds.musicMenuMuffled.muted = true;
+                        sounds.music.muted = false;
+
+                        startLevel();
+                        playSound("music");
+                        playSound("musicMenuMuffled"); 
+                
+                    }else if (level === 6){
+                        playSound('menuSelect');
+                        showDevtools = false;
+                        cancelAnimationFrame(myReq);
+                        startBossLevel();
+
+                        
+                    }else if(level >= 7 && level <= 13){
+                        playSound('menuSelect');
+                        showDevtools = false;
+                        cancelAnimationFrame(myReq);
+                        startLevel();
+
+                        pauseSound('music');
+                        pauseSound('musicMenuMuffled');
+                        pauseSound('music3');
+                        pauseSound('music3MenuMuffled');
+                        playSound("music2");
+                        playSound("musicMenu2Muffled");
+                        sounds.music2MenuMuffled.muted = true;
+                        sounds.music2.muted = false;
+                    }else if(level >= 14 && level <= 19){
+                        playSound('menuSelect');
+                        showDevtools = false;
+                        cancelAnimationFrame(myReq);
+                        startLevel();
+                        sounds.music3MenuMuffled.muted = true;
+                        sounds.music3.muted = false;
+                        playSound('music3');
+                        playSound('music3MenuMuffled');
+                    }else if(level === 20){
+                        playSound('menuSelect');
+                        showDevtools = false;
+                        cancelAnimationFrame(myReq);
+                        startLevel();
+                        pauseSound('music');
+                        pauseSound('musicMenuMuffled');
+                        pauseSound('music3');
+                        pauseSound('music3MenuMuffled');
+
+                        playSound('boss2bMusic');
+                        playSound('boss2bMusicMenuMuffled');
+                    }else {
+                        playSound('menuSelect');
+                        showDevtools = false;
+                        cancelAnimationFrame(myReq);
+                        startLevel();
+                        sounds.music2MenuMuffled.muted = true;
+                        sounds.music2.muted = false;
+                    }
+                    player.hp = level + 3;
+                }
+
+                console.log('showingDevtools');
+                if(e.key=="w"){
+                    playSound('menuScrollUp');
+                    devtoolsSelectorY -= 1;
+                }
+                if(e.key=="a"){
+                    if (devtoolsSelectorY === 0){
+                        level -= 1;
+                        if (level < 1){
+                            level = numLevels;
+                        }
+                    }
+                    playSound('menuScrollDown');
+                    //graphicsSelector -= 1;
+                }
+                if(e.key=="s"){
+                    playSound('menuScrollDown');
+                    devtoolsSelectorY += 1;
+                }
+                if(e.key=="d"){
+                    if (devtoolsSelectorY === 0){
+                        level += 1;
+                        if (level > numLevels){
+                            level = 1
+                        }
+                    }
+                    playSound('menuScrollUp');
+                    //graphicsSelector += 1;
+                }
+
+                if (devtoolsSelectorY > 1){
+                    devtoolsSelectorY = 0;
+                }else if(devtoolsSelectorY < 0){
+                    devtoolsSelectorY = 1;
+                }
+                
+                return;
             } 
+
             if (showGraphics === true){
-                if(e.key=="Enter"){
+
+
+                if (event.key === "Enter"){
+                    playSound('menuSelect');
                     showGraphics = false;
                     cancelAnimationFrame(myReq);
 
                     showOptions = true;
                     optionsSelector = 2;
                     showOptionsMenu();
+
                 }
 
-                if(e.key=="d"){
+                if(e.key=="d" || e.key=="w"){
+                    playSound('menuScrollUp');
                     graphicsSelector += 1;
                 }
-                if(e.key=="a"){
+                if(e.key=="a" || e.key=="s"){
+                    playSound('menuScrollDown');
                     graphicsSelector -= 1;
                 }
 
@@ -304,6 +438,10 @@
                         playSound("doorLocked");
                         return;
                     }
+                }else if (level === 13){
+                    level = 21;
+                    playSound("newLevel");
+                    startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
                 }else if(level === 19){
                     playSound("newLevel");
                     showRpSection6();    
@@ -318,8 +456,8 @@
 
         };
 
-            if(e.key==="Enter" && readyToExit != true && readyToDrink != true){
-                if (level > 6 && level < 13){
+            if(e.key==="Enter" && readyToExit != true && readyToDrink != true &&readyToDamage2aBoss != true){
+                if (level > 6 && level <= 13){
                     if(canPause2a === true){
                         monster2aPaused = true;
                         canPause2a = false;
@@ -378,6 +516,22 @@
                 }
             }    
 
+            if(e.key==="Enter" && readyToDamage2aBoss === true){
+                console.log('something done');
+                readyToDamage2aBoss = false;
+
+                tiles[4][3] = new MutateBossSpecialFloorActivator(4, 3);
+                tiles[2][3] = new MutateFloor(2, 3);
+                tiles[6][3] = new MutateFloor(6, 3);
+
+                //bottom row buttons
+                tiles[1][5] = new MutateFloor(1, 5);
+                tiles[3][5] = new MutateFloor(3, 5);
+                tiles[5][5] = new MutateFloor(5, 5);
+                tiles[7][5] = new MutateFloor(7, 5);
+                
+            } 
+
             if(e.key>=1 && e.key<=6) player.castSpell(e.key-1);
 
             if(e.key==7) player.equipSword(0);
@@ -386,11 +540,13 @@
             if(e.key=="m"){
                 if(soundStopped === false){
                     document.getElementById('audioSymbol').src='images/imgX.png';
-                    pauseSound('music'); 
+                    pauseSound('music');
+                    pauseSound('musicMenuMuffled'); 
                     soundStopped = true;
                 }else if(soundStopped === true){
                     document.getElementById('audioSymbol').src='images/img.png';
-                    playSound('music'); 
+                    playSound('music');
+                    playSound('musicMenuMuffled');  
                     soundStopped = false;
                 }
             }
@@ -426,18 +582,6 @@
                 playSound('doorLocked');
             }
 
-            if(e.key=="o" && gameState == "running"){
-                if(showOptions === false){
-                    showOptions = true;
-                    showOptionsMenu();
-                }else {
-                    showOptions = false;
-                    cancelAnimationFrame(myReq);
-                }
-                console.log(showOptions);
-                
-            }
-
     };
 
     document.querySelector("html").addEventListener("keydown", (e) => {
@@ -454,11 +598,77 @@
     });
 
     document.addEventListener('keyup', function(event){
-    if(event.key === "Escape"){
-            showOptions = false;
-            showGraphics = false;
-            cancelAnimationFrame(myReq);
-        }
+            if(event.key === "Escape" && gameState === "running" && animatingLevel2aTooltip != true){
+                if(showOptions === false && showGraphics === false && showDevtools === false){
+                    playSound('menuOpen');
+                    sounds.musicMenuMuffled.muted = false;
+                    sounds.music2MenuMuffled.muted = false;
+                    sounds.bossmusicMenuMuffled.muted = false;
+                    sounds.music3MenuMuffled.muted = false;
+                    
+
+                    sounds.music.muted = true;
+                    sounds.music2.muted = true;
+                    sounds.bossmusic.muted = true;
+                    sounds.music3.muted = true;
+                    
+
+                    if (level === 20){
+                        sounds.boss2bMusicMenuMuffled.muted = false;
+                        sounds.boss2bMusic.muted = true;
+                        alienFloaterX = 10000;
+                        alienFloaterY = 10000;
+                    }
+
+                    showOptions = true;
+                    showOptionsMenu();
+                }else if(showGraphics === true){
+                    playSound('menuOpen');
+                    showGraphics = false;
+                    cancelAnimationFrame(myReq);
+
+                    showOptions = true;
+                    optionsSelector = 2;
+                    showOptionsMenu();
+                }else if(showDevtools === true){
+                    playSound('menuOpen');
+                    showGraphics = showDevtools = false;
+                    cancelAnimationFrame(myReq);
+
+
+                    showOptions = true;
+                    optionsSelector = 1;
+                    showOptionsMenu();
+
+                }else {
+                    playSound('menuClose');
+                    sounds.musicMenuMuffled.muted = true;
+                    sounds.music2MenuMuffled.muted = true;
+                    sounds.bossmusicMenuMuffled.muted = true;
+                    sounds.music3MenuMuffled.muted = true;
+                    sounds.boss2bMusicMenuMuffled.muted = true;
+
+                    sounds.music.muted = false;
+                    sounds.music2.muted = false;
+                    sounds.bossmusic.muted = false;
+                    sounds.music3.muted = false;
+                    sounds.boss2bMusic.muted = false;
+
+                    if (level === 20){
+                        alienFloaterX = 160;
+                        alienFloaterY = 160;
+                        alienFloaterStatus = 'goingToB'
+                    }
+
+
+
+                    showOptions = false;
+
+                    cancelAnimationFrame(myReq);
+                }
+
+                console.log(showOptions);
+            }
     });
 
     
@@ -473,11 +683,49 @@
     function muteAudio() {
         if(soundStopped === false){
             document.getElementById('audioSymbol').src='images/imgX.png';
-            pauseSound('music'); 
+            if (level <= 5){
+                pauseSound('music');
+                pauseSound('musicMenuMuffled'); 
+            }else if (level === 6){
+                pauseSound('bossmusic');
+                pauseSound('bossmusicMenuMuffled'); 
+            }else if (level >= 7 && level <= 12){
+                pauseSound('music2');
+                pauseSound('music2MenuMuffled'); 
+            }else if (level === 13){
+                //bosslevel2amusic
+            }else if (level >= 14 && level <= 19){
+                pauseSound('music3');
+                pauseSound('music3MenuMuffled');
+            }else if (level === 20){
+                pauseSound('boss2bmusic');
+                pauseSound('boss2bmusicMenuMuffled');
+            }
+            
+            
             soundStopped = true;
         }else if(soundStopped === true){
             document.getElementById('audioSymbol').src='images/img.png';
-            playSound('music'); 
+            if (level <= 5){
+                playSound('music');
+                playSound('musicMenuMuffled');
+            }else if (level === 6){
+                playSound('bossmusic');
+                playSound('bossmusicMenuMuffled'); 
+            }else if (level >= 7 && level <= 12){
+                playSound('music2');
+                playSound('music2MenuMuffled'); 
+            }else if (level === 13){
+                //bosslevel2amusic
+            }else if (level >= 14 && level <= 19){
+                playSound('music3');
+                playSound('music3MenuMuffled');
+            }else if (level === 20){
+                playSound('boss2bmusic');
+                playSound('boss2bmusicMenuMuffled');
+            }
+            
+              
             soundStopped = false;
         }
     }
