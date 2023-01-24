@@ -5,7 +5,10 @@ readyToMutate = true;
 unlockDoor0 = false;
 unlockDoor1 = false;
 
+let randomButtonDecider = 0;
 boss2aSpecialFloorActivator = false;
+let boss2aProgressIndicator = 3;
+let needToResetDarkMXPosition = false;
 
 boss2bButtonRPushed = false;
 boss2bButtonRSprite = 73;
@@ -571,20 +574,36 @@ class MutateBossSpecialFloorDamageButton extends Tile{
         if(monster.isPlayer){
             this.sprite = 125;
             if(boss2aSpecialFloorActivator === true){
-                tiles[1][3] = new boss2aDamageIndicatorBlock1(1, 3);
-                tiles[1][4] = new boss2aDamageIndicatorBlock1(1, 4);
+                
 
-                tiles[2][4] = new boss2aDamageIndicatorBlock1(2, 4);
-                tiles[2][5] = new boss2aDamageIndicatorBlock1(2, 5);
+                if (boss2aProgressIndicator > 0){
+                    boss2aProgressIndicator -= 1
+                    console.log(boss2aProgressIndicator);
+                    shakeAmount = 5 - boss2aProgressIndicator;
+                    screenshake(); 
 
-                tiles[3][3] = new boss2aDamageIndicatorBlock1(3, 3);
-                tiles[3][4] = new boss2aDamageIndicatorBlock1(3, 4);
+                    //reset boss position
+                    needToResetDarkMXPosition = true;
+                    console.log(needToResetDarkMXPosition);
 
-                //show prompt for going to level Y or final level
-                animatingMutationSelection1 = true;
-                showRpSection2();
-                level += 1
-                playSound("newLevel");
+                    //top row buttons
+                    tiles[2][3] = new MutateFloor(2, 3);
+                    tiles[4][3] = new MutateBossSpecialFloorActivator(4, 3);
+                    tiles[6][3] = new MutateFloor(6, 3);
+
+                    //bottom row buttons
+                    tiles[1][5] = new MutateFloor(1, 5);
+                    tiles[3][5] = new MutateFloor(3, 5);
+                    tiles[5][5] = new MutateFloor(5, 5);
+                    tiles[7][5] = new MutateFloor(7, 5);
+                    boss2aSpecialFloorActivator = false;
+                }else if (boss2aProgressIndicator === 0){
+                    //show prompt for going to level Y or final level
+                    animatingMutationSelection1 = true;
+                    showRpSection2();
+                    level += 1
+                    playSound("newLevel");
+                }
 
 
             }
@@ -1643,7 +1662,7 @@ class boss2bButtonL extends Tile{
 }
 
 function random2aBossButton(){
-    let randomButtonDecider = Math.floor(Math.random() * 6);
+    randomButtonDecider = Math.floor(Math.random() * 6);
 
     //top row buttons
     if(randomButtonDecider <= 1){

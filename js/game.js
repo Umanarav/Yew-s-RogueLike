@@ -149,6 +149,26 @@ function draw(){
             drawBoss2bHelper();     
         }
 
+        if (level === 13 && boss2aProgressIndicator >= 0){
+
+            //background
+            ctx.save();
+            ctx.fillStyle = `rgb(0,0,0,${.84})`;
+            ctx.fillRect(13, 13, 525, 38)
+            ctx.restore();
+
+
+            //health bar
+            drawText("Boss2a: " + (boss2aProgressIndicator + 1), 21, false, 38, "white", 34);
+            ctx.save();
+            ctx.fillStyle = 'white';
+            ctx.fillRect(213, 26, boss2aProgressIndicator * 69 + 2, 12)
+            ctx.fillStyle = 'red';
+            ctx.fillRect(214, 27, boss2aProgressIndicator * 69, 10)
+            ctx.restore();
+
+        }
+
         if (readyToTriggerTopBot === true || readyToTriggerRightBot === true || readyToTriggerLeftBot === true || readyToTriggerBottomBot === true){
             drawText("press Enter to activate the Bot!", 21, false, 233, "white", 89);
             if (readyToTriggerTopBot === true){
@@ -728,6 +748,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         spawnRate = 30
     }else if(level === 13){
         generateMutationBossLevel();
+        boss2aProgressIndicator = 3;
         spawnRate = 30
     }else {
         generateLevel();       

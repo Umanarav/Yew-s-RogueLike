@@ -836,6 +836,7 @@ class DarkMX extends Monster{
         this.isDarkMX = true;
     }
     doStuff(){
+
         if (monster2aPaused === true){
             return;
         }else{
@@ -857,6 +858,15 @@ class DarkMX extends Monster{
                 }else{
                 return;
             }
+        }
+
+        if(needToResetDarkMXPosition === true){
+            if (Math.random() >= .5){
+                this.tryMove(2, 0);
+            }else {
+                this.tryMove(-2, 0);
+            }
+            needToResetDarkMXPosition = false;
         }
 
         if (monster2aPaused === true){
