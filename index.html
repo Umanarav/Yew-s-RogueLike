@@ -52,7 +52,7 @@
     gameState = "loading";  
 
     startingHp = 3; 
-    numLevels = 26;    
+    numLevels = 21;    
 
     shakeAmount = 0;       
     shakeX = 0;                 
@@ -67,6 +67,11 @@
     document.querySelector("html").onkeypress = function(e){
         console.log(e.key);
         if(gameState == "title"){
+            topBotActivated = false;
+            rightBotActivated = false;
+            leftBotActivated = false;
+            bottomBotActivated = false; 
+
             animatingTitle = false;
             gameState = "rpSection0";
             showRpSection0();                              
@@ -80,7 +85,7 @@
             startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
             section1Number = 0;
         }else if(gameState === "rpSection2"){
-            if(e.key=="1"){
+            if(e.key=="1" && moonShoes === false){
                 moonShoes = true;
                 cancelAnimationFrame(myReq);
                 gameState = "rpSection3";
@@ -89,7 +94,7 @@
                 pauseSound('musicMenuMuffled'); 
                 pauseSound('bossmusic');
             }
-            if(e.key=="2"){
+            if(e.key=="2" && eaterSoul === false){
                 eaterSoul = true;
                 cancelAnimationFrame(myReq);
                 gameState = "rpSection4"
@@ -98,6 +103,17 @@
                 pauseSound('musicMenuMuffled'); 
                 pauseSound('bossmusic');
             } 
+            if(e.key=="3"){
+                //show lab animation
+                //take me to final level
+                cancelAnimationFrame(myReq);
+                gameState = "running"
+                ctx.restore();
+                level = 21
+                pauseSound('rpSection0Music');
+                startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+                
+            }
         }else if(gameState === "rpSection3"){
             ctx.shadowBlur = 0;
             animatingMutationSelection1 = false;
@@ -149,14 +165,14 @@
             if(e.key=="Enter" && interactiveY1 === 89 && interactiveX1 === 55){
                 showInteractiveSection2();
             }
-
-        }else if(gameState == "dead"){             
+        }else if(gameState == "dead"){       
             showTitle();
             pauseAllMusic();                                      
         }else if(gameState == "running"){
             if(animatingLevel2aTooltip === true){
                     animatingLevel2aTooltip = false;
                     cancelAnimationFrame(myReq);
+                    ctx.shadowBlur = 0;
                     sounds.music2.muted = false;
                     return;                
             }
@@ -172,6 +188,14 @@
                     console.log(optionsSelector);
                 }
 
+                if(e.key=="Enter" && optionsSelector === 0){
+                    playSound('menuSelect');
+                    showOptions = false;
+                    showInventory = true;
+                    
+                    showInventoryMenu();
+
+                }
                 if(e.key=="Enter" && optionsSelector === 1){
                     playSound('menuSelect');
                     showOptions = false;
@@ -196,8 +220,8 @@
 
                 //allowing continuous scrolling through top/bottom
                 if (optionsSelector > 3){
-                    optionsSelector = 1;
-                }else if(optionsSelector <= 0){
+                    optionsSelector = -1;
+                }else if(optionsSelector < -1){
                     optionsSelector = 3;
                 }
 
@@ -207,6 +231,8 @@
             if (showDevtools === true){
 
                 if (event.key === "Enter" && devtoolsSelectorY === 1){
+
+
 
                     if (level <= 5){
                         playSound('menuSelect');
@@ -348,6 +374,65 @@
                 return;
             }
 
+            if(showInventory === true){
+
+                if(e.key=="w"){
+                    playSound('menuScrollDown');
+                    inventorySelector -= 1;
+                }
+
+                if(e.key=="s"){
+                    playSound('menuScrollDown');
+                    inventorySelector += 1;
+                }
+
+                if (inventorySelector > 3){
+                    inventorySelector = 0;
+                }else if(inventorySelector < 0){
+                    inventorySelector = 3;
+                }
+
+                if (event.key === "Enter"){
+                    playSound('menuSelect');
+                    if(inventorySelector === 0){
+                        player.equipSword(0);
+                    }else if(inventorySelector === 1){
+                        player.equipArmor(0);
+                    }else if(inventorySelector === 2){
+                        playSound('menuOpen');
+                        showInventory = false;
+                        cancelAnimationFrame(myReq);
+                        optionsSelector = 0;    
+                        showOptions = true;
+                        optionsSelector = 0;
+                        showOptionsMenu();
+                    }else if(inventorySelector === 3){
+                        playSound('menuOpen');
+                        showInventory = false;
+                        cancelAnimationFrame(myReq);
+                        optionsSelector = 0;    
+                    }
+
+                }
+                
+
+                if(e.key === "i"){
+                        playSound('menuOpen');
+                        showInventory = false;
+                        cancelAnimationFrame(myReq);
+                        optionsSelector = 0;
+                }
+
+                return;
+            }
+
+            if(e.key === "i"){
+                if(showInventory === false && showOptions === false && showDevtools === false && showGraphics === false){
+                    showInventory = true;
+                    showInventoryMenu();
+                }
+            }
+
             if(e.key=="w"){
                 pY = -1;
                 pX = 0;
@@ -394,26 +479,43 @@
                 playerDirection = "right";
             }
 
-            if(e.key=="f"){
+            if(e.key=="f" || e.key==" "){
                 playerDirection = "down";
                 tick();    
             }
             //if(e.key=="g") moonShoes = true;
+
             
             if(e.key==="Enter" && readyToExit === true){
                     welldepleted = false  
                 if(level === numLevels){
                     addScore(score, true); 
                     showTitle();
+                }else if (level === 3){
+                    currentKonamiKey = 0;
+                    level = -777
+                    startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+                    playSound("newLevel");
+                    pauseSound("music");
+                    playSound("musicShopkeep");
+                }else if (level === -777){
+                    level = 4
+                    startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+                    pauseSound("musicShopkeep");
+                    pauseSound("musicShopkeepAngry");
+                    pauseSound("konamiSong");
+                    playSound("newLevel"); 
+                    playSound('music');
                 }else if(level === 5){
                     showRpSection1();
                     level++;
                     playSound("newLevel");  
                 }else if (level === 6){
                     animatingMutationSelection1 = true;
-                    showRpSection2();
-                    level += 1
                     playSound("newLevel");
+                    showRpSection2();
+                    console.log('why ');
+                    level += 1
                 }else if(level === 7){
                     if(unlockDoor0 === true){
                         playSound("newLevel");
@@ -445,13 +547,54 @@
                 }else if(level === 19){
                     playSound("newLevel");
                     showRpSection6();    
-                }
-                else {
+                }else if(level === 20){
+                    animatingMutationSelection1 = true;
+                    showRpSection2();
+                    playSound("newLevel");
+                    pauseSound('boss2bMusic');
+
+                }else {
                     playSound("newLevel");
                     level++;
                     startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
                 }
             }
+
+            //konami code'
+            
+            var konamiCode = ['w', 'w', 's', 's', 'a', 'd', 'a', 'd', 'b', 'a'];
+            var currentKonamiKey = 0;
+
+            var keyHandler = function (event) {
+
+                // If the key isn't in the KonamiCode, or isn't the currentKonamiKey in the KonamiCode, reset
+                if (konamiCode.indexOf(event.key) < 0 && level === -777 && konamiActivated === false || event.key !== konamiCode[currentKonamiKey] && level === -777 && konamiActivated === false) {
+                    currentKonamiKey = 0;
+                    return;
+                }
+
+                // Update how much of the KonamiCode is complete
+                if (level === -777 && konamiActivated === false){
+                    currentKonamiKey++;
+                }
+                
+
+                // If complete, alert and reset
+                if (konamiCode.length === currentKonamiKey && level === -777 && konamiActivated === false) {
+                    currentKonamiKey = 0;
+                    
+                    konamiActivated = true;
+                    console.log('konamiActivated');
+                    playSound('unlockDoor');
+                    pauseSound("musicShopkeep");
+                    playSound("konamiSong");
+                }
+
+            };
+
+            // Listen for keydown events
+            document.addEventListener('keydown', keyHandler, false);
+            
 
 
         };
@@ -582,7 +725,138 @@
                 playSound('doorLocked');
             }
 
+            //add this line and below to controller function
+            if(e.key=="Enter" && level === 21){
+                if (readyToTriggerTopBot === true && topBotActivated === false && topBotSlain != true && score >= 6){
+                    console.log('top triggered')
+                    topBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[4][1] = new Floor(4, 1);
+                    botSavedOrKilled += 1;
+                    score -= 6;
+                }
+                if(readyToTriggerBottomBot === true && bottomBotActivated === false && botBotSlain != true && score >= 12){
+                    console.log('bottom triggered')
+                    bottomBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[4][7] = new Floor(4, 7);
+                    botSavedOrKilled += 1;
+                    score -= 12;
+                }
+                if(readyToTriggerRightBot === true && rightBotActivated === false && rightBotSlain != true && eaterSoul === true){
+                    console.log('right triggered')
+                    rightBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[7][4] = new Floor(7, 4);
+                    botSavedOrKilled += 1;
+                    eaterSoul = false;
+                }
+                if(readyToTriggerLeftBot === true && leftBotActivated === false && leftBotSlain != true && moonShoes === true){
+                    console.log('left triggered')
+                    leftBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[1][4] = new Floor(1, 4);
+                    botSavedOrKilled += 1;
+                    moonShoes = false;
+                }
+
+                if (gameState === "rpSectionfinal"){
+                    cancelAnimationFrame(myReq);
+                    addScore(score, true); 
+                    showTitle();
+                }
+            }
+
+            if(e.key=="Enter" && level === -777 && shopkeepHostile === false){
+
+                //HP purchase Trigger
+                if(readyToBuyHP6 === true){
+                    if (score >= 6){
+                        score -= 6
+                        player.hp += 6
+                        playSound("well");
+                    }else{
+                        playSound("soldOut"); 
+                    }
+                }
+                //Sword 1/2/X purchase trigger
+                else if (readyToBuySwordUpgrade === true && numSword === 0){
+                    if (score >= 6){
+                        score -= 6
+                        numSword +=1;
+                        player.addSword();
+                        playSound("pickup_sword");
+                        this.tier1Sword = false;    
+                    }else{
+                        playSound("soldOut"); 
+                    }           
+                }
+                else if (readyToBuySwordUpgrade === true && numSword === 1 && weaponUpgraded != true){
+                    if (score >= 12){
+                        score -= 12
+                        weaponUpgraded = true;
+                        playSound("pickup_sword");
+                            if (tier1SwordEquipped === true){
+                                player.baseAttack = 5;
+                            }   
+                    }else{
+                        playSound("soldOut"); 
+                    }    
+                }else if(readyToBuySwordUpgrade === true && weaponUpgraded === true){
+                    playSound("soldOut");
+                }
+                //Armor 1/2/X purchase trigger
+                else if (readyToBuyArmorUpgrade === true && numArmor === 0){
+                    if (score >= 6){
+                        score -= 6
+                        numArmor += 1;
+                        player.addArmor();
+                        playSound("pickup_armor");
+                        this.tier1Armor = false;
+                    }else {
+                        playSound('soldOut');
+                    }
+                }else if (readyToBuyArmorUpgrade === true && numArmor === 1 && armorUpgraded != true){
+                    if (score >= 12){
+                        score -= 12;
+                        armorUpgraded = true;
+                        playSound("pickup_armor");
+                        if (tier1ArmorEquipped === true){
+                                player.damageReduction = 3
+                            }
+                    }else {
+                        playSound('soldOut');
+                    }
+
+                }else if(readyToBuyArmorUpgrade === true && armorUpgraded === true){
+                    playSound("soldOut");
+                }
+                //talking to shopkeep dialog handler, counts from 0 up to 8, then resets.
+                //If konami Code is activated, it counts from -1 down to -6, then resets.
+                else if (readyToTalkToShopKeeper === true){
+                    playSound('buttonOut');
+                    if (konamiActivated === false){
+                        shopKeepDialogIndicator += 1;
+                    }else if (konamiActivated === true){
+                        shopKeepDialogIndicator -= 1
+                    }
+
+                    if (shopKeepDialogIndicator >= 8){
+                        shopKeepDialogIndicator = 0;
+                    }
+                    if (shopKeepDialogIndicator <= -6){
+                        shopKeepDialogIndicator = -1
+                    }
+                }
+            }
+
     };
+
+
 
     document.querySelector("html").addEventListener("keydown", (e) => {
         if (e.key === "k" && eaterSoul === true) {
@@ -598,8 +872,8 @@
     });
 
     document.addEventListener('keyup', function(event){
-            if(event.key === "Escape" && gameState === "running" && animatingLevel2aTooltip != true){
-                if(showOptions === false && showGraphics === false && showDevtools === false){
+            if(event.key === "Escape" && gameState === "running" && animatingLevel2aTooltip != true || event.key === "End" && gameState === "running" && animatingLevel2aTooltip != true){
+                if(showOptions === false && showGraphics === false && showDevtools === false && showInventory === false){
                     playSound('menuOpen');
                     sounds.musicMenuMuffled.muted = false;
                     sounds.music2MenuMuffled.muted = false;
@@ -632,7 +906,7 @@
                     showOptionsMenu();
                 }else if(showDevtools === true){
                     playSound('menuOpen');
-                    showGraphics = showDevtools = false;
+                    showDevtools = false;
                     cancelAnimationFrame(myReq);
 
 
@@ -640,7 +914,13 @@
                     optionsSelector = 1;
                     showOptionsMenu();
 
-                }else {
+                }else if(showInventory === true){
+                    playSound('menuOpen');
+                    showInventory = false;
+                    cancelAnimationFrame(myReq);
+                    optionsSelector = 0;
+                }
+                else {
                     playSound('menuClose');
                     sounds.musicMenuMuffled.muted = true;
                     sounds.music2MenuMuffled.muted = true;
@@ -714,6 +994,8 @@
                 playSound('bossmusicMenuMuffled'); 
             }else if (level >= 7 && level <= 12){
                 playSound('music2');
+                sounds.music2.loop = true;
+                sounds.music2.muted = false;
                 playSound('music2MenuMuffled'); 
             }else if (level === 13){
                 //bosslevel2amusic

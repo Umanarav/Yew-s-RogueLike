@@ -1,0 +1,19 @@
+indicator game is running
+indicator to move? press to not remind me again
+
+things i want to be able to do
+
+use controller fully
+-mutations require support
+
+swipe ability
+put out fires
+
+level X
+-robots drop disks
+-alternate route through level -portal 2 wheatley esque
+
+LEVEL Z
+-add explanation animation
+
+

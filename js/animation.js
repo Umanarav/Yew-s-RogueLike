@@ -19,6 +19,10 @@ let rotateClockwise = true;
 
 let myReq;
 
+let playingKonamiAnimation = false;
+let konamiX = 13;
+let konamiAnimationIncrement = .25;
+
 let animatingMutationSelection1 = false;
 
 let fallingMX01 = true;
@@ -62,12 +66,22 @@ let level2aCutscenePercentAscending = true;
 let animatinglevel2aCutscene = false;
 
 let showOptions = false;
-let optionsSelector = 1;
+let optionsSelector = 0;
 let showGraphics = false;
 let graphicsSelector = 1;
 let showDevtools = false;
 let devtoolsSelectorY = 0;
 let devtoolsSelectorX = 0;
+let showInventory = false;
+let inventorySelector = 0;
+
+let topBotX = 7;
+let rightBotX = 7;
+let leftBotX = 7;
+let bottomtBotX = 7;
+
+let alphaModifier = .01;
+let finalCutsceneAlpha = .01;
 
 
 //
@@ -374,7 +388,7 @@ function showRpSection1(){
     playSound('bossmusicMenuMuffled');
 }
 
-function showRpSection2(){                                          
+function showRpSection2(){                                       
     ctx.fillStyle = 'rgba(0,0,0,.75)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
@@ -383,11 +397,13 @@ function showRpSection2(){
     animatingMutationSelection1 = true;
 
     ctx.save();
+    pauseSound('music2');
+    sounds.music2.muted = true;
+    sounds.music2.loop = false;
     showInteractiveSection2();
-    pauseSound('music');
-    pauseSound('bossmusic');
-    pauseSound('bossmusicMenuMuffled');
-    playSound('rpSection0Music');
+    pauseSound("bossmusic");
+    pauseSound("bossmusicMenuMuffled");
+    playSound("rpSection0Music");
 
     previewCounter = 0;
 
@@ -451,6 +467,8 @@ function showRpSection5(){
     gameState = "rpSection5";
 
     pauseSound('music');
+    pauseSound('music2');
+    pauseSound('music2MenuMuffled');
     pauseSound('musicMenuMuffled');
     playSound('rpSection0Music');
 
@@ -478,6 +496,442 @@ function showRpSection6(){
     drawText("mutation Y boss fight", 55, false, 377, "white", 144);
 
 }
+
+function showRpSection7(){
+    level = 21;
+    pauseSound('');
+    pauseSound('rpSection0Music');
+
+}
+
+function showRpSectionFinal(){
+
+        ctx.fillStyle = `rgba(0,0,0,1)`;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+
+        gameState = "rpSectionfinal";
+
+        drawText("cutscene", 13, true, 55, "white", 55);
+
+        if (topBotActivated === true){
+            drawText("topBotActivated", 13, true, 255, "white", 55);
+        }else if (topBotSlain === true){
+            drawText("topBotSlain", 13, true, 255, "white", 55);
+        }else if (topBotActivated === false && topBotSlain === false){
+            drawText("topBotLeftInactive", 13, true, 255, "white", 55);
+        } 
+
+        
+        if (rightBotActivated === true){
+            drawText("rightBotActivated", 13, true, 355, "white", 55);
+            
+        }else if (rightBotSlain === true){
+            drawText("rightBotSlain", 13, true, 355, "white", 55);
+        }else if (rightBotActivated === false && topBotSlain === false){
+            drawText("rightBotLeftInactive", 13, true, 355, "white", 55);
+        }   
+
+
+        if (leftBotActivated === true){
+            drawText("leftBotActivated", 13, true, 455, "white", 55);
+        }else if (leftBotSlain === true){
+            drawText("leftBotSlain", 13, true, 455, "white", 55);
+        }else if (leftBotActivated === false && topBotSlain === false){
+            drawText("leftBotLeftInactive", 13, true, 455, "white", 55);
+        }   
+
+
+        if (bottomBotActivated === true){
+            drawText("bottomBotActivated", 13, true, 555, "white", 55);
+        }else if (botBotSlain === true){
+            drawText("bottomBotSlain", 13, true, 555, "white", 55);
+        }else if (bottomBotActivated === false && botBotSlain === false){
+            drawText("bottomBotLeftInactive", 13, true, 555, "white", 55);
+        }   
+
+        animateRpSectionFinal();
+
+}
+
+function animateRpSectionFinal(){
+    ctx.fillStyle = `rgba(0,0,0,1)`;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 8;
+
+    animateRpSectionBackdrop()
+
+    if (topBotActivated === true){
+        drawText("topBotActivated", 13, true, 255, "white", 55);
+            if (topBotX > -2){
+                topBotX -= .01
+            }
+                //console.log(topBotX);
+                drawSprite(132, topBotX - 1, 2);
+                drawSprite(25, topBotX, 2);
+                
+        }else if (topBotSlain === true || topBotActivated === false && topBotSlain === false){
+        drawText("topBotSlain", 13, true, 255, "white", 55);
+        if (topBotX < 25){
+            topBotX += .055
+        }
+           // console.log(topBotX);
+            drawSprite(25, topBotX - 9, 2);
+    }
+
+    if (rightBotActivated === true){
+        drawText("rightBotActivated", 13, true, 355, "white", 55);
+            if (rightBotX > -2){
+                rightBotX -= .02
+            }
+                //console.log(rightBotX);
+                drawSprite(157, rightBotX, 4);
+                drawSprite(71, rightBotX + 1, 4);
+
+        }else if (rightBotSlain === true || rightBotActivated === false && rightBotSlain === false){
+            drawText("rightBotSlain", 13, true, 355, "white", 55);
+            if (rightBotX < 21){
+                rightBotX += .089
+            }
+                //console.log(rightBotX);
+                drawSprite(71, rightBotX - 8, 4);
+    }
+
+    if (leftBotActivated === true){
+        drawText("leftBotActivated", 13, true, 455, "white", 55);
+        if (leftBotX > -4){
+            leftBotX -= .03
+        }
+            //console.log(leftBotX);
+            drawSprite(144, leftBotX + 1, 6);
+            drawSprite(109, leftBotX + 2, 6);
+        }else if (leftBotSlain === true || leftBotActivated === false && leftBotSlain === false){
+            drawText("leftBotSlain", 13, true, 455, "white", 55);
+            if (leftBotX < 25){
+                leftBotX += .144
+            }
+                //console.log(leftBotX);
+                drawSprite(109, leftBotX - 7, 6);
+    }
+
+    if (bottomBotActivated === true){
+        drawText("bottomBotActivated", 13, true, 555, "white", 55);
+        if (bottomBotX > -5){
+            bottomBotX -= .05
+        }
+            //console.log(bottomBotX);
+            drawSprite(164, bottomBotX + 2, 8);
+            drawSprite(158, bottomBotX + 3, 8);
+    }else if (botBotSlain === true){
+        drawText("bottomBotSlain", 13, true, 555, "white", 55);
+        if (bottomBotX < 21){
+            bottomBotX += .233
+        }
+            //console.log(bottomBotX);
+            drawSprite(158, bottomBotX - 6, 8);
+    }
+
+
+
+    myReq = requestAnimationFrame(animateRpSectionFinal);
+}
+
+function animateRpSectionBackdrop(){
+
+    if (finalCutsceneAlpha <= 0.019999999999999914){
+        alphaModifier = .01
+    }if (finalCutsceneAlpha >= 1){
+        alphaModifier = -.01
+    }
+    finalCutsceneAlpha += alphaModifier;
+    console.log(finalCutsceneAlpha)
+    //begin tOp
+
+    if (topBotActivated === true || topBotSlain === true){
+        if (topBotActivated === true){
+            ctx.fillStyle = `rgba(${finalCutsceneAlpha * 60},${finalCutsceneAlpha * 179},${finalCutsceneAlpha * 113},${finalCutsceneAlpha - .13})`
+        }
+        if(topBotSlain === true){
+            ctx.fillStyle = `rgba(${finalCutsceneAlpha * 255},0,0,${finalCutsceneAlpha - .13})`
+        }
+  
+        ctx.beginPath();
+        ctx.arc(610 + finalCutsceneAlpha * 377, 610 + finalCutsceneAlpha * 377, 610 + finalCutsceneAlpha * 377, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(377 + finalCutsceneAlpha * 233, 377 + finalCutsceneAlpha * 233, 377 + finalCutsceneAlpha * 233, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(233 + finalCutsceneAlpha * 144, 233 + finalCutsceneAlpha * 144, 233 + finalCutsceneAlpha * 144, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(144 + finalCutsceneAlpha * 89, 144+ finalCutsceneAlpha * 89, 144+ finalCutsceneAlpha * 89, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(89 + finalCutsceneAlpha * 55, 89 + finalCutsceneAlpha * 55, 89 + finalCutsceneAlpha * 55, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(55 + finalCutsceneAlpha * 34, 55 + finalCutsceneAlpha * 34, 55 + finalCutsceneAlpha * 34, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(34 + finalCutsceneAlpha * 21, 34 + finalCutsceneAlpha * 21, 34 + finalCutsceneAlpha * 21, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(21 + finalCutsceneAlpha * 13, 21 + finalCutsceneAlpha * 13, 21 + finalCutsceneAlpha * 13, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(13 + finalCutsceneAlpha * 8, 13 + finalCutsceneAlpha * 8, 13 + finalCutsceneAlpha * 8, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(8 + finalCutsceneAlpha * 5, 8 + finalCutsceneAlpha * 5, 8 + finalCutsceneAlpha * 5, 0, 2 * Math.PI);
+        ctx.fill();
+     
+        ctx.beginPath();
+        ctx.arc(5 + finalCutsceneAlpha * 3, 5 + finalCutsceneAlpha * 3, 5 + finalCutsceneAlpha * 3, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(3 + finalCutsceneAlpha * 2, 3 + finalCutsceneAlpha * 2, 3 + finalCutsceneAlpha * 2, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(2 + finalCutsceneAlpha * 1, 2 + finalCutsceneAlpha * 1, 2 + finalCutsceneAlpha * 1, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(1 + finalCutsceneAlpha, 1 + finalCutsceneAlpha, 1 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(0 + finalCutsceneAlpha, 0 + finalCutsceneAlpha, 0 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    // begin right 
+    if(rightBotActivated === true || rightBotSlain === true){
+            if (rightBotActivated === true){
+                ctx.fillStyle = `rgba(${finalCutsceneAlpha * 60},${finalCutsceneAlpha * 179},${finalCutsceneAlpha * 113},${finalCutsceneAlpha - .21})`
+            }
+            if(rightBotSlain === true){
+                ctx.fillStyle = `rgba(${finalCutsceneAlpha * 255},0,0,${finalCutsceneAlpha - .21})`
+            }
+    
+        ctx.beginPath();
+        ctx.arc((832 - 610) - finalCutsceneAlpha * 377, 610 + finalCutsceneAlpha * 377, 610 + finalCutsceneAlpha * 377, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 377) - finalCutsceneAlpha * 233, 377 + finalCutsceneAlpha * 233, 377 + finalCutsceneAlpha * 233, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 233) - finalCutsceneAlpha * 144, 233 + finalCutsceneAlpha * 144, 233 + finalCutsceneAlpha * 144, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 144) - finalCutsceneAlpha * 89, 144 + finalCutsceneAlpha * 89, 144 + finalCutsceneAlpha * 89, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 89) - finalCutsceneAlpha * 55, 89 + finalCutsceneAlpha * 55, 89 + finalCutsceneAlpha * 55, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 55) - finalCutsceneAlpha * 34, 55 + finalCutsceneAlpha * 34, 55 + finalCutsceneAlpha * 34, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 34) - finalCutsceneAlpha * 21, 34 + finalCutsceneAlpha * 21, 34 + finalCutsceneAlpha * 21, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 21) - finalCutsceneAlpha * 13, 21 + finalCutsceneAlpha * 13, 21 + finalCutsceneAlpha * 13, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 13) - finalCutsceneAlpha * 8, 13 + finalCutsceneAlpha * 8, 13 + finalCutsceneAlpha * 8, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 8) - finalCutsceneAlpha * 5, 8 + finalCutsceneAlpha * 5, 8 + finalCutsceneAlpha * 5, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 5) - finalCutsceneAlpha * 3, 5 + finalCutsceneAlpha * 3, 5 + finalCutsceneAlpha * 3, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 3) - finalCutsceneAlpha * 2, 3 + finalCutsceneAlpha * 2, 3 + finalCutsceneAlpha * 2, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 2) - finalCutsceneAlpha, 2 + finalCutsceneAlpha, 2 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 1) - finalCutsceneAlpha, 1 + finalCutsceneAlpha, 1 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 0) - finalCutsceneAlpha, 0 + finalCutsceneAlpha, 0 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    //begin left
+    
+    if (leftBotActivated === true || leftBotSlain === true){
+        if (leftBotActivated === true){
+            ctx.fillStyle = `rgba(${finalCutsceneAlpha * 60},${finalCutsceneAlpha * 179},${finalCutsceneAlpha * 113},${finalCutsceneAlpha - .34})`
+        }
+        if(leftBotSlain === true){
+            ctx.fillStyle = `rgba(${finalCutsceneAlpha * 255},0,0,${finalCutsceneAlpha - .34})`
+        }
+
+        ctx.beginPath();
+        ctx.arc(610 + finalCutsceneAlpha * 377, (576 - 610) - finalCutsceneAlpha * 377, 610 + finalCutsceneAlpha * 377, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(377 + finalCutsceneAlpha * 233, (576 - 377) - finalCutsceneAlpha * 233, 377 + finalCutsceneAlpha * 233, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(233 + finalCutsceneAlpha * 144, (576 - 233) - finalCutsceneAlpha * 144, 233 + finalCutsceneAlpha * 144, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(144 + finalCutsceneAlpha * 89, (576 - 144) - finalCutsceneAlpha * 89, 144 + finalCutsceneAlpha * 89, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(89 + finalCutsceneAlpha * 55, (576 - 89) - finalCutsceneAlpha * 55, 89 + finalCutsceneAlpha * 55, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(55 + finalCutsceneAlpha * 34, (576 - 55) - finalCutsceneAlpha * 34, 55 + finalCutsceneAlpha * 34, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(34 + finalCutsceneAlpha * 21, (576 - 34) - finalCutsceneAlpha * 21, 34 + finalCutsceneAlpha * 21, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(21 + finalCutsceneAlpha * 13, (576 - 21) - finalCutsceneAlpha * 13, 21 + finalCutsceneAlpha * 13, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(13 + finalCutsceneAlpha * 8, (576 - 13) - finalCutsceneAlpha * 8, 13 + finalCutsceneAlpha * 8, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(8 + finalCutsceneAlpha * 5, (576 - 8) - finalCutsceneAlpha * 5, 8 + finalCutsceneAlpha * 5, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(5 + finalCutsceneAlpha * 3, (576 - 5) - finalCutsceneAlpha * 3, 5 + finalCutsceneAlpha * 3, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(3 + finalCutsceneAlpha * 2, (576 - 3) - finalCutsceneAlpha * 2, 3 + finalCutsceneAlpha * 2, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(2 + finalCutsceneAlpha, (576 - 2) - finalCutsceneAlpha, 2 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(1 + finalCutsceneAlpha, (576 - 1) - finalCutsceneAlpha, 1 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(0 + finalCutsceneAlpha, (576 - 0) - finalCutsceneAlpha, 0 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    //begin bottom
+    if(bottomBotActivated === true|| botBotSlain === true){
+
+            if (bottomBotActivated === true){
+                ctx.fillStyle = `rgba(${finalCutsceneAlpha * 60},${finalCutsceneAlpha * 179},${finalCutsceneAlpha * 113},${finalCutsceneAlpha - .55})`
+            }
+            if(botBotSlain === true){
+                ctx.fillStyle = `rgba(${finalCutsceneAlpha * 255},0,0,${finalCutsceneAlpha - .55})`
+            }
+
+        ctx.beginPath();
+        ctx.arc((832 - 610) - finalCutsceneAlpha * 377, (576 - 610) - finalCutsceneAlpha * 377, 610 + finalCutsceneAlpha * 377, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 377) - finalCutsceneAlpha * 233, (576 - 377) - finalCutsceneAlpha * 233, 377 + finalCutsceneAlpha * 233, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 233) - finalCutsceneAlpha * 144, (576 - 233) - finalCutsceneAlpha * 144, 233 + finalCutsceneAlpha * 144, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 144) - finalCutsceneAlpha * 89, (576 - 144) - finalCutsceneAlpha * 89, 144 + finalCutsceneAlpha * 89, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 89) - finalCutsceneAlpha * 55, (576 - 89) - finalCutsceneAlpha * 55, 89 + finalCutsceneAlpha * 55, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 55) - finalCutsceneAlpha * 34, (576 - 55) - finalCutsceneAlpha * 34, 55 + finalCutsceneAlpha * 34, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 34) - finalCutsceneAlpha * 21, (576 - 34) - finalCutsceneAlpha * 21, 34 + finalCutsceneAlpha * 21, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 21) - finalCutsceneAlpha * 13, (576 - 21) - finalCutsceneAlpha * 13, 21 + finalCutsceneAlpha * 21, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 13) - finalCutsceneAlpha * 8, (576 - 13) - finalCutsceneAlpha * 8, 13 + finalCutsceneAlpha * 8, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 8) - finalCutsceneAlpha * 5, (576 - 8) - finalCutsceneAlpha * 5, 8 + finalCutsceneAlpha * 5, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 5) - finalCutsceneAlpha * 3, (576 - 5) - finalCutsceneAlpha * 3, 5 + finalCutsceneAlpha * 3, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 3) - finalCutsceneAlpha * 2, (576 - 3) - finalCutsceneAlpha * 2, 3 + finalCutsceneAlpha * 2, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 2) - finalCutsceneAlpha, (576 - 2) - finalCutsceneAlpha, 2 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 1) - finalCutsceneAlpha, (576 - 1) - finalCutsceneAlpha, 1 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc((832 - 0) - finalCutsceneAlpha, (576 - 0) - finalCutsceneAlpha, 0 + finalCutsceneAlpha, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+}
+
+
 
 function showInteractiveSection1(){
     gameState = "interactiveSection1";
@@ -1298,13 +1752,20 @@ function showInteractiveSection2(){
     
 
     if (gameState === 'rpSection2'){
-        drawText("press 1 for Moon Shoes", 55 - shrinkingNumber, false, 141 + shrinkingNumber, "black", 89 - shrinkingNumber);
-        drawText("press 2 for Eater Soul", 55 + shrinkingNumber, false, 230 - shrinkingNumber, "black", 89 + shrinkingNumber); 
-        drawText("press 3 for mutationZ", 55 - shrinkingNumber, false, 374 + shrinkingNumber, "black", 89 - shrinkingNumber);
+    
+        if (moonShoes === false){
+            drawText("press 1 for Moon Shoes", 55 - shrinkingNumber, false, 141 + shrinkingNumber, "black", 89 - shrinkingNumber); 
+            drawText("press 1 for Moon Shoes", 55 - shrinkingNumber, false, 144 + shrinkingNumber, "white", 89 - shrinkingNumber);
+        }
 
-        drawText("press 1 for Moon Shoes", 55 - shrinkingNumber, false, 144 + shrinkingNumber, "white", 89 - shrinkingNumber);
-        drawText("press 2 for Eater Soul", 55 + shrinkingNumber, false, 233 - shrinkingNumber, "white", 89 + shrinkingNumber); 
+        if (eaterSoul === false){
+            drawText("press 2 for Eater Soul", 55 + shrinkingNumber, false, 230 - shrinkingNumber, "black", 89 + shrinkingNumber);  
+            drawText("press 2 for Eater Soul", 55 + shrinkingNumber, false, 233 - shrinkingNumber, "white", 89 + shrinkingNumber);   
+        }
+
+        drawText("press 3 for mutationZ", 55 - shrinkingNumber, false, 374 + shrinkingNumber, "black", 89 - shrinkingNumber);
         drawText("press 3 for mutationZ", 55 - shrinkingNumber, false, 377 + shrinkingNumber, "white", 89 - shrinkingNumber);
+        
     }
     
     myReq = window.requestAnimationFrame(showInteractiveSection2); 
@@ -2046,7 +2507,7 @@ function animateTile() {
             ctx.save();
             ctx.shadowColor = 'white';
             ctx.shadowBlur = 5;
-            drawText("MX-01 is rebooting... meanwhile they dream...", 21, false, 178 - level2aAlphaCounter * 100, "white", 165);
+            drawText("MX-01 is rebooting... meanwhile they dream...", 19, false, 178 - level2aAlphaCounter * 100, "white", 165);
             if(level2aInfoXCounter >= 64){
                 drawText("Work with MX-01's Shadow(s) to finish.", 21, false, 212 - level2aAlphaCounter * 100, "white", 165);
             }
@@ -2213,6 +2674,27 @@ function animateTile() {
             console.log(level2aAlphaCounter);
             myReq = window.requestAnimationFrame(showLevel2aTooltip); 
 
+        }else{
+
+            return;
+        }
+          
+    }
+
+    function showShopkeepKonamiAnimation(){
+        if (konamiActivated === true && level === -777){
+            konamiX += konamiAnimationIncrement;
+            console.log('animate');
+            
+            var time = new Date();
+
+                drawText("Konami Activated!",konamiX,false,konamiX,`rgb(${konamiX * 6.545454545454545},${konamiX * 4.044943820224719},${konamiX * 2.5})`, konamiX);
+
+            if(konamiX === 55){
+                konamiAnimationIncrement = -.25
+            }else if (konamiX === 13){
+                konamiAnimationIncrement = .25
+            }
         }else{
 
             return;
@@ -3293,23 +3775,36 @@ function animateTile() {
             ctx.fillRect(144,144,544, 244);
             ctx.restore();
 
-            if(optionsSelector === 1){
+            if(optionsSelector === -1){
                 ctx.save();
                 ctx.fillStyle = `rgba(144,0,0,${.5})`;
-                ctx.clearRect(144,144, 544, 34);
-                ctx.fillRect(144,144, 544, 34);
+                ctx.clearRect(148,216, 536, 34);
+                ctx.fillRect(148,216, 536, 34);
+                ctx.restore();
+            }
+            if(optionsSelector === 0){
+                ctx.save();
+                ctx.fillStyle = `rgba(144,0,0,${.5})`;
+                ctx.clearRect(148,249, 536, 34);
+                ctx.fillRect(148,249, 536, 34);
+                ctx.restore();
+            }else if(optionsSelector === 1){
+                ctx.save();
+                ctx.fillStyle = `rgba(144,0,0,${.5})`;
+                ctx.clearRect(148,282, 536, 34);
+                ctx.fillRect(148,282, 536, 34);
                 ctx.restore();
             }else if(optionsSelector === 2){
                 ctx.save();
                 ctx.fillStyle = `rgba(144,0,0,${.5})`;
-                ctx.clearRect(144,188, 544, 34);
-                ctx.fillRect(144,188, 544, 34);
+                ctx.clearRect(148,317, 536, 34);
+                ctx.fillRect(148,317, 536, 34);
                 ctx.restore();
             }else if(optionsSelector === 3){
                 ctx.save();
                 ctx.fillStyle = `rgba(144,0,0,${.5})`;
-                ctx.clearRect(144,224, 544, 34);
-                ctx.fillRect(144,224, 544, 34);
+                ctx.clearRect(148,350, 536, 34);
+                ctx.fillRect(148,350, 536, 34);
                 ctx.restore();
             }
 
@@ -3324,20 +3819,31 @@ function animateTile() {
             ctx.stroke();
             ctx.restore();
 
-            fixExtraPixel();
+            drawText("Placeholder 1", 34, true, canvas.height/2 - 111, "white"); 
 
-            drawText("Dev Tools", 34, true, canvas.height/2 - 115, "white"); 
+            drawText("Placeholder 2", 34, true, canvas.height/2 - 78, "white"); 
 
-            drawText("Graphics", 34, true, canvas.height/2 - 74.5, "white"); 
+            drawText("Access Panel", 34, true, canvas.height/2 - 45, "white"); 
 
-            drawText("Exit Menu", 34, true, canvas.height/2 - 32, "white"); 
+            drawText("Inventory", 34, true, canvas.height/2 - 13, "white"); 
 
-            if(optionsSelector === 1){
-                drawText("Dev Tools", 34, true, canvas.height/2 - 115, "yellow");        
+            drawText("Dev Tools", 34, true, canvas.height/2 + 21, "white"); 
+
+            drawText("Graphics", 34, true, canvas.height/2 + 55, "white"); 
+
+            drawText("Exit Menu", 34, true, canvas.height/2 + 89, "white"); 
+
+            if(optionsSelector === -1){
+                drawText("Access Panel", 34, true, canvas.height/2 - 45, "yellow");        
+            }
+            if(optionsSelector === 0){
+                drawText("Inventory", 34, true, canvas.height/2 - 13, "yellow");        
+            }else if(optionsSelector === 1){
+                drawText("Dev Tools", 34, true, canvas.height/2 + 21, "yellow");        
             }else if(optionsSelector === 2){
-                drawText("Graphics", 34, true, canvas.height/2 - 74.5, "yellow");    
+                drawText("Graphics", 34, true, canvas.height/2 + 55, "yellow");    
             }else if(optionsSelector === 3){
-                drawText("Exit Menu", 34, true, canvas.height/2 - 32, "yellow");    
+                drawText("Exit Menu", 34, true, canvas.height/2 + 89, "yellow");    
             }
 
             myReq = window.requestAnimationFrame(showOptionsMenu);
@@ -3423,6 +3929,69 @@ function animateTile() {
             return;
         }   
         myReq = window.requestAnimationFrame(showDevtoolsMenu);
+         
+    }
+
+    function showInventoryMenu(){
+        if(showInventory === true){
+            ctx.save();
+            ctx.fillStyle = `rgba(0,0,0,${1})`;
+            ctx.clearRect(144,144,544, 244);
+            ctx.fillRect(144,144,544, 244);
+            ctx.restore();
+
+            drawText("Inventory", 34, true, canvas.height/2 - 111, "white"); 
+
+            ctx.save();
+            ctx.strokeStyle = `rgba(233,144,89,1)`;
+            ctx.lineWidth = 2;
+            ctx.moveTo(149, 149);
+            ctx.lineTo(683,149);
+            ctx.lineTo(683,383);
+            ctx.lineTo(149,383);
+            ctx.lineTo(149,149);
+            ctx.stroke();
+            ctx.restore();
+
+            if (weaponUpgraded === true){
+                drawText((player.swords[0] || "") + "I" + (tier1SwordEquipped ? '[Equipped]' : '' || ""), 34, false, 239, "white", 232);
+            }else {
+                drawText((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""), 34, false, 239, "white", 232);
+            }
+            
+            drawText((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""), 34, false, 315, "white", 232);
+            drawText("Exit to Menu", 21, false, 353, "white", 535)
+            drawText("Exit to Game", 21, false, 374, "white", 535)
+
+            if(weaponUpgraded === true){
+                drawSprite(139, 2.5, 2.75)
+            }else {
+                drawSprite(21, 2.5, 2.75)
+            }
+            
+
+            drawSprite(22, 2.5, 4)
+
+            if(inventorySelector === 0){
+                if (weaponUpgraded === true){
+                    drawText((player.swords[0] || "") + "I" + (tier1SwordEquipped ? '[Equipped]' : '' || ""), 34, false, 239, "yellow", 232);
+                }else {
+                    drawText((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""), 34, false, 239, "yellow", 232);
+                }
+                
+            }else if(inventorySelector === 1){
+                drawText((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""), 34, false, 315, "yellow", 232);
+            }else if(inventorySelector === 2){
+                drawText("Exit to Menu", 21, false, 353, "yellow", 535)
+            }else if(inventorySelector === 3){
+                drawText("Exit to Game", 21, false, 374, "yellow", 535)
+            }
+        
+
+        }else {
+            return;
+        }   
+        myReq = window.requestAnimationFrame(showInventoryMenu);
          
     }
 

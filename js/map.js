@@ -5,7 +5,12 @@ function generateLevel(){
 
     generateMonsters();
 
-    if(level === 7){
+    if(level === 7 || level === 21 || level === -777){
+        if (level === -777) {
+            console.log('gen shop level');
+            monsters.push(new Shopkeep(tiles[4][1]));
+            tiles[7][7] = new Exit(7, 7);
+        }
         return;
     }else {
         for(let i=0;i<3;i++){                                         
@@ -90,10 +95,11 @@ function generateEaterMutationLevel(){
 function generateTiles(){
     let passableTiles=0;
     tiles = [];
+
     for(let column=0;column<numTiles;column++){
         tiles[column] = [];
         for(let row=0;row<numTiles;row++){
-            if(Math.random() < 0.3){
+            if(Math.random() < 0.3 && level != 21 && level != -777) {
                 tiles[column][row] = new EatableWall(column,row);
             }else if(!inBounds(column,row)){
                 tiles[column][row] = new Wall(column,row);   
@@ -102,7 +108,16 @@ function generateTiles(){
                 passableTiles++;
             }
         }
+    
     }
+    
+    if (level === 21){
+        tiles[1][4] = new BossFloor(1, 4);
+        tiles[7][4] = new BossFloor(7, 4);
+        tiles[4][1] = new BossFloor(4, 1);
+        tiles[4][7] = new BossFloor(4, 7);
+    }
+
     return passableTiles;
 }
 
@@ -309,6 +324,8 @@ function randomPassableTile(){
             tile = getMutateTile(x, y);
         }else if(level >= 14 && level <= 20){
             tile = getEaterMutateTile(x, y);
+        }else if(level === 21 || level === -777){
+            tile = getTile(4, 4)
         }else {
             tile = getTile(x, y);  
         }
@@ -446,7 +463,10 @@ function generateMonsters(){
                 spawnMonster();
             }*/   
 
-    }else {
+    }else if(level === 21){
+        numMonsters = 3;
+    }
+    else {
         for(let i=0;i<numMonsters;i++){
             spawnMonster();
             console.log(numMonsters);
@@ -463,6 +483,24 @@ function generateBossMonsters(){
 }
 
 function spawnMonster(){
+    if (level === 21){
+        if(topBotSlain != true && topBotSpawned != true){
+            monsters.push(new TopBot(tiles[4][1]));
+            topBotSpawned = true;
+        }
+        if(leftBotSlain != true && leftBotSpawned != true){
+            monsters.push(new LeftBot(tiles[1][4]));
+            leftBotSpawned = true;
+        }
+        if(rightBotSlain != true && rightBotSpawned != true){
+            monsters.push(new RightBot(tiles[7][4]));
+            rightBotSpawned = true;
+        }
+        if(botBotSlain != true && botBotSpawned != true){
+            monsters.push(new BottomBot(tiles[4][7]));
+            botBotSpawned = true;
+        }
+    }
     if (level === 20){
         //monsters.push(new EaterBoss(tiles[4][1]));        
     }

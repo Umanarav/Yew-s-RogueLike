@@ -10,6 +10,21 @@ let boss2bHPCorrection = 0;
 let monster2aPaused = false;
 let canPause2a = true;
 
+let topBotSlain = false;
+let rightBotSlain = false;
+let leftBotSlain = false;
+let botBotSlain = false;
+
+let topBotSpawned = false;
+let rightBotSpawned = false;
+let leftBotSpawned = false;
+let botBotSpawned = false;
+
+let botSavedOrKilled = 0;
+
+let shopkeepHostile = false;
+let shopkeepDamaged = false;
+let fightMusicActive = false;
 
 class Monster{
 	constructor(tile, sprite, hp){
@@ -251,6 +266,38 @@ class Monster{
                 }
         }
 
+        if(this.isTopBot && this.hp <= 0){
+            topBotSlain = true;
+            this.die();
+            greenLightTileActivated = false;
+            redLightTileActivated = true;
+            tiles[4][1] = new Floor(4, 1);
+            botSavedOrKilled += 1;
+        }
+        if(this.isRightBot && this.hp <= 0){
+            rightBotSlain = true;
+            this.die();
+            greenLightTileActivated = false;
+            redLightTileActivated = true;
+            tiles[7][4] = new Floor(7, 4);
+            botSavedOrKilled += 1;
+        }
+        if(this.isLeftBot && this.hp <= 0){
+            leftBotSlain = true;
+            this.die();
+            greenLightTileActivated = false;
+            redLightTileActivated = true;
+            tiles[1][4] = new Floor(1, 4);
+            botSavedOrKilled += 1;
+        }
+        if(this.isBotBot && this.hp <= 0){
+            botBotSlain = true;
+            this.die();
+            greenLightTileActivated = false;
+            redLightTileActivated = true;
+            tiles[4][7] = new Floor(4, 7);
+            botSavedOrKilled += 1;
+        }
         
         if(this.hp <= 0){
             this.die();
@@ -306,7 +353,12 @@ class Monster{
             this.doStuff();
             console.log(this.hp, 'true hp');
             if (tier1SwordEquipped === true){
-                boss2bHP -= 3;    
+                if (weaponUpgraded === true){
+                    boss2bHP -= 5;     
+                }else {
+                    boss2bHP -= 3;    
+                }
+ 
             }else{
                 boss2bHP -= 1;    
             }
@@ -325,17 +377,26 @@ class Monster{
         this.tile.monster = null;
         if(this.isPlayer){
             this.sprite = 1;
+            playSound("playerDied");
             gameState = "dead";
             moonShoes = false;
+            moonShoesController = false;
             eatsWalls = false;
             eaterSoul = false;
 
+            konamiActivated = false;
+            weaponUpgraded = false;
+            armorUpgraded = false;
+
             reveal2bHelperCounter = 0;
+
+            pauseSound("musicShopkeepAngry");
 
         }
         if(this.isExplodingMonster){
             this.sprite = 40;
         }
+
     }
 
     move(tile){
@@ -408,7 +469,6 @@ class Player extends Monster{
 	        if(swordName){
 	            swords[swordName]();
 	            playSound("equip_sword");
-	            tick();
 	        }
 	    }
 
@@ -420,13 +480,100 @@ class Player extends Monster{
         equipArmor(index){                                                   
             let armorName = this.armors[index];
                 if(armorName){
-                armors[armorName]();
-                playSound("equip_armor");
-                tick();
-            }
+                    armors[armorName]();
+                    playSound("equip_armor");
+                }else if (numArmor === 1){
+                    playSound("equip_armor");
+                }
         }
 
 }
+
+class Shopkeep extends Monster{
+    constructor(tile){
+        super(tile, 214, 69);
+        this.isShopkeep = true;
+        this.teleportCounter = 0;
+        
+    }
+    doStuff(){
+        this.sprite += 1;
+
+        if (this.sprite === 225){
+            this.sprite = 214;
+        }
+
+
+        if(this.hp <= 68){
+            shopkeepDamaged = true;
+        }
+
+        if (this.hp < 66){
+
+            this.hp -= .25
+            shopkeepHostile = true;
+            super.doStuff();
+            if (fightMusicActive === false){
+                fightMusicActive = true;
+                pauseSound('konamiSong');
+                playSound('musicShopkeepAngry');
+            }
+
+        }
+
+
+    }
+}
+
+class TopBot extends Monster{
+    constructor(tile){
+        super(tile, 132, 3);
+        this.isTopBot = true;
+    }
+    doStuff(){
+        //super.doStuff();
+        if (topBotActivated === true){
+            this.die();
+        }
+    }
+}
+class LeftBot extends Monster{
+    constructor(tile){
+        super(tile, 144, 5);
+        this.isLeftBot = true;
+    }
+    doStuff(){
+        //super.doStuff();
+        if (leftBotActivated === true){
+            this.die();
+        }
+    }
+}
+class RightBot extends Monster{
+    constructor(tile){
+        super(tile, 157, 5);
+        this.isRightBot = true;
+    }
+    doStuff(){
+        //super.doStuff();
+        if (rightBotActivated === true){
+            this.die();
+        }
+    }
+}
+class BottomBot extends Monster{
+    constructor(tile){
+        super(tile, 164, 5);
+        this.isBotBot = true;
+    }
+    doStuff(){
+        //super.doStuff();
+        if (bottomBotActivated === true){
+            this.die();
+        }
+    }
+}
+
 
 class Bird extends Monster{
     constructor(tile){

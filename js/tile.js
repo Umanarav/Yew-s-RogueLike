@@ -5,6 +5,8 @@ readyToMutate = true;
 unlockDoor0 = false;
 unlockDoor1 = false;
 
+boss2aSpecialFloorActivator = false;
+
 boss2bButtonRPushed = false;
 boss2bButtonRSprite = 73;
 
@@ -13,6 +15,21 @@ boss2bButtonLPushed = false;
 reveal2bHelper = false;
 
 readyToDamage2aBoss = false;
+
+let readyToTriggerTopBot = false;
+let readyToTriggerBottomBot = false;
+let readyToTriggerRightBot = false;
+let readyToTriggerLeftBot = false;
+
+let topBotActivated = false;
+let bottomBotActivated = false;
+let rightBotActivated = false;
+let leftBotActivated = false;
+
+let redLightTileActivated = false;
+let greenLightTileActivated = false;
+
+let shopFloorModifier = 0;
 
 class Tile{
 	constructor(x, y, sprite, passable, hazard, object, exit, button, eatable, pylon, hp){
@@ -102,11 +119,132 @@ class Tile{
 }
 
 class Floor extends Tile{
-    constructor(x,y){
+    constructor(x,y,sprite){
         super(x, y, 2, true, false, false, false);
         //x, y, sprite, passable, hazard, object, exit//
         if (level >= 21 && level <= 26){
             this.sprite = 120;
+
+        }
+        if (redLightTileActivated === true){
+            this.sprite = 129;
+        }else if(greenLightTileActivated === true) {
+            this.sprite = 130;
+        }else if(level === 1){
+            this.sprite = 2;
+        }else if(level === -777){
+            this.sprite = 136;
+
+            if (this.x === 1 && this.y === 1){
+                this.sprite = 166;
+            }else if (this.x === 2 && this.y === 1){
+                this.sprite = 167;
+            }else if (this.x === 3 && this.y === 1){
+                this.sprite = 168;
+            }else if (this.x === 4 && this.y === 1){
+                this.sprite = 169;
+            }else if (this.x === 5 && this.y === 1){
+                this.sprite = 170;
+            }else if (this.x === 6 && this.y === 1){
+                this.sprite = 171;
+            }else if (this.x === 7 && this.y === 1){
+                this.sprite = 172;
+            }
+            
+            else if (this.x === 1 && this.y === 2){
+                this.sprite = 173;
+            }else if (this.x === 2 && this.y === 2){
+                this.sprite = 174;
+            }else if (this.x === 3 && this.y === 2){
+                this.sprite = 175;
+            }else if (this.x === 4 && this.y === 2){
+                this.sprite = 176;
+            }else if (this.x === 5 && this.y === 2){
+                this.sprite = 177;
+            }else if (this.x === 6 && this.y === 2){
+                this.sprite = 178;
+            }else if (this.x === 7 && this.y === 2){
+                this.sprite = 179;
+            }
+
+            else if (this.x === 1 && this.y === 3){
+                this.sprite = 180;
+            }else if (this.x === 2 && this.y === 3){
+                this.sprite = 181;
+            }else if (this.x === 3 && this.y === 3){
+                this.sprite = 182;
+            }else if (this.x === 4 && this.y === 3){
+                this.sprite = 183;
+            }else if (this.x === 5 && this.y === 3){
+                this.sprite = 184;
+            }else if (this.x === 6 && this.y === 3){
+                this.sprite = 185;
+            }else if (this.x === 7 && this.y === 3){
+                this.sprite = 186;
+            }
+
+            else if (this.x === 1 && this.y === 4){
+                this.sprite = 187;
+            }else if (this.x === 2 && this.y === 4){
+                this.sprite = 188;
+            }else if (this.x === 3 && this.y === 4){
+                this.sprite = 189;
+            }else if (this.x === 4 && this.y === 4){
+                this.sprite = 190;
+            }else if (this.x === 5 && this.y === 4){
+                this.sprite = 191;
+            }else if (this.x === 6 && this.y === 4){
+                this.sprite = 192;
+            }else if (this.x === 7 && this.y === 4){
+                this.sprite = 193;
+            }
+
+            else if (this.x === 1 && this.y === 5){
+                this.sprite = 194;
+            }else if (this.x === 2 && this.y === 5){
+                this.sprite = 195;
+            }else if (this.x === 3 && this.y === 5){
+                this.sprite = 196;
+            }else if (this.x === 4 && this.y === 5){
+                this.sprite = 197;
+            }else if (this.x === 5 && this.y === 5){
+                this.sprite = 198;
+            }else if (this.x === 6 && this.y === 5){
+                this.sprite = 199;
+            }else if (this.x === 7 && this.y === 5){
+                this.sprite = 200;
+            }
+
+            else if (this.x === 1 && this.y === 6){
+                this.sprite = 201;
+            }else if (this.x === 2 && this.y === 6){
+                this.sprite = 202;
+            }else if (this.x === 3 && this.y === 6){
+                this.sprite = 203;
+            }else if (this.x === 4 && this.y === 6){
+                this.sprite = 204;
+            }else if (this.x === 5 && this.y === 6){
+                this.sprite = 205;
+            }else if (this.x === 6 && this.y === 6){
+                this.sprite = 206;
+            }else if (this.x === 7 && this.y === 6){
+                this.sprite = 207;
+            }
+
+            else if (this.x === 1 && this.y === 7){
+                this.sprite = 208;
+            }else if (this.x === 2 && this.y === 7){
+                this.sprite = 209;
+            }else if (this.x === 3 && this.y === 7){
+                this.sprite = 210;
+            }else if (this.x === 4 && this.y === 7){
+                this.sprite = 211;
+            }else if (this.x === 5 && this.y === 7){
+                this.sprite = 212;
+            }else if (this.x === 6 && this.y === 7){
+                this.sprite = 213;
+            }
+
         }
     };
 
@@ -161,6 +299,53 @@ class Floor extends Tile{
             return;
             }
         }
+
+        if (monster.isPlayer && level === 21){
+            if(player.tile.x === 4 && player.tile.y === 2 || player.tile.x === 3 && player.tile.y === 1 || player.tile.x === 5 && player.tile.y === 1){
+                console.log('rdy to trigger top bot with texxt')
+                if (topBotActivated === true){
+                    readyToTriggerTopBot = false;
+                }else {
+                    readyToTriggerTopBot = true;
+                }
+                //variable to trigger disk giving
+            }else if(player.tile.x === 4 && player.tile.y === 6 || player.tile.x === 3 && player.tile.y === 7 || player.tile.x === 5 && player.tile.y === 7){
+                console.log('rdy to trigger bot bot')
+                if (bottomBotActivated === true){
+                    readyToTriggerBottomBot = false;
+                }else {
+                    readyToTriggerBottomBot = true;
+                }
+                //variable to trigger disk giving
+            }else if(player.tile.x === 6 && player.tile.y === 4 || player.tile.x === 7 && player.tile.y === 3 || player.tile.x === 7 && player.tile.y === 5){
+                console.log('rdy to trigger right bot')
+                if (rightBotActivated === true){
+                    readyToTriggerRightBot = false;
+                }else {
+                    readyToTriggerRightBot = true;
+                }
+                
+                //variable to trigger disk giving
+            }else if(player.tile.x === 2 && player.tile.y === 4 || player.tile.x === 1 && player.tile.y === 3 || player.tile.x === 1 && player.tile.y === 5){
+                console.log('rdy to trigger left bot')
+                if (leftBotActivated === true){
+                    readyToTriggerLeftBot = false;
+                }else {
+                    readyToTriggerLeftBot = true;
+                }
+                
+                //variable to trigger disk giving
+            }else {
+                console.log('not rdy to trigger bot')
+                readyToTriggerTopBot = false;
+                readyToTriggerBottomBot = false;
+                readyToTriggerRightBot = false;
+                readyToTriggerLeftBot = false;
+            }
+            console.log('x = ', player.tile.x )
+            console.log('y = ', player.tile.y )
+        }
+
     };
 };
 
@@ -383,11 +568,36 @@ class MutateBossSpecialFloorDamageButton extends Tile{
             standingInFire = false;
         }
 
-        if(monster.isPlayer)
-            readyToDamage2aBoss = true;
+        if(monster.isPlayer){
             this.sprite = 125;
+            if(boss2aSpecialFloorActivator === true){
+                tiles[1][3] = new boss2aDamageIndicatorBlock1(1, 3);
+                tiles[1][4] = new boss2aDamageIndicatorBlock1(1, 4);
+
+                tiles[2][4] = new boss2aDamageIndicatorBlock1(2, 4);
+                tiles[2][5] = new boss2aDamageIndicatorBlock1(2, 5);
+
+                tiles[3][3] = new boss2aDamageIndicatorBlock1(3, 3);
+                tiles[3][4] = new boss2aDamageIndicatorBlock1(3, 4);
+
+                //show prompt for going to level Y or final level
+                animatingMutationSelection1 = true;
+                showRpSection2();
+                level += 1
+                playSound("newLevel");
+
+
+            }
+        }
     };
 };
+
+class boss2aDamageIndicatorBlock1 extends Tile{
+    constructor(x,y){
+        super(x, y, 123, true, false, false, false);
+        //x, y, sprite, passable, hazard, object, exit//
+    };
+}
 
 class MutateBossSpecialFloorActivator extends Tile{
     constructor(x,y){
@@ -404,6 +614,8 @@ class MutateBossSpecialFloorActivator extends Tile{
             readyToDrink = false;
             standingInFire = false;
         }
+        {console.log('stepped on activator')}
+        boss2aSpecialFloorActivator = true;
 
         if (this.sprite === 123){
             this.sprite = 124;
@@ -429,7 +641,8 @@ class MutateBossSpecialFloorActivator extends Tile{
             tiles[1][5] = new MutateFloor(1, 5);
             tiles[3][5] = new MutateFloor(3, 5);
             tiles[5][5] = new MutateFloor(5, 5);
-            tiles[7][5] = new MutateFloor(7, 5); 
+            tiles[7][5] = new MutateFloor(7, 5);
+            boss2aSpecialFloorActivator = false;
         }
         
         
@@ -812,6 +1025,10 @@ class Wall extends Tile{
         //x, y, sprite, passable, hazard, object, exit
         if (level >= 21 && level <= 26){
             this.sprite = 119;
+        }else if (level === -777){
+            this.sprite = 137;
+        }else {
+            this.sprite = 3;
         }
     }
 };
@@ -891,6 +1108,11 @@ class Exit extends Tile{
         super(x, y, 11, true, false, false, true);
         /*x, y, sprite, passable, hazard, object, exit*/
         this.exit = true;
+
+        if (level === -777){
+            this.sprite = 134;
+
+        }
     }
 
     stepOn(monster){
