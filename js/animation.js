@@ -133,6 +133,8 @@ function drawTitleBackdrop() {
 
         drawText("Yew's", 40, true, canvas.height/2 - 110, "white");
         drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white"); 
+        drawText("Works Best in Google Chrome", 21, true, canvas.height/2 - 13, "gray"); 
+        drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2, "gray"); 
         drawScores(); 
 
         setTimeout(() => {
