@@ -53,7 +53,7 @@
     gameState = "loading";  
 
     startingHp = 3; 
-    numLevels = 21;    
+    numLevels = 22;    
 
     shakeAmount = 0;       
     shakeX = 0;                 
@@ -571,9 +571,15 @@
                     playSound("newLevel");
                     pauseSound('boss2bMusic');
 
+                }else if(level === 21){
+                    showRpSectionFinal();
+                    playSound("newLevel");
+                    console.log('should be final cutscene here')
+                    return;
                 }else {
                     playSound("newLevel");
                     level++;
+                    console.log("the culprit")
                     startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
                 }
             }

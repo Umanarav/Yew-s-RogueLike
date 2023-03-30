@@ -116,6 +116,10 @@ function generateTiles(){
         tiles[7][4] = new BossFloor(7, 4);
         tiles[4][1] = new BossFloor(4, 1);
         tiles[4][7] = new BossFloor(4, 7);
+
+        tiles[2][2] = new BossFloorScientist(2, 2);
+        tiles [7][7] = new Exit(7, 7);
+
     }
 
     return passableTiles;
@@ -500,6 +504,7 @@ function spawnMonster(){
             monsters.push(new BottomBot(tiles[4][7]));
             botBotSpawned = true;
         }
+
     }
     if (level === 20){
         //monsters.push(new EaterBoss(tiles[4][1]));        

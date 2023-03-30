@@ -546,6 +546,8 @@ function showRpSectionFinal(){
             drawText("leftBotSlain", 13, true, 455, "white", 55);
         }else if (leftBotActivated === false && topBotSlain === false){
             drawText("leftBotLeftInactive", 13, true, 455, "white", 55);
+        }else {
+            drawText("leftBotLeftInactive", 13, true, 455, "white", 55);
         }   
 
 
@@ -580,7 +582,12 @@ function animateRpSectionFinal(){
                 drawSprite(25, topBotX, 2);
                 
         }else if (topBotSlain === true || topBotActivated === false && topBotSlain === false){
-        drawText("topBotSlain", 13, true, 255, "white", 55);
+        
+        if (topBotSlain === true){
+            drawText("topBotSlain", 13, true, 255, "white", 55);  
+        }else {
+            drawText("topBotInactive", 13, true, 255, "white", 55); 
+        }
         if (topBotX < 25){
             topBotX += .055
         }
@@ -598,7 +605,12 @@ function animateRpSectionFinal(){
                 drawSprite(71, rightBotX + 1, 4);
 
         }else if (rightBotSlain === true || rightBotActivated === false && rightBotSlain === false){
-            drawText("rightBotSlain", 13, true, 355, "white", 55);
+            if (rightBotSlain === true){
+                drawText("rightBotSlain", 13, true, 355, "white", 55);   
+            }else {
+                drawText("rightBotInactive", 13, true, 355, "white", 55);  
+            }
+        
             if (rightBotX < 21){
                 rightBotX += .089
             }
@@ -615,7 +627,11 @@ function animateRpSectionFinal(){
             drawSprite(144, leftBotX + 1, 6);
             drawSprite(109, leftBotX + 2, 6);
         }else if (leftBotSlain === true || leftBotActivated === false && leftBotSlain === false){
-            drawText("leftBotSlain", 13, true, 455, "white", 55);
+            if (leftBotSlain === true){
+                drawText("leftBotSlain", 13, true, 455, "white", 55);  
+            }else {
+                drawText("leftBotInactive", 13, true, 455, "white", 55);  
+            }
             if (leftBotX < 25){
                 leftBotX += .144
             }
@@ -631,8 +647,12 @@ function animateRpSectionFinal(){
             //console.log(bottomBotX);
             drawSprite(164, bottomBotX + 2, 8);
             drawSprite(158, bottomBotX + 3, 8);
-    }else if (botBotSlain === true){
-        drawText("bottomBotSlain", 13, true, 555, "white", 55);
+    }else if (botBotSlain === true || bottomBotActivated === false && botBotSlain === false){
+        if (botBotSlain === true){
+            drawText("bottomBotSlain", 13, true, 555, "white", 55);  
+        }else {
+            drawText("bottomBotInactive", 13, true, 555, "white", 55);  
+        }
         if (bottomBotX < 21){
             bottomBotX += .233
         }
@@ -1829,6 +1849,7 @@ function showMX01EnteringLevel2a(){
 
 function showLevel2Preview(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.shadowBlur = 0;
 
     if (gameState === 'rpSection4'){
         spriteWallPreview = 36;

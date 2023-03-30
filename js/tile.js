@@ -23,6 +23,7 @@ let readyToTriggerTopBot = false;
 let readyToTriggerBottomBot = false;
 let readyToTriggerRightBot = false;
 let readyToTriggerLeftBot = false;
+let readyToConverseWithScientistA = false;
 
 let topBotActivated = false;
 let bottomBotActivated = false;
@@ -344,9 +345,18 @@ class Floor extends Tile{
                 readyToTriggerBottomBot = false;
                 readyToTriggerRightBot = false;
                 readyToTriggerLeftBot = false;
+                
             }
             console.log('x = ', player.tile.x )
             console.log('y = ', player.tile.y )
+
+            if(player.tile.x === 2 && player.tile.y === 3 || player.tile.x === 1 && player.tile.y === 2 || player.tile.x === 2 && player.tile.y === 1 || player.tile.x === 3 && player.tile.y === 2){
+                console.log('rdy to talk with scientist ')
+                    readyToConverseWithScientistA = true;
+            }else {
+                console.log('not rdy to talk with scientist ')
+                readyToConverseWithScientistA = false;
+            }
         }
 
     };
@@ -372,6 +382,17 @@ class BossFloor extends Tile{
             this.treasure = false;
             spawnMonster();
         }
+    }
+};
+
+class BossFloorScientist extends Tile{
+    constructor(x,y){
+        super(x, y, 143, true);
+        //x, y, sprite, passable, hazard, object, exit
+    };
+    stepOn(monster){
+        standingInFire = false;
+        readyToConverseWithScientistA = false;
     }
 };
 

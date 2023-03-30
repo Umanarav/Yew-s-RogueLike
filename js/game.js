@@ -193,6 +193,11 @@ function draw(){
             }
         }
 
+        if (level === 21 && readyToConverseWithScientistA === true){
+            drawText("I locked myself in here", 21, false, 233, "white", 144);
+                
+        }
+
         if(level === -777 && shopkeepHostile === false){
 
             //buying bottome left HP 
@@ -1187,6 +1192,7 @@ function playLevelAppropriateMusic(){
         playSound('bossmusic');
         playSound('bossmusicMuffled');
     }else if(level >= 7 && level <= 12){
+        
         playSound('music2');
         playSound('music2MenuMuffled');
     }else if(level > 13 && level <= 20){
