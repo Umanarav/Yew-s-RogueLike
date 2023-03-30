@@ -133,8 +133,8 @@ function drawTitleBackdrop() {
 
         drawText("Yew's", 40, true, canvas.height/2 - 110, "white");
         drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white"); 
-        drawText("Works Best in Google Chrome", 21, true, canvas.height/2 - 13, "gray"); 
-        drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2, "gray"); 
+        drawText("Works Best in Google Chrome", 21, true, canvas.height/2 - 250, "gray"); 
+        drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2 - 233, "gray"); 
         drawScores(); 
 
         setTimeout(() => {
@@ -335,6 +335,7 @@ function drawRpSection1Backdrop() {
         if (section1Number < 113){    
             ctx.drawImage(rpSection1Backdrop[section1Number], 0, 0); 
             section1Number += 1;
+            drawText("press any key to continue", 13, false, 575, "white", 613);
         }
 
         if (section1Number === 113){
@@ -346,6 +347,10 @@ function drawRpSection1Backdrop() {
             window.requestAnimationFrame(drawRpSection1Backdrop); 
         }, 150);
         
+    }else {
+        animatingSection1 = false;
+            startBossLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+            section1Number = 0;
     }
 }
 

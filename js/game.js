@@ -342,6 +342,7 @@ function draw(){
 
         if(gamepadConnected === false){
             drawText("Executables", 21, false, 140, "violet");
+            drawText("Press 1-6 to use .EXE", 12, false, 154, "yellow");
             let spellText1 = (1) + ") " + (player.spells[0] + ".EXE" || "");                        
                 let spellText2 = (2) + ") " + (player.spells[1] + ".EXE" || "");
                 let spellText3 = (3) + ") " + (player.spells[2] + ".EXE"  || "");
@@ -353,7 +354,8 @@ function draw(){
                 drawText(spellText3, 16, false, 170+2*21, "aqua");        
                 drawText(spellText4, 16, false, 170+3*21, "aqua");        
                 drawText(spellText5, 16, false, 170+4*21, "aqua");        
-                drawText(spellText6, 16, false, 170+5*21, "aqua"); 
+                drawText(spellText6, 16, false, 170+5*21, "aqua");
+            drawText(".EXEs refresh each floor", 12, false, 294, "yellow"); 
 
             drawText("Functions ", 21, false, 315 , "violet");
                 if(readyToExit === true){
@@ -380,6 +382,7 @@ function draw(){
                 drawText("f) TICK(); ", 16, false, 366 , "aqua");
 
             drawText("Inventory (i)", 21, false, 406, "violet");
+                drawText("Press 7/8 to (un)equip", 12, false, 420, "yellow");
             
                 let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? ' [Equipped]' : '' || "")); 
                 
@@ -783,6 +786,11 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
     }else if(level > 6 && level < 13){
         randomPassableTileNotWell().replace(ExitLocked);
     }else if(level === 13){
+        pauseSound('musicMenuMuffled');
+        pauseSound('rpSection0Music');
+        playSound("bossmusic");  
+        playSound('bossmusicMenuMuffled');   
+        sounds.bossmusic.muted = false;
         console.log("this is where an exit would have been randomly drawn, but level 13/level2aBoss prevents it.");
     }else if(level === -777){
         console.log("this is where an exit would have been randomly drawn, but shops prevent this.");
@@ -825,13 +833,9 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
         
     }
 
-    if (level >= 7 && level <= 13){
+    if (level >= 7 && level < 13){
         pauseSound('music3');
         pauseSound('music3MenuMuffled');
-    }
-
-    if (level === 13){
-        pauseSound("rpSection0Music");   
     }
 
     if (level === 14){
@@ -865,7 +869,7 @@ function startLevel(playerHp, playerSpells, playerBaseAttack = 1){
 
     if (level === 21 ){
         pauseSound('boss2bMusic');
-        pauseSound('rpSection0Music')
+        pauseSound('rpSection0Music');
     }
 
     reveal2bHelperCounter = 0;
@@ -1150,10 +1154,11 @@ function pauseLevelAppropriateMusic(){
     }else if(level === 6){
         pauseSound('bossmusic');
         pauseSound('bossmusicMuffled');
-    }else if(level >= 7 && level <= 12){
+    }else if(level >= 7 && level < 12){
         pauseSound('music2');
         pauseSound('music2MenuMuffled');
     }else if(level >= 13 && level <= 20){
+        pauseSound('music2');
         pauseSound('music3');
         //pauseSound('music3MenuMuffled');
     }
@@ -1184,7 +1189,7 @@ function playLevelAppropriateMusic(){
     }else if(level >= 7 && level <= 12){
         playSound('music2');
         playSound('music2MenuMuffled');
-    }else if(level >= 13 && level <= 20){
+    }else if(level > 13 && level <= 20){
         playSound('music3');
         //playSound('music3MenuMuffled');
     }

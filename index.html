@@ -135,6 +135,7 @@
             animatinglevel2aCutscene = false;
             cancelAnimationFrame(myReq);
             startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+            pauseSound('rpSection0Music');
         }else if(gameState === "rpSection6"){
             animatingCutscene1 = false;
             cancelAnimationFrame(myReq);
@@ -252,7 +253,7 @@
                         startBossLevel();
 
                         
-                    }else if(level >= 7 && level <= 13){
+                    }else if(level >= 7 && level < 13){
                         playSound('menuSelect');
                         showDevtools = false;
                         cancelAnimationFrame(myReq);
@@ -266,6 +267,22 @@
                         playSound("musicMenu2Muffled");
                         sounds.music2MenuMuffled.muted = true;
                         sounds.music2.muted = false;
+                    }else if(level === 13){
+                        playSound('menuSelect');
+                        showDevtools = false;
+                        cancelAnimationFrame(myReq);
+                        startLevel();
+
+                        pauseSound('music');
+                        pauseSound('musicMenuMuffled');
+                        pauseSound('music3');
+                        pauseSound('music3MenuMuffled');
+                        pauseSound("music2");
+                        pauseSound("musicMenu2Muffled");
+                        playSound('bossmusic');
+                        playSound('bossmusicMuffled');
+                        sounds.bossmusicMuffled.muted = true;
+                        sounds.bossmusic.muted = false;
                     }else if(level >= 14 && level <= 19){
                         playSound('menuSelect');
                         showDevtools = false;

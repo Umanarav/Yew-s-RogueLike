@@ -1,0 +1,116 @@
+body {
+  background: url('../images/basic-tile-export.png') repeat;
+}
+
+h1 {
+  color: white;
+  margin: 13px;
+}
+th {
+  color: white;
+  margin: 13px;
+}
+p {
+  color: white;
+}
+
+label {
+  color: white;
+}
+
+label#text {
+  color: white;
+}
+
+tempdiv {
+  color: black;
+}
+
+.bug-report-form label {
+    display: block;
+    margin-bottom: 5px;
+    padding: 5px;
+    margin: 5px;
+    
+  }
+  
+  .bug-report-form input,
+  .bug-report-form select,
+  .bug-report-form textarea {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    
+  }
+  
+  .bug-report-form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin: 5px;
+  }
+  
+  .bug-report-form input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  
+  .bug-report-form textarea {
+    height: 150px;
+  }
+  
+  .bug-report-form {
+    position: relative;
+    margin: 5px;
+  }
+  
+  .bug-report-form label.error {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    color: red;
+    font-size: 12px;
+  }
+
+  .bug-report {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  .clear-history-button {
+
+  border: none;
+
+  padding: 13px 21px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 144px;
+  cursor: pointer;
+  align-content: right;
+  }
+
+  .required-field::before {
+    content: "*";
+    color: red;
+    margin-right: 5px;
+
+  }
+  .required-field {
+    color: white;
+
+  }
+
+  input#email {
+    margin: 5px;
+  }
+
+  select#severity {
+      margin: 5px;
+  }

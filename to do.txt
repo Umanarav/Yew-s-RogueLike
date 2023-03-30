@@ -1,5 +1,9 @@
 -indicator game is running
 -indicator to move? press to not remind me again prompt
+-explain F to tick?
+-explain executables
+
+intro cs
 
 things i want to be able to do
 
