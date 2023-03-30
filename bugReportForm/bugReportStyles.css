@@ -95,17 +95,9 @@ tempdiv {
 	margin: 4px 144px;
 	cursor: pointer;
 	align-content: right;
-  animation: shake 0.5s;
+
 }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  10%, 90% { transform: translateX(-10px); }
-  20%, 80% { transform: translateX(10px); }
-  30%, 50%, 70% { transform: translateX(-10px); }
-  40%, 60% { transform: translateX(10px); }
-  100% { transform: translateX(0); }
-}
 
 .required-field::before {
 	content: "*";
@@ -151,6 +143,4 @@ form#bug-report-form.form-container {
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
-  
-  
   
