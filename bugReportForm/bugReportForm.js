@@ -5,6 +5,13 @@ const successAudio = new Audio('../sounds/success.mp3');
 const refreshAudio = new Audio('../sounds/refresh.mp3');
 const errorAudio = new Audio('../sounds/error.mp3');
 
+//check the users browsertype and put it in the field
+const platformInput = document.getElementById('platform');
+platformInput.value = localStorage.getItem('platform');
+platformInput.addEventListener('change', () => {
+    localStorage.setItem('platform', platformInput.value);
+});
+
 //create clear local history button
 const clearHistoryButton = document.createElement('button');
 clearHistoryButton.style.textAlign = 'center';
