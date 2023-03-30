@@ -17,6 +17,22 @@
         
     }
 
+    #bugReport {
+        position: fixed;
+        bottom: 5%;
+        right: 87.5%;
+        outline: 1px solid white;
+        margin: 3px;
+    }
+
+    span {
+        position: fixed;
+        bottom: 5%;
+        right: 89%;
+        outline: 1px solid white;
+        margin: 3px;
+    }
+
     label {
         position: fixed;
         bottom: 6%;

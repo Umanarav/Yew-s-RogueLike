@@ -1,64 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Bug Report Form</title>
-    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-    <link rel="stylesheet" href="bugReportStyles.css">
-  </head>
-  <body>
-    <h1>Report a Bug</h1>
-    <form id="bug-report-form" 
-      class="form-container"
-      method="POST" 
-      action="https://script.google.com/macros/s/AKfycbwnauNaDTdDqEDG1uj1jwBEVf6mT4fDGqAT6W4Unl45pLlPceagXI3sEzaSz2z766aN/exec"
-      target="_blank"
-    >
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" oninput="this.size = this.value.length;" size="21"><br>
-
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" oninput="this.size = this.value.length;" size="21"><br>
-
-      <label for="description" class="required-field">Bug Description:</label></label>
-      <textarea id="description" name="description" required></textarea><br>
-
-      <label for="steps-to-reproduce">Steps to Reproduce:</label>
-      <textarea id="steps-to-reproduce" name="steps-to-reproduce"></textarea><br>
-
-      <label for="severity">Severity:</label>
-      <select id="severity" name="severity" >
-        <option value="" disabled selected>Select severity</option>
-        <option value="Low">Low</option>
-        <option value="Medium">Medium</option>
-        <option value="High">High</option>
-      </select><br>
-
-      <label for="platform">Platform:</label>
-      <select id="platform" name="platform">
-        <option value="">--Please select--</option>
-        <option value="Windows">Windows</option>
-        <option value="Mac">Mac</option>
-        <option value="Linux">Linux</option>
-      </select><br>
-
-      <label for="version">Version:</label>
-      <input type="text" id="version" name="version" value="Beta 1.0" readonly style="outline:none;border:none;"><br>
-
-      <input type="submit" value="Submit">
-
-      <table id="bug-report-table" class="table-container">
-        <thead>
-          <tr>
-            <th><img src="../images/boss2b2.gif">Thank you for your help! We are processing your report now!<img src="../images/boss2b2.gif"></th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-      <script src="bugReportForm.js"></script>
-    </body>
-  </html>
-    </form>
-
-    
+<head>
+	<meta charset="UTF-8">
+	<title>Bug Report Form</title>
+	<link href="../images/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="bugReportStyles.css" rel="stylesheet">
+</head>
+<body>
+	<h1>Report a Bug</h1>
+	<form action="https://script.google.com/macros/s/AKfycbwnauNaDTdDqEDG1uj1jwBEVf6mT4fDGqAT6W4Unl45pLlPceagXI3sEzaSz2z766aN/exec" class="form-container" id="bug-report-form" method="post" name="bug-report-form" target="_blank">
+		<label for="name">Name:</label> <input id="name" name="name" oninput="this.size = this.value.length;" size="21" type="text"><br>
+		<label for="email">Email:</label> <input id="email" name="email" oninput="this.size = this.value.length;" size="21" type="email"><br>
+		<label class="required-field" for="description">Bug Description:</label> 
+		<textarea id="description" name="description" required=""></textarea><br>
+		<label for="steps-to-reproduce">Steps to Reproduce:</label> 
+		<textarea id="steps-to-reproduce" name="steps-to-reproduce"></textarea><br>
+		<label for="severity">Severity:</label> <select id="severity" name="severity">
+			<option disabled selected value="">
+				Select severity
+			</option>
+			<option value="Low">
+				Low
+			</option>
+			<option value="Medium">
+				Medium
+			</option>
+			<option value="High">
+				High
+			</option>
+		</select><br>
+		<label for="platform">Platform:</label> <select id="platform" name="platform">
+			<option value="">
+				--Please select--
+			</option>
+			<option value="Windows">
+				Windows
+			</option>
+			<option value="Mac">
+				Mac
+			</option>
+			<option value="Linux">
+				Linux
+			</option>
+		</select><br>
+		<label for="version">Version:</label> <input id="version" name="version" readonly style="outline:none;border:none;background-color:transparent;" type="text" value="Beta 1.0"><br>
+		<input type="submit" value="Submit">
+		<hr class="black-line">
+		<table class="table-container" id="bug-report-table">
+			<thead>
+				<tr>
+					<th><img src="../images/boss2b2.gif">Thank you for your help! We are processing your report now!<img src="../images/boss2b2.gif"></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+		<script src="bugReportForm.js">
+		</script> 
+	</form>
+</body>
+</html>
