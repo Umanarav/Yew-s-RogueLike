@@ -96,7 +96,7 @@ const titleBackdrop6 = new Image();
 
 var someNumberTitle = 11;
 
-animatingTitle = false;
+let animatingTitle = false;
 
 let starHue = 0;
 
@@ -139,22 +139,6 @@ function drawTitleBackdrop() {
         ctx.fillRect(0,0,canvas.width, canvas.height);
 
 
-        // check if the image is hitting the right or left bounds of the canvas
-        if (bouncingX > 832 -144 || bouncingX < 0) {
-            // reverse the x velocity
-            vx = -vx;
-        }
-
-        // check if the image is hitting the top or bottom bounds of the canvas
-        if (bouncingY > 576 - 144 || bouncingY < 0) {
-            // reverse the y velocity
-            vy = -vy;
-        }
-
-        // update the position of the image based on its velocity
-        bouncingX += vx;
-        bouncingY += vy;
-
         // Add random stars
         ctx.fillStyle = `hsl(${starHue}, 100%, 50%)`;
         for (let i = 0; i < someNumberTitle * 34; i++) {
@@ -164,38 +148,6 @@ function drawTitleBackdrop() {
             ctx.arc(x, y, x/144, y/233, 2.39983 );
             ctx.fill();
         }
-
-       // Draw the layers
-  
-       for (let i = 0; i < Math.ceil(canvas.width / layer2.width) + 1; i++) {
-        ctx.drawImage(layer2, layer2X + i * layer2.width, 0);
-      }
-  for (let i = 0; i < Math.ceil(canvas.width / layer3.width) + 1; i++) {
-    ctx.drawImage(layer3, layer3X + i * layer3.width, 0);
-  }
-
-
-  for (let i = 0; i < Math.ceil(canvas.width / layer1.width) + 1; i++) {
-    ctx.drawImage(layer1, layer1X + i * layer1.width, 0);
-  }
-
-  // Update the layer positions based on their speeds
-  layer1X -= layer1Speed;
-  layer2X -= layer2Speed;
-  layer3X -= layer3Speed;
-
-// If a layer goes off the screen to the left, reset it to the end of the canvas
-if (layer1X + layer1.width < 0) {
-    layer1X = layer1X + layer1.width;
-  }
-  if (layer2X + layer2.width < 0) {
-    layer2X = layer2X + layer2.width;
-  }
-  if (layer3X + layer3.width < 0) {
-    layer3X = layer3X + layer3.width;
-  }
-
-
 
 
         if (someNumberTitle === 11 || someNumberTitle === 12){
@@ -221,12 +173,6 @@ if (layer1X + layer1.width < 0) {
             someNumberTitle = 11
             ctx.drawImage(titleBackdrop6, 0, 0,)
         }
-
-        ctx.drawImage(boss2b, bouncingX, bouncingY, 144 + someNumberTitle, 144 + someNumberTitle);
-
-        
-
-
 
         drawText("Yew's", 42, true, canvas.height/2 - 110, "black");
         drawText("Rogue-Like", 72, true, canvas.height/2 - 50, "black");
