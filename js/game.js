@@ -11,7 +11,7 @@ let readyToBuySwordUpgrade = false;
 let readyToBuyArmorUpgrade = false;
 
 let weaponUpgraded = false;
-let armorUpgraded = false;
+var armorUpgraded = false;
 
 let konamiActivated = false;
 let konamiAnimationTigger = false;
@@ -423,6 +423,7 @@ function draw(){
 
         if(gamepadConnected === true){
             drawText("Executables", 21, false, 140, "violet");
+            drawText("Press button to use .EXE", 12, false, 154, "yellow");
                 let spellText1 = (1) + ") " + (player.spells[0] || "");                        
                 let spellText2 = (2) + ") " + (player.spells[1] || "");
                 let spellText3 = (3) + ") " + (player.spells[2] || "");
@@ -434,7 +435,8 @@ function draw(){
                 drawText("LB/" + spellText3, 16, false, 170+2*21, "aqua");        
                 drawText("RB/" + spellText4, 16, false, 170+3*21, "aqua");        
                 drawText("X/" + spellText5, 16, false, 170+4*21, "aqua");        
-                drawText("Y/" + spellText6, 16, false, 170+5*21, "aqua");                
+                drawText("Y/" + spellText6, 16, false, 170+5*21, "aqua");      
+                drawText(".EXEs refresh each floor", 12, false, 294, "yellow");           
             
             drawText("Functions ", 21, false, 315 , "violet");
                 
@@ -460,15 +462,29 @@ function draw(){
 
 
             drawText("Hardware", 21, false, 406, "violet");
-                let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? '[Equipped]' : '' || ""));  
-                drawText(swordText, 16, false, 436, "aqua");
-
-                if (weaponUpgraded === true){
-                    drawText(swordText, 16, false, 436, "aqua");
-                }
+                drawText("Enter -> Inventory to (un)equip", 12, false, 420, "yellow");
             
-                let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? '[Equipped]' : '' || ""));                        
-                drawText(armorText, 16, false, 457, "aqua");
+            let swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? ' [Equipped]' : '' || "")); 
+            
+            if (weaponUpgraded === true){
+                swordText = (7) + ") " + ((player.swords[0] || "") + "I" + (tier1SwordEquipped ? ' [Equipped]' : '' || "")); 
+            }else {
+                swordText = (7) + ") " + ((player.swords[0] || "") + (tier1SwordEquipped ? ' [Equipped]' : '' || "")); 
+            }
+            drawText(swordText, 16, false, 436, "aqua");        
+
+            let armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? ' [Equipped]' : '' || ""));                         
+            
+            if (armorUpgraded === true){
+                armorText = (8) + ") " + ((player.armors[0] || "") + " +" + (tier1ArmorEquipped ? ' [Equipped]' : '' || ""));
+            }else {
+                armorText = (8) + ") " + ((player.armors[0] || "") + (tier1ArmorEquipped ? ' [Equipped]' : '' || "")); 
+            }
+            
+            drawText(armorText, 16, false, 457, "aqua");
+
+                
+                
 
             drawText("Mutations", 21, false, 497, "violet");
                 if (moonShoes === true){
@@ -1108,9 +1124,14 @@ function playSound(soundName){
     sounds[soundName].play();
 }
 
-function pauseSound(soundName){                       
-    sounds[soundName].currentTime = 0;  
-    sounds[soundName].pause();
+function pauseSound(soundName) {
+    if (sounds.hasOwnProperty(soundName)) {
+        var sound = sounds[soundName];
+        if (!sound.paused) {
+            sound.currentTime = 0;
+            sound.pause();
+        }
+    }
 }
 
 function playTreasureSounds(){

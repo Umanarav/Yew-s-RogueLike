@@ -6,7 +6,7 @@ armors = {
             tier1ArmorEquipped = true
             player.damageReduction = 2
             playSound("equip_armor");
-            if (ArmorUpgraded === true){
+            if (armorUpgraded === true){
                 player.damageReduction = 3
             }
             

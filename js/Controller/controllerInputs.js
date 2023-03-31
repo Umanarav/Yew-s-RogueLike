@@ -35,6 +35,7 @@ if (Controller.supported) {
 
     window.addEventListener('gc.button.press', function(event) {
         console.log(event.detail);
+    
         if(gameState == "title"){                              
             animatingTitle = false;
             gameState = "rpSection0";
@@ -461,15 +462,31 @@ if (Controller.supported) {
                 if(level === numLevels){
                     addScore(score, true); 
                     showTitle();
+                }else if (level === 3){
+                    currentKonamiKey = 0;
+                    level = -777
+                    startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+                    playSound("newLevel");
+                    pauseSound("music");
+                    playSound("musicShopkeep");
+                }else if (level === -777){
+                    level = 4
+                    startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
+                    pauseSound("musicShopkeep");
+                    pauseSound("musicShopkeepAngry");
+                    pauseSound("konamiSong");
+                    playSound("newLevel"); 
+                    playSound('music');
                 }else if(level === 5){
                     showRpSection1();
                     level++;
                     playSound("newLevel");  
                 }else if (level === 6){
                     animatingMutationSelection1 = true;
-                    showRpSection2();
-                    level += 1
                     playSound("newLevel");
+                    showRpSection2();
+                    console.log('why ');
+                    level += 1
                 }else if(level === 7){
                     if(unlockDoor0 === true){
                         playSound("newLevel");
@@ -505,9 +522,17 @@ if (Controller.supported) {
                     animatingMutationSelection1 = true;
                     showRpSection2();
                     playSound("newLevel");
+                    pauseSound('boss2bMusic');
+
+                }else if(level === 21){
+                    showRpSectionFinal();
+                    playSound("newLevel");
+                    console.log('should be final cutscene here')
+                    return;
                 }else {
                     playSound("newLevel");
                     level++;
+                    console.log("the culprit")
                     startLevel(Math.min(maxHp, player.hp+1),undefined, player.baseAttack);
                 }
             }
@@ -583,6 +608,139 @@ if (Controller.supported) {
                 playSound('boss2bExplosion');
             }else if (event.detail.name === "FACE_1" && level === 20 && boss2bButtonRPushed === true && boss2bBombable === false){
                 playSound('doorLocked');
+            }
+
+            if(event.detail.name === "FACE_1" && level === 21){
+                if (readyToTriggerTopBot === true && topBotActivated === false && topBotSlain != true && score >= 6){
+                    console.log('top triggered')
+                    topBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[4][1] = new Floor(4, 1);
+                    botSavedOrKilled += 1;
+                    score -= 6;
+                }
+                if(readyToTriggerBottomBot === true && bottomBotActivated === false && botBotSlain != true && score >= 12){
+                    console.log('bottom triggered')
+                    bottomBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[4][7] = new Floor(4, 7);
+                    botSavedOrKilled += 1;
+                    score -= 12;
+                }
+                if(readyToTriggerRightBot === true && rightBotActivated === false && rightBotSlain != true && eaterSoul === true){
+                    console.log('right triggered')
+                    rightBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[7][4] = new Floor(7, 4);
+                    botSavedOrKilled += 1;
+                    eaterSoul = false;
+                }
+                if(readyToTriggerLeftBot === true && leftBotActivated === false && leftBotSlain != true && moonShoes === true){
+                    console.log('left triggered')
+                    leftBotActivated = true;
+                    greenLightTileActivated = true;
+                    redLightTileActivated = false;
+                    tiles[1][4] = new Floor(1, 4);
+                    botSavedOrKilled += 1;
+                    moonShoes = false;
+                }
+
+                if (gameState === "rpSectionfinal"){
+                    cancelAnimationFrame(myReq);
+                    addScore(score, true); 
+                    showTitle();
+                    readyToTriggerTopBot = false;
+                    readyToTriggerRightBot = false;
+                    readyToTriggerBottomBot = false;
+                    readyToTriggerLeftBot = false;
+
+                }
+            }
+
+            if(event.detail.name === "FACE_1" && level === -777 && shopkeepHostile === false){
+
+                //HP purchase Trigger
+                if(readyToBuyHP6 === true){
+                    if (score >= 6){
+                        score -= 6
+                        player.hp += 6
+                        playSound("well");
+                    }else{
+                        playSound("soldOut"); 
+                    }
+                }
+                //Sword 1/2/X purchase trigger
+                else if (readyToBuySwordUpgrade === true && numSword === 0){
+                    if (score >= 6){
+                        score -= 6
+                        numSword +=1;
+                        player.addSword();
+                        playSound("pickup_sword");
+                        this.tier1Sword = false;    
+                    }else{
+                        playSound("soldOut"); 
+                    }           
+                }
+                else if (readyToBuySwordUpgrade === true && numSword === 1 && weaponUpgraded != true){
+                    if (score >= 12){
+                        score -= 12
+                        weaponUpgraded = true;
+                        playSound("pickup_sword");
+                            if (tier1SwordEquipped === true){
+                                player.baseAttack = 5;
+                            }   
+                    }else{
+                        playSound("soldOut"); 
+                    }    
+                }else if(readyToBuySwordUpgrade === true && weaponUpgraded === true){
+                    playSound("soldOut");
+                }
+                //Armor 1/2/X purchase trigger
+                else if (readyToBuyArmorUpgrade === true && numArmor === 0){
+                    if (score >= 6){
+                        score -= 6
+                        numArmor += 1;
+                        player.addArmor();
+                        playSound("pickup_armor");
+                        this.tier1Armor = false;
+                    }else {
+                        playSound('soldOut');
+                    }
+                }else if (readyToBuyArmorUpgrade === true && numArmor === 1 && armorUpgraded != true){
+                    if (score >= 12){
+                        score -= 12;
+                        armorUpgraded = true;
+                        playSound("pickup_armor");
+                        if (tier1ArmorEquipped === true){
+                                player.damageReduction = 3
+                            }
+                    }else {
+                        playSound('soldOut');
+                    }
+
+                }else if(readyToBuyArmorUpgrade === true && armorUpgraded === true){
+                    playSound("soldOut");
+                }
+                //talking to shopkeep dialog handler, counts from 0 up to 8, then resets.
+                //If konami Code is activated, it counts from -1 down to -6, then resets.
+                else if (readyToTalkToShopKeeper === true){
+                    playSound('buttonOut');
+                    if (konamiActivated === false){
+                        shopKeepDialogIndicator += 1;
+                    }else if (konamiActivated === true){
+                        shopKeepDialogIndicator -= 1
+                    }
+
+                    if (shopKeepDialogIndicator >= 8){
+                        shopKeepDialogIndicator = 0;
+                    }
+                    if (shopKeepDialogIndicator <= -6){
+                        shopKeepDialogIndicator = -1
+                    }
+                }
             }
 
             if(event.detail.name === "LEFT_SHOULDER_BOTTOM"){

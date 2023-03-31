@@ -98,14 +98,105 @@ var someNumberTitle = 11;
 
 animatingTitle = false;
 
+let starHue = 0;
+
+let bouncingX = 0;
+let bouncingY = 0;
+let vx = 21;
+let vy = 21;
+
+// Load the images
+let layer1 = new Image();
+layer1.src = 'images/layer1.png';
+let layer2 = new Image();
+layer2.src = 'images/layer2.png';
+let layer3 = new Image();
+layer3.src = 'images/layer3.png';
+
+// Set the initial x positions of the layers
+let layer1X = 0;
+let layer2X = 0;
+let layer3X = 0;
+
+// Set the speeds of the layers
+let layer1Speed = 1;
+let layer2Speed = 5;
+let layer3Speed = 8;
+
+
 function drawTitleBackdrop() {
     if (animatingTitle === true){
         someNumberTitle += 1;
+
+        starHue += 1;
+        if (starHue > 360) {
+            starHue = 0;
+        }
         console.log(someNumberTitle);
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         ctx.fillStyle = 'rgba(0,0,0,.75)';
         ctx.fillRect(0,0,canvas.width, canvas.height);
+
+
+        // check if the image is hitting the right or left bounds of the canvas
+        if (bouncingX > 832 -144 || bouncingX < 0) {
+            // reverse the x velocity
+            vx = -vx;
+        }
+
+        // check if the image is hitting the top or bottom bounds of the canvas
+        if (bouncingY > 576 - 144 || bouncingY < 0) {
+            // reverse the y velocity
+            vy = -vy;
+        }
+
+        // update the position of the image based on its velocity
+        bouncingX += vx;
+        bouncingY += vy;
+
+        // Add random stars
+        ctx.fillStyle = `hsl(${starHue}, 100%, 50%)`;
+        for (let i = 0; i < someNumberTitle * 34; i++) {
+            let x = Math.random() * canvas.width;
+            let y = Math.random() * canvas.height;
+            ctx.beginPath();
+            ctx.arc(x, y, x/144, y/233, 2.39983 );
+            ctx.fill();
+        }
+
+       // Draw the layers
+  
+       for (let i = 0; i < Math.ceil(canvas.width / layer2.width) + 1; i++) {
+        ctx.drawImage(layer2, layer2X + i * layer2.width, 0);
+      }
+  for (let i = 0; i < Math.ceil(canvas.width / layer3.width) + 1; i++) {
+    ctx.drawImage(layer3, layer3X + i * layer3.width, 0);
+  }
+
+
+  for (let i = 0; i < Math.ceil(canvas.width / layer1.width) + 1; i++) {
+    ctx.drawImage(layer1, layer1X + i * layer1.width, 0);
+  }
+
+  // Update the layer positions based on their speeds
+  layer1X -= layer1Speed;
+  layer2X -= layer2Speed;
+  layer3X -= layer3Speed;
+
+// If a layer goes off the screen to the left, reset it to the end of the canvas
+if (layer1X + layer1.width < 0) {
+    layer1X = layer1X + layer1.width;
+  }
+  if (layer2X + layer2.width < 0) {
+    layer2X = layer2X + layer2.width;
+  }
+  if (layer3X + layer3.width < 0) {
+    layer3X = layer3X + layer3.width;
+  }
+
+
+
 
         if (someNumberTitle === 11 || someNumberTitle === 12){
             someNumberTitle +=1
@@ -131,11 +222,19 @@ function drawTitleBackdrop() {
             ctx.drawImage(titleBackdrop6, 0, 0,)
         }
 
+        ctx.drawImage(boss2b, bouncingX, bouncingY, 144 + someNumberTitle, 144 + someNumberTitle);
+
+        
+
+
+
+        drawText("Yew's", 42, true, canvas.height/2 - 110, "black");
+        drawText("Rogue-Like", 72, true, canvas.height/2 - 50, "black");
         drawText("Yew's", 40, true, canvas.height/2 - 110, "white");
-        drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white"); 
+        drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white");  
         drawText("Works Best in Google Chrome", 21, true, canvas.height/2 - 250, "gray"); 
         drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2 - 233, "gray"); 
-        drawScores(); 
+        //drawScores(); 
 
         setTimeout(() => {
             window.requestAnimationFrame(drawTitleBackdrop); 
