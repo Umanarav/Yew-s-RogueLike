@@ -219,7 +219,7 @@ function drawTitleBackdrop() {
             someNumberTitle = 11
             ctx.drawImage(titleBackdrop6, 0, 0,)
         }
-        
+
         //ctx.drawImage(boss2b, bouncingX, bouncingY, 144 + someNumberTitle, 144 + someNumberTitle);
 
         drawText("Yew's", 42, true, canvas.height/2 - 55, "black");
@@ -229,15 +229,12 @@ function drawTitleBackdrop() {
         
         drawText("Works Best in Google Chrome", 22, true, canvas.height/2 + 34, "white"); 
         drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2 + 50, "white");
-
-         
         //drawScores(); 
 
         setTimeout(() => {
             window.requestAnimationFrame(drawTitleBackdrop); 
         }, 142.8571428571429);
     }else {
-            
         return;
     }
 }
@@ -289,13 +286,9 @@ function init() {
     rpSection0Backdrop5.src = 'rpSection0Backdrop/rpSection0Backdrop5.png'
     rpSection0Backdrop6.src = 'rpSection0Backdrop/rpSection0Backdrop6.png'
 
-
-
     for(let i = 0; i < 114; i += 1){
         rpSection1Backdrop[i].src = 'rpSection1Backdrop/rpSection1Backdrop' + i + '.png'; 
     }
-
-
 
     titleBackdrop0.src = 'titleBackdrop/TitleBackdrop0.png'
     titleBackdrop1.src = 'titleBackdrop/TitleBackdrop1.png'
