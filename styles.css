@@ -1,6 +1,9 @@
-    canvas {
-        outline: 1px solid white;
-    }
+canvas {
+    border: 3px solid #181d2c;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    background: linear-gradient(deg, #000000, #181d2c );
+}
 
     body {
         background-color: black;
@@ -29,8 +32,39 @@
         position: fixed;
         bottom: 5%;
         right: 89%;
+        padding: 10px 20px;
+        background-color: #f0f0f0;
+        color: #000;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.34s ease-in-out;
+        transition: color 0.21s ease-in-out;
+    }
+    
+    span:hover {
+        transform: translateY(-1px);
         outline: 1px solid white;
-        margin: 3px;
+        color: #f0f0f0;
+        background-color: #000;
+        cursor: pointer;
+    }
+
+    span:active {
+        transform: translateY(1px);
+    }
+    
+    @keyframes bounce {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-6px);
+        }
+        100% {
+            transform: translateY(0);
+        }
     }
 
     label {

@@ -98,7 +98,7 @@ var someNumberTitle = 11;
 
 let animatingTitle = false;
 
-/* Load the images
+
 const layer1 = new Image();
 layer1.src = 'images/layer1.png';
 const layer2 = new Image();
@@ -106,55 +106,21 @@ layer2.src = 'images/layer2.png';
 const layer3 = new Image();
 layer3.src = 'images/layer3.png';
 
-// Set the initial x positions of the layers
-let layer1X = 0;
-let layer2X = 0;
-let layer3X = 0;
-
-// Set the speeds of the layers
-const layer1Speed = 1;
-const layer2Speed = 2;
-const layer3Speed = 3;*/
-
 function drawTitleBackdrop() {
     if (animatingTitle === true){
         someNumberTitle += 1;
 
-        //console.log(someNumberTitle);
+        console.log(someNumberTitle);
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         ctx.fillStyle = 'rgba(0,0,0,.75)';
         ctx.fillRect(0,0,canvas.width, canvas.height);
 
-       // Draw the layers
-  
-       /*for (let i = 0; i < Math.ceil(canvas.width / layer2.width) + 1; i++) {
-                ctx.drawImage(layer2, layer2X + i * layer2.width, 0);
-            }
-        for (let i = 0; i < Math.ceil(canvas.width / layer3.width) + 1; i++) {
-            ctx.drawImage(layer3, layer3X + i * layer3.width, 0);
-        }
-
-        for (let i = 0; i < Math.ceil(canvas.width / layer1.width) + 1; i++) {
-            ctx.drawImage(layer1, layer1X + i * layer1.width, 0);
-        }
-
-        // Update the layer positions based on their speeds
-        layer1X -= layer1Speed;
-        layer2X -= layer2Speed;
-        layer3X -= layer3Speed;
-
-        // If a layer goes off the screen to the left, reset it to the end of the canvas
-        if (layer1X + layer1.width < 0) {
-            layer1X = layer1X + layer1.width;
-        }
-        if (layer2X + layer2.width < 0) {
-            layer2X = layer2X + layer2.width;
-        }
-        if (layer3X + layer3.width < 0) {
-            layer3X = layer3X + layer3.width;
-        }*/
-
+        /*Draw the layers
+        ctx.drawImage(layer2, 0, 0);
+        ctx.drawImage(layer3, 0, 0);
+        ctx.drawImage(layer1, 0, 0);*/
+        
         //animate rainbow frame
         if (someNumberTitle === 11 || someNumberTitle === 12){
             someNumberTitle +=1
@@ -180,14 +146,13 @@ function drawTitleBackdrop() {
             ctx.drawImage(titleBackdrop6, 0, 0,)
         }
 
-        drawText("Yew's", 42, true, canvas.height/2 - 55, "black");
-        drawText("Rogue-Like", 72, true, canvas.height/2 - 5, "black");
         drawText("Yew's", 40, true, canvas.height/2 - 55, "white");
         drawText("Rogue-Like", 70, true, canvas.height/2 - 5, "white");  
         
-        drawText("Works Best in Google Chrome", 22, true, canvas.height/2 + 34, "white"); 
-        drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2 + 50, "white");
+        drawText("Works Best in Google Chrome", 22, true, canvas.height/2 + 34, "gray"); 
+        drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2 + 50, "gray");
         //drawScores(); 
+        drawText("Version: 1.0", 13, true, canvas.height/2 + 233, "white");
 
         setTimeout(() => {
             window.requestAnimationFrame(drawTitleBackdrop); 
