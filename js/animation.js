@@ -100,11 +100,6 @@ animatingTitle = false;
 
 let starHue = 0;
 
-let bouncingX = 0;
-let bouncingY = 0;
-let vx = 5;
-let vy = 5;
-
 // Load the images
 let layer1 = new Image();
 layer1.src = 'images/layer1.png';
@@ -127,29 +122,12 @@ let layer3Speed = 3;
 function drawTitleBackdrop() {
     if (animatingTitle === true){
         someNumberTitle += 1;
-        
+
         console.log(someNumberTitle);
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         ctx.fillStyle = 'rgba(0,0,0,.75)';
         ctx.fillRect(0,0,canvas.width, canvas.height);
-
-
-        // check if the image is hitting the right or left bounds of the canvas
-        if (bouncingX > 832 -144 || bouncingX < 0) {
-            // reverse the x velocity
-            vx = -vx;
-        }
-
-        // check if the image is hitting the top or bottom bounds of the canvas
-        if (bouncingY > 576 - 144 || bouncingY < 0) {
-            // reverse the y velocity
-            vy = -vy;
-        }
-
-        // update the position of the image based on its velocity
-        bouncingX += vx;
-        bouncingY += vy;
 
        // Draw the layers
   
@@ -159,7 +137,6 @@ function drawTitleBackdrop() {
         for (let i = 0; i < Math.ceil(canvas.width / layer3.width) + 1; i++) {
             ctx.drawImage(layer3, layer3X + i * layer3.width, 0);
         }
-
 
         for (let i = 0; i < Math.ceil(canvas.width / layer1.width) + 1; i++) {
             ctx.drawImage(layer1, layer1X + i * layer1.width, 0);
