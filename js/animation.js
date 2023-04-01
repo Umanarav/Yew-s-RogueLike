@@ -102,8 +102,8 @@ let starHue = 0;
 
 let bouncingX = 0;
 let bouncingY = 0;
-let vx = 21;
-let vy = 21;
+let vx = 5;
+let vy = 5;
 
 // Load the images
 let layer1 = new Image();
@@ -120,8 +120,8 @@ let layer3X = 0;
 
 // Set the speeds of the layers
 let layer1Speed = 1;
-let layer2Speed = 5;
-let layer3Speed = 8;
+let layer2Speed = 2;
+let layer3Speed = 3;
 
 
 function drawTitleBackdrop() {
@@ -220,14 +220,17 @@ function drawTitleBackdrop() {
             ctx.drawImage(titleBackdrop6, 0, 0,)
         }
         
-        ctx.drawImage(boss2b, bouncingX, bouncingY, 144 + someNumberTitle, 144 + someNumberTitle);
+        //ctx.drawImage(boss2b, bouncingX, bouncingY, 144 + someNumberTitle, 144 + someNumberTitle);
 
-        drawText("Yew's", 42, true, canvas.height/2 - 110, "black");
-        drawText("Rogue-Like", 72, true, canvas.height/2 - 50, "black");
-        drawText("Yew's", 40, true, canvas.height/2 - 110, "white");
-        drawText("Rogue-Like", 70, true, canvas.height/2 - 50, "white");  
-        drawText("Works Best in Google Chrome", 21, true, canvas.height/2 - 250, "gray"); 
-        drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2 - 233, "gray"); 
+        drawText("Yew's", 42, true, canvas.height/2 - 55, "black");
+        drawText("Rogue-Like", 72, true, canvas.height/2 - 5, "black");
+        drawText("Yew's", 40, true, canvas.height/2 - 55, "white");
+        drawText("Rogue-Like", 70, true, canvas.height/2 - 5, "white");  
+        
+        drawText("Works Best in Google Chrome", 22, true, canvas.height/2 + 34, "white"); 
+        drawText("(Audio errors may occur in other browsers)", 13, true, canvas.height/2 + 50, "white");
+
+         
         //drawScores(); 
 
         setTimeout(() => {
