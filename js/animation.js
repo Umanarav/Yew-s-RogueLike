@@ -98,7 +98,7 @@ var someNumberTitle = 11;
 
 let animatingTitle = false;
 
-// Load the images
+/* Load the images
 const layer1 = new Image();
 layer1.src = 'images/layer1.png';
 const layer2 = new Image();
@@ -114,13 +114,13 @@ let layer3X = 0;
 // Set the speeds of the layers
 const layer1Speed = 1;
 const layer2Speed = 2;
-const layer3Speed = 3;
+const layer3Speed = 3;*/
 
 function drawTitleBackdrop() {
     if (animatingTitle === true){
         someNumberTitle += 1;
 
-        console.log(someNumberTitle);
+        //console.log(someNumberTitle);
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         ctx.fillStyle = 'rgba(0,0,0,.75)';
@@ -128,7 +128,7 @@ function drawTitleBackdrop() {
 
        // Draw the layers
   
-       for (let i = 0; i < Math.ceil(canvas.width / layer2.width) + 1; i++) {
+       /*for (let i = 0; i < Math.ceil(canvas.width / layer2.width) + 1; i++) {
                 ctx.drawImage(layer2, layer2X + i * layer2.width, 0);
             }
         for (let i = 0; i < Math.ceil(canvas.width / layer3.width) + 1; i++) {
@@ -153,7 +153,7 @@ function drawTitleBackdrop() {
         }
         if (layer3X + layer3.width < 0) {
             layer3X = layer3X + layer3.width;
-        }
+        }*/
 
         //animate rainbow frame
         if (someNumberTitle === 11 || someNumberTitle === 12){
