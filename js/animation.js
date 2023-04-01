@@ -98,8 +98,6 @@ var someNumberTitle = 11;
 
 let animatingTitle = false;
 
-let starHue = 0;
-
 // Load the images
 const layer1 = new Image();
 layer1.src = 'images/layer1.png';
@@ -130,7 +128,7 @@ function drawTitleBackdrop() {
 
        // Draw the layers
   
-       /*for (let i = 0; i < Math.ceil(canvas.width / layer2.width) + 1; i++) {
+       for (let i = 0; i < Math.ceil(canvas.width / layer2.width) + 1; i++) {
                 ctx.drawImage(layer2, layer2X + i * layer2.width, 0);
             }
         for (let i = 0; i < Math.ceil(canvas.width / layer3.width) + 1; i++) {
@@ -139,7 +137,7 @@ function drawTitleBackdrop() {
 
         for (let i = 0; i < Math.ceil(canvas.width / layer1.width) + 1; i++) {
             ctx.drawImage(layer1, layer1X + i * layer1.width, 0);
-        }*/
+        }
 
         // Update the layer positions based on their speeds
         layer1X -= layer1Speed;
@@ -181,8 +179,6 @@ function drawTitleBackdrop() {
             someNumberTitle = 11
             ctx.drawImage(titleBackdrop6, 0, 0,)
         }
-
-        //ctx.drawImage(boss2b, bouncingX, bouncingY, 144 + someNumberTitle, 144 + someNumberTitle);
 
         drawText("Yew's", 42, true, canvas.height/2 - 55, "black");
         drawText("Rogue-Like", 72, true, canvas.height/2 - 5, "black");
