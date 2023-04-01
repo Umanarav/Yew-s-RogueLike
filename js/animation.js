@@ -96,7 +96,7 @@ const titleBackdrop6 = new Image();
 
 var someNumberTitle = 11;
 
-let animatingTitle = false;
+animatingTitle = false;
 
 let starHue = 0;
 
@@ -127,11 +127,7 @@ let layer3Speed = 3;
 function drawTitleBackdrop() {
     if (animatingTitle === true){
         someNumberTitle += 1;
-
-        starHue += 1;
-        if (starHue > 360) {
-            starHue = 0;
-        }
+        
         console.log(someNumberTitle);
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
@@ -154,16 +150,6 @@ function drawTitleBackdrop() {
         // update the position of the image based on its velocity
         bouncingX += vx;
         bouncingY += vy;
-
-        // Add random stars
-        ctx.fillStyle = `hsl(${starHue}, 100%, 50%)`;
-        for (let i = 0; i < someNumberTitle * 34; i++) {
-            let x = Math.random() * canvas.width;
-            let y = Math.random() * canvas.height;
-            ctx.beginPath();
-            ctx.arc(x, y, x/144, y/233, 2.39983 );
-            ctx.fill();
-        }
 
        // Draw the layers
   
