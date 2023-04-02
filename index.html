@@ -937,8 +937,13 @@
 
     document.querySelector("html").addEventListener("keydown", (e) => {
         if (e.key === "k" && eaterSoul === true) {
-            eatsWalls = true;
-            //console.log(eatsWalls);
+            if (eatsWalls === true){
+            eatsWalls = false;
+            console.log(eatsWalls);
+        }else {
+            eatsWalls = true;  
+            console.log(eatsWalls);
+        }
         }
     });
 

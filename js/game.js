@@ -410,14 +410,14 @@ function draw(){
 
             drawText("Mutations", 21, false, 497, "violet");
                 if (moonShoes === true){
-                    drawText("9) Move two (hold shift)", 16, false, 517, "aqua");     
+                    drawText("Move two (hold shift)", 16, false, 517, "aqua");     
                 }else if (readyToMutate === true){
                     drawText("9) Press Enter to Mutate", 16, false, 517, "aqua");     
                 }
                 if(eatsWalls === true && eaterSoul === true){
-                    drawText("Eat walls enabled", 16, false, 538, "aqua");            
+                    drawText("Eat walls enabled (k)", 16, false, 538, "aqua");            
                 }else if (eatsWalls === false && eaterSoul === true){
-                    drawText("Hold k to eat walls", 16, false, 538, "aqua");
+                    drawText("press k to eat walls", 16, false, 538, "aqua");
                 } 
         }
 
