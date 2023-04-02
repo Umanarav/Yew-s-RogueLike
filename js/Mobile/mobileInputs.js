@@ -8,11 +8,14 @@ const toggleButton = document.getElementById("toggle-button");
 const buttonContainer = document.getElementById("button-container-1");
 
 toggleButton.addEventListener("click", function() {
-    if (buttonContainer.style.display === "none") {
+    console.log(buttonContainer.style.display);
+    if (buttonContainer.style.display === "none" || buttonContainer.style.display === "") {
       buttonContainer.style.display = "flex";
     } else {
       buttonContainer.style.display = "none";
     }
+
+    console.log(buttonContainer.style.display);
   });
 
 menuButtons.forEach(function(button) {

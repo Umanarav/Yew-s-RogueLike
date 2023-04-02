@@ -86,7 +86,7 @@ canvas {
     }
 
     #button-container-1 {
-        display: flex;
+        display: none;
         flex-wrap: wrap;
         flex-direction: column;
         justify-content: center;
@@ -111,8 +111,8 @@ canvas {
 
 
       .menuButton {
-        font-size: 18px;
-        padding: 10px;
+        font-size: 34px;
+        padding: 34px;
         margin: 5px;
         border: none;
         background-color: gray;
@@ -120,11 +120,11 @@ canvas {
         border-radius: 5px;
         cursor: pointer;
         flex-basis: 60px; /* set a fixed width */
-        height: 34px; /* set your desired button height */
       }
+
       .menuButtonBigger {
-        font-size: 18px;
-        padding: 10px;
+        font-size: 34px;
+        padding: 34px;
         margin: 5px;
         border: none;
         background-color: gray;
@@ -132,13 +132,12 @@ canvas {
         border-radius: 5px;
         cursor: pointer;
         flex-basis: 60px; /* set a fixed width */
-        height: 55px; /* set your desired button height */
+        
 
       }
 
 
       #sub-container-4 {
-        height: 55px; /* set your desired button height */
         display: flex;
         justify-content: center;
       }
@@ -155,21 +154,21 @@ canvas {
         
         order: 2;
       }
-      
+
       .menuButton[value="d"] {
         
-        order: 3;
+        order: 4;
       }
       
       .menuButton[value="s"] {
         
-        order: 4;
+        order: 3;
       }
 
-      .menuButton[value=" "] {
+      .menuButton[value="Enter"] {
         order: 5;
       }
-      .menuButton[value="Enter"] {
+      .menuButton[value=" "] {
         order: 6;
       }
       .menuButton[value="f"] {
@@ -183,25 +182,31 @@ canvas {
       }
 
       #toggle-button {
-        position: fixed;
-        left: 50%;
-        bottom: 20px;
-        transform: translateX(-50%);
-        padding: 12px 20px;
-        font-size: 18px;
-        background-color: #f0f0f0;
-        color: #000;
-        border: none;
-        border-radius: 10px;
-        font-size: 16px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.34s ease-in-out;
-        transition: color 0.21s ease-in-out;
+        display: none;
       }
 
-      #toggle-button:hover {
-        outline: 1px solid white;
-        color: #f0f0f0;
-        background-color: #000;
-        cursor: pointer;
+      @media only screen and (max-device-width: 600px) {
+        #toggle-button {
+            position: fixed;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            padding: 12px 20px;
+            font-size: 18px;
+            background-color: #f0f0f0;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.34s ease-in-out;
+            transition: color 0.21s ease-in-out;
+        }
+
+        #toggle-button:hover {
+            outline: 1px solid white;
+            color: #f0f0f0;
+            background-color: #000;
+            cursor: pointer;
+        }
     }
