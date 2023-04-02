@@ -2,6 +2,11 @@ canvas {
     border: 3px solid #181d2c;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     border-radius: 3px;
+    
+}
+
+#layer2 {
+    display: none;
 }
 
     body {
@@ -78,4 +83,125 @@ canvas {
         bottom: 6%;
         right: 5%;
    
+    }
+
+    #button-container-1 {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-basis: 55px;
+        margin: 13px;        
+      }
+
+      #sub-container-1 {
+        display: flex;
+        justify-content: center;
+      }
+      #sub-container-2 {
+        display: flex;
+        justify-content: center;
+      }
+      #sub-container-3 {
+        margin-top: 13px;
+        display: flex;
+        justify-content: center;
+      }
+
+
+      .menuButton {
+        font-size: 18px;
+        padding: 10px;
+        margin: 5px;
+        border: none;
+        background-color: gray;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        flex-basis: 60px; /* set a fixed width */
+        height: 34px; /* set your desired button height */
+      }
+      .menuButtonBigger {
+        font-size: 18px;
+        padding: 10px;
+        margin: 5px;
+        border: none;
+        background-color: gray;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        flex-basis: 60px; /* set a fixed width */
+        height: 55px; /* set your desired button height */
+
+      }
+
+
+      #sub-container-4 {
+        height: 55px; /* set your desired button height */
+        display: flex;
+        justify-content: center;
+      }
+      
+      .menuButton:hover {
+        background-color: darkgray;
+      }
+      
+      .menuButton[value="w"] {
+        order: 1;
+      }
+      
+      .menuButton[value="a"] {
+        
+        order: 2;
+      }
+      
+      .menuButton[value="d"] {
+        
+        order: 3;
+      }
+      
+      .menuButton[value="s"] {
+        
+        order: 4;
+      }
+
+      .menuButton[value=" "] {
+        order: 5;
+      }
+      .menuButton[value="Enter"] {
+        order: 6;
+      }
+      .menuButton[value="f"] {
+        order: 7;
+      }
+      .menuButton[value="k"] {
+        order: 8;
+      }
+      .menuButton[value="l"] {
+        order: 8;
+      }
+
+      #toggle-button {
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translateX(-50%);
+        padding: 12px 20px;
+        font-size: 18px;
+        background-color: #f0f0f0;
+        color: #000;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.34s ease-in-out;
+        transition: color 0.21s ease-in-out;
+      }
+
+      #toggle-button:hover {
+        outline: 1px solid white;
+        color: #f0f0f0;
+        background-color: #000;
+        cursor: pointer;
     }

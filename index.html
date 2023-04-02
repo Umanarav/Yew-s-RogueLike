@@ -3,22 +3,51 @@
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <link rel="stylesheet" href="styles.css">
 
+
+
+
 <body>
     <a href="bugReportForm/bugReportForm.html" target="_blank" onclick="return confirm('Are you sure you want to open a new tab for submitting bug reports? The game tab will not close.')"><img id="bugReport" src="images/boss2b.png"/><span>Submit Bug Report</span></a>
     <img id="audioSymbol" src="images/img.png" onclick="muteAudio()"/>
 </body>
 
-<canvas id="layer1" style="z-index: 1;" />
-<canvas id="layer2" style="z-index: 2;" />
+
+<div id="canvas-container">
+    <canvas id="layer1" style="z-index: 1;"></canvas>
+    <canvas id="layer2" style="z-index: 2; top: 100%;"></canvas>
+</div>
+<button id="toggle-button">Toggle Mobile Controls</button>
+
+<div id="button-container-1">
+    <div id="sub-container-1">
+        <button class="menuButton" value="w">up</button>
+    </div>
+    <div id="sub-container-2">
+        <button class="menuButton" value="a">left</button>
+        <button class="menuButton" value="s">down</button>
+        <button class="menuButton" value="d">right</button>
+    </div>
+    <div id="sub-container-3">
+        <button class="menuButton" value=" ">space</button>
+        <button class="menuButton" value="f">f/tick();</button>
+
+        <button class="menuButton" value="Enter">Enter</button>
+    </div>
+    <div id="sub-container-4">
+        <button class="menuButtonBigger" value="k">Eater Soul</button>
+        <button class="menuButtonBigger" value="l">Moon Shoes</button>
+    </div>
+<div>
+
+    
+
+    
 
 <div style="display:none;">
   <img id="rp0image"
        src="images/spritesheet.png"
        width="512" height="16">
 </div>
-
-
-
 
 <script src="js/animation.js"></script>
 <script src="js/cutscene.js"></script>
@@ -33,6 +62,7 @@
 <script src="js/Controller/Controller.min.js"></script>
 <script src="js/Controller/Controller.layouts.min.js"></script>
 <script src="js/Controller/controllerInputs.js"></script>
+<script src="js/Mobile/mobileInputs.js"></script>
 
 <script>
     moonShoes = false;
@@ -62,7 +92,7 @@
 
     boss2bButtonRCooldown = 0;    
 
-    document.querySelector("html").onkeypress = function(e){
+    document.querySelector("html").onkeydown = function(e){
         console.log(e.key);
         if(gameState == "title"){
             topBotActivated = false;
@@ -498,7 +528,7 @@
                 playerDirection = "right";
             }
 
-            if(e.key=="f" || e.key==" "){
+            if(e.key=="f"){
                 playerDirection = "down";
                 tick();    
             }
@@ -898,12 +928,7 @@
             //console.log(eatsWalls);
         }
     });
-    document.querySelector("html").addEventListener("keyup", (e) => {
-        if (e.key === "k" && eaterSoul === true) {
-            eatsWalls = false;
-            //console.log(eatsWalls);
-        }
-    });
+
 
     document.addEventListener('keyup', function(event){
             if(event.key === "Escape" && gameState === "running" && animatingLevel2aTooltip != true || event.key === "End" && gameState === "running" && animatingLevel2aTooltip != true){
